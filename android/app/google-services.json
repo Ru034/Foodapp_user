@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "241224478820",
+    "project_id": "flutterdrive-38710",
+    "storage_bucket": "flutterdrive-38710.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:241224478820:android:2b87918aa827a023936f71",
+        "android_client_info": {
+          "package_name": "com.example.foodapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyARQhRJph4FrZ-yokBF2cCgdfbhG322nao"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:241224478820:android:713e3dfe750a0445936f71",
+        "android_client_info": {
+          "package_name": "com.example.foodapp_user"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyARQhRJph4FrZ-yokBF2cCgdfbhG322nao"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
