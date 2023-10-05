@@ -482,15 +482,17 @@ class _HomePageState extends State<HomePage> {
                                       padding: EdgeInsets.only(left: 30.0),
                                     ),
                                     Text(_data[index][4].toString()),
-                                    if (_data.length - 1 == index||(_data[index][3] !=_data[index + 1][3]&&_data.length - 1 > index))
-                                        TextButton(
-                                          onPressed: () {
-                                            //todo
-                                          },
-                                          child: const Icon(
-                                              Icons.add_circle_outline_sharp,
-                                              color: Colors.blue),
-                                        ),
+                                    if (index == 0 ||(index > 0&&_data[index][3] != _data[index - 1][3]))
+                                      TextButton(
+                                        onPressed: () {
+                                          //todo
+                                        },
+                                        child: const Icon(
+                                            Icons.add_circle_outline_sharp,
+                                            color: Colors.blue),
+                                      ),
+
+
 
                                   ],
                                 ),
