@@ -359,8 +359,7 @@ class _HomePageState extends State<HomePage> {
       ),
       */
 
-      body: Column(
-          children: [
+      body: Column(children: [
         Expanded(
             child: ListView(
           children: [
@@ -392,7 +391,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
                 for (int index = 0; index < _data.length; index++)
-                  if (_data[index][0] == 1&&(index>0&&_data[index][3] != _data[index-1][3]))
+                  if (_data[index][0] == 1 && (index > 0 && _data[index][3] != _data[index - 1][3]))
                     ListTile(
                       subtitle: Column(
                         children: [
@@ -402,74 +401,41 @@ class _HomePageState extends State<HomePage> {
                                 //新增圖片
                                 child: Row(
                                   children: [
-                                    if (index == 0)
-                                      if (_data[index][6] != "" && index == 0)
-                                        Expanded(
-                                          child: Stack(
-                                            children: [
-                                              Image.file(
-                                                File(_data[index][6]),
-                                                width: 50,
-                                                height: 50,
-                                                fit: BoxFit.cover,
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                    if (index > 0)
-                                      if (_data[index][3] != _data[index - 1][3] && index > 0)
-                                        if (_data[index][6] != "" && index > 0)
-                                          Expanded(
-                                            child: Stack(
-                                              children: [
-                                                Image.file(
-                                                  File(_data[index][6]),
-                                                  width: 50,
-                                                  height: 50,
-                                                  fit: BoxFit.cover,
-                                                ),
-                                              ],
+                                    if (index == 0 && _data[index][6] != "" && index == 0 || (_data[index][3] != _data[index - 1][3] && index > 0 && _data[index][6] != ""))
+                                      Expanded(
+                                        child: Stack(
+                                          children: [
+                                            Image.file(
+                                              File(_data[index][6]),
+                                              width: 50,
+                                              height: 50,
+                                              fit: BoxFit.cover,
                                             ),
-                                          )
+                                          ],
+                                        ),
+                                      ),
                                   ],
                                 ),
-
                               ),
-
-
-
                               Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  if (index == 0)
-                                    Text(_data[index][3].toString()),
-                                  if (index == 0)
-                                    Text(_data[index][5].toString()),
-                                  if (index > 0)
-                                    if (_data[index][3] != _data[index - 1][3])
-                                      Text(_data[index][3].toString()),
-                                  if (index > 0)
-                                    if (_data[index][3] != _data[index - 1][3])
-                                      Text(_data[index][5].toString()),
-                                  if (index == 0)
-                                    TextButton(
-                                      onPressed: () {
-                                        //todo
-                                      },
-                                      child: const Icon(
-                                          Icons.add_circle_outline_sharp,
-                                          color: Colors.blue),
-                                    ),
-                                  if (index > 0)
-                                    if (_data[index][3] != _data[index - 1][3])
-                                      TextButton(
-                                        onPressed: () {
-                                          //todo
-                                        },
-                                        child: const Icon(
-                                            Icons.add_circle_outline_sharp,
-                                            color: Colors.blue),
-                                      ),
+                                  Text(_data[index][3].toString()),
+                                  const Padding(
+                                    padding: EdgeInsets.only(top: 0, left: 20.0, bottom: 0),
+                                  ),
+                                  Text(_data[index][5].toString()),
+                                  const Padding(
+                                    padding: EdgeInsets.only(top: 0, left: 10.0, bottom: 0),
+                                  ),
+                                  TextButton(
+                                    onPressed: () {
+                                      //todo
+                                    },
+                                    child: const Icon(
+                                        Icons.add_circle_outline_sharp,
+                                        color: Colors.blue),
+                                  ),
                                 ],
                               ),
                             ],
@@ -503,12 +469,8 @@ class _HomePageState extends State<HomePage> {
                               Expanded(
                                 child: Row(
                                   children: [
-                                    if (index == 0)
+                                    if (index == 0 ||(index > 0&&_data[index][3] != _data[index - 1][3]))
                                       Text(_data[index][3].toString()),
-                                    if (index > 0)
-                                      if (_data[index][3] !=
-                                          _data[index - 1][3])
-                                        Text(_data[index][3].toString()),
                                   ],
                                 ),
                               ),
@@ -520,9 +482,7 @@ class _HomePageState extends State<HomePage> {
                                       padding: EdgeInsets.only(left: 30.0),
                                     ),
                                     Text(_data[index][4].toString()),
-                                    if (_data.length - 1 > index)
-                                      if (_data[index][3] !=
-                                          _data[index + 1][3])
+                                    if (_data.length - 1 == index||(_data[index][3] !=_data[index + 1][3]&&_data.length - 1 > index))
                                         TextButton(
                                           onPressed: () {
                                             //todo
@@ -531,92 +491,15 @@ class _HomePageState extends State<HomePage> {
                                               Icons.add_circle_outline_sharp,
                                               color: Colors.blue),
                                         ),
-                                    if (_data.length - 1 == index)
-                                      TextButton(
-                                        onPressed: () {
-                                          //todo
-                                        },
-                                        child: const Icon(
-                                            Icons.add_circle_outline_sharp,
-                                            color: Colors.blue),
-                                      ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                /*
-                const Padding(
-                  padding: EdgeInsets.only(left: 30.0),
-                  //const EdgeInsets.only(left: 40.0)
-                  child: Text(
-                    "套餐選項",
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-                for (int index = 0; index < _data.length; index++)
-                  if (_data[index][0] == 3)
-                    ListTile(
-                      subtitle: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Padding(
-                                padding: EdgeInsets.only(left: 30.0),
-                              ),
-                              Expanded(
-                                child: Row(
-                                  children: [
-                                    if (index == 0)
-                                      Text(_data[index][3].toString()),
-                                    if (index > 0)
-                                      if (_data[index][3] != _data[index - 1][3])
-                                        Text(_data[index][3].toString()),
-                                  ],
-                                ),
-                              ),
-                              Expanded(
-                                child: Column(
-                                  children: [
-                                    Text(_data[index][4].toString()),
-                                    if (_data.length - 2 > index)
-                                      if (_data[index][3] != _data[index + 1][3])
-                                        TextButton(
-                                          onPressed: () {
-                                            //todo
-                                          },
-                                          child: const Icon(
-                                              Icons.add_circle_outline_sharp,
-                                              color: Colors.blue),
-                                        ),
-                                    if (_data.length - 1 == index)
-                                      TextButton(
-                                        onPressed: () {
-                                          //todo
-                                        },
-                                        child: const Icon(
-                                            Icons.add_circle_outline_sharp,
-                                            color: Colors.blue),
-                                      ),
-                                  ],
-                                ),
-                              ),
-                              Text(_data[index][5].toString()),
 
+                                  ],
+                                ),
+                              ),
                             ],
                           ),
                         ],
                       ),
                     ),
-*/
               ],
             ),
           ],
@@ -636,8 +519,7 @@ class _HomePageState extends State<HomePage> {
             child: const Text('打開購物車'),
           ),
         ),
-      ]
-      ),
+      ]),
     );
   }
 }
