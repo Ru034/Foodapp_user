@@ -67,6 +67,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   //HomePage 的狀態類別，用於管理狀態變化
   List<List<dynamic>> _data = [];
+  List<List<dynamic>> _data2 = [];
 
   get auth2 => null;
 
@@ -102,13 +103,7 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  void addNewDataAtIndex(
-      String listData, String newOption, String newPrice, int ord, int index) {
-    List<dynamic> newData = [ord, "", "", listData, newOption, newPrice, ""];
-    setState(() {
-      _data.insert(index, newData);
-    });
-  }
+
 
   Future<void> saveCsvToLocalDirectory() async {
     try {
@@ -128,30 +123,6 @@ class _HomePageState extends State<HomePage> {
       print('Error saving CSV data: $e');
     }
   }
-
-  Future<void> _pickImage(int index) async {
-    final XFile? pickedImage = await ImagePicker().pickImage(
-      source: ImageSource.gallery, // Choose from the gallery
-    );
-
-    if (pickedImage != null) {
-      final imagePath = pickedImage.path;
-
-      try {
-        final newImagePath =
-            '/data/user/0/com.example.foodapp_user/new/image_${DateTime.now().millisecondsSinceEpoch}.jpg';
-        final File newImageFile = await File(imagePath).copy(newImagePath);
-        setState(() {
-          _imagePath = newImagePath;
-          _data[index][6] =
-              newImagePath; // Update _data[index][6] to include the new image path
-        });
-      } catch (e) {
-        print('Error copying image: $e');
-      }
-    }
-  }
-
   Future<void> createNewDirectory() async {
     final Directory newDirectory =
         Directory('/data/user/0/com.example.foodapp_user/new');
@@ -269,7 +240,6 @@ class _HomePageState extends State<HomePage> {
       }
     }
   }
-
   Future<void> _download() async {
     final googleSignIn =
         signIn.GoogleSignIn.standard(scopes: [drive.DriveApi.driveScope]);
@@ -309,17 +279,47 @@ class _HomePageState extends State<HomePage> {
       print("Account is null");
     }
   }
-
-/*
-  void _loadCSV() async {
-    final rawData = await rootBundle.loadString("assets/M1.csv");
-    List<List<dynamic>> listData = const CsvToListConverter().convert(rawData);
+  void addNewDataAtIndex(
+      String listData, String newOption, String newPrice, int ord, int index) {
+    List<dynamic> newData = [ord, "", "", listData, newOption, newPrice, ""];
     setState(() {
-      _data = listData;
+      _data.insert(index, newData);
     });
   }
+  showAlertDialog(BuildContext context, String listData, String listData2) {
+    AlertDialog dialog = AlertDialog(
+      //title: Text("AlertDialog component"),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
 
-*/
+          Text(listData+'      '+listData2),
+          for (int index = 0; index < _data.length; index++)
+            if   (_data[index][3] == listData && _data[index][4] != '')
+              Text(_data[index][4].toString() + '      ' +_data[index][5].toString())
+    ],
+      ),
+      actions: [
+        ElevatedButton(
+          child: Text("新增"),
+          onPressed: () {
+            // Access input values using textFieldController1.text and textFieldController2.text
+            // todo 功能
+            // addNewDataAtIndex(listData);
+          },
+        ),
+      ],
+    );
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return dialog;
+      },
+    );
+  }
+
+
+
 
   Future<void> _loadCSV() async {
     await _download();
@@ -430,7 +430,7 @@ class _HomePageState extends State<HomePage> {
                                   ),
                                   TextButton(
                                     onPressed: () {
-                                      //todo
+                                      showAlertDialog(context,_data[index][3].toString(),_data[index][5].toString());
                                     },
                                     child: const Icon(
                                         Icons.add_circle_outline_sharp,
