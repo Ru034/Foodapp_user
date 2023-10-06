@@ -103,8 +103,6 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-
-
   Future<void> saveCsvToLocalDirectory() async {
     try {
       final String csvContent = const ListToCsvConverter().convert(_data);
@@ -123,6 +121,7 @@ class _HomePageState extends State<HomePage> {
       print('Error saving CSV data: $e');
     }
   }
+
   Future<void> createNewDirectory() async {
     final Directory newDirectory =
         Directory('/data/user/0/com.example.foodapp_user/new');
@@ -240,6 +239,7 @@ class _HomePageState extends State<HomePage> {
       }
     }
   }
+
   Future<void> _download() async {
     final googleSignIn =
         signIn.GoogleSignIn.standard(scopes: [drive.DriveApi.driveScope]);
@@ -279,6 +279,7 @@ class _HomePageState extends State<HomePage> {
       print("Account is null");
     }
   }
+
   void addNewDataAtIndex(
       String listData, String newOption, String newPrice, int ord, int index) {
     List<dynamic> newData = [ord, "", "", listData, newOption, newPrice, ""];
@@ -286,18 +287,38 @@ class _HomePageState extends State<HomePage> {
       _data.insert(index, newData);
     });
   }
-  showAlertDialog(BuildContext context, String listData, String listData2) {
+
+  showAlertDialog(String listData, String listData2) {
     AlertDialog dialog = AlertDialog(
       //title: Text("AlertDialog component"),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-
-          Text(listData+'      '+listData2),
+          Text(listData + '      ' + listData2),
           for (int index = 0; index < _data.length; index++)
-            if   (_data[index][3] == listData && _data[index][4] != '')
-              Text(_data[index][4].toString() + '      ' +_data[index][5].toString())
-    ],
+            if (_data[index][3] == listData && _data[index][4] != '')
+              Row(
+                children: [
+                  Text(_data[index][4].toString() +
+                      '      ' +
+                      _data[index][5].toString()),
+                  TextButton(
+                    onPressed: () {
+                      //todo
+                    },
+                    child: const Icon(Icons.add_circle_outline_sharp,
+                        color: Colors.blue),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      //todo
+                    },
+                    child: const Icon(Icons.remove_circle_outline,
+                        color: Colors.red),
+                  ),
+                ],
+              ),
+        ],
       ),
       actions: [
         ElevatedButton(
@@ -318,8 +339,71 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  showAlertDialog2(String listData, String listData2) {
+    AlertDialog dialog = AlertDialog(
+      //title: Text("AlertDialog component"),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(listData + '      ' + listData2),
+          for (int index = 0; index < _data.length; index++)
+            if (_data[index][3] == listData && _data[index][4] != '')
+              Column(
+                children: [
+                  Text(_data[index][4]),
+                  //Text(_data.length as String),
+                  for (int index2 = 0; index2 < _data.length ; index2++)
+                    if (_data[index2][0] == 3)
+                      if (_data[index][4] == _data[index2][3])
+                        //Text("11111111111"),
+
+                        Row(
+                          children: [
+                            Text(_data[index2][4]+'    '+_data[index2][5].toString()),
+                            TextButton(
+                              onPressed: () {
+                                //todo
+                              },
+                              child: const Icon(Icons.add_circle_outline_sharp,
+                                  color: Colors.blue),
+                            ),
+
+                            TextButton(
+                              onPressed: () {
+                                //todo
+                              },
+                              child: const Icon(Icons.remove_circle_outline,
+                                  color: Colors.red),
+                            ),
+                          ],
+                        )
 
 
+
+                ],
+              ),
+
+
+        ],
+      ),
+      actions: [
+        ElevatedButton(
+          child: Text("新增"),
+          onPressed: () {
+            // Access input values using textFieldController1.text and textFieldController2.text
+            // todo 功能
+            // addNewDataAtIndex(listData);
+          },
+        ),
+      ],
+    );
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return dialog;
+      },
+    );
+  }
 
   Future<void> _loadCSV() async {
     await _download();
@@ -391,7 +475,8 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
                 for (int index = 0; index < _data.length; index++)
-                  if (_data[index][0] == 1 && (index > 0 && _data[index][3] != _data[index - 1][3]))
+                  if (_data[index][0] == 1 &&
+                      (index > 0 && _data[index][3] != _data[index - 1][3]))
                     ListTile(
                       subtitle: Column(
                         children: [
@@ -401,7 +486,13 @@ class _HomePageState extends State<HomePage> {
                                 //新增圖片
                                 child: Row(
                                   children: [
-                                    if (index == 0 && _data[index][6] != "" && index == 0 || (_data[index][3] != _data[index - 1][3] && index > 0 && _data[index][6] != ""))
+                                    if (index == 0 &&
+                                            _data[index][6] != "" &&
+                                            index == 0 ||
+                                        (_data[index][3] !=
+                                                _data[index - 1][3] &&
+                                            index > 0 &&
+                                            _data[index][6] != ""))
                                       Expanded(
                                         child: Stack(
                                           children: [
@@ -422,15 +513,19 @@ class _HomePageState extends State<HomePage> {
                                 children: [
                                   Text(_data[index][3].toString()),
                                   const Padding(
-                                    padding: EdgeInsets.only(top: 0, left: 20.0, bottom: 0),
+                                    padding: EdgeInsets.only(
+                                        top: 0, left: 20.0, bottom: 0),
                                   ),
                                   Text(_data[index][5].toString()),
                                   const Padding(
-                                    padding: EdgeInsets.only(top: 0, left: 10.0, bottom: 0),
+                                    padding: EdgeInsets.only(
+                                        top: 0, left: 10.0, bottom: 0),
                                   ),
                                   TextButton(
                                     onPressed: () {
-                                      showAlertDialog(context,_data[index][3].toString(),_data[index][5].toString());
+                                      showAlertDialog(
+                                          _data[index][3].toString(),
+                                          _data[index][5].toString());
                                     },
                                     child: const Icon(
                                         Icons.add_circle_outline_sharp,
@@ -469,7 +564,10 @@ class _HomePageState extends State<HomePage> {
                               Expanded(
                                 child: Row(
                                   children: [
-                                    if (index == 0 ||(index > 0&&_data[index][3] != _data[index - 1][3]))
+                                    if (index == 0 ||
+                                        (index > 0 &&
+                                            _data[index][3] !=
+                                                _data[index - 1][3]))
                                       Text(_data[index][3].toString()),
                                   ],
                                 ),
@@ -482,18 +580,20 @@ class _HomePageState extends State<HomePage> {
                                       padding: EdgeInsets.only(left: 30.0),
                                     ),
                                     Text(_data[index][4].toString()),
-                                    if (index == 0 ||(index > 0&&_data[index][3] != _data[index - 1][3]))
+                                    if (index == 0 ||
+                                        (index > 0 &&
+                                            _data[index][3] !=
+                                                _data[index - 1][3]))
                                       TextButton(
                                         onPressed: () {
-                                          //todo
+                                          showAlertDialog2(
+                                              _data[index][3].toString(),
+                                              _data[index][5].toString());
                                         },
                                         child: const Icon(
                                             Icons.add_circle_outline_sharp,
                                             color: Colors.blue),
                                       ),
-
-
-
                                   ],
                                 ),
                               ),
