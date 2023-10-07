@@ -339,10 +339,22 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  showAlertDialog2(String listData, String listData2) {
-    AlertDialog dialog = AlertDialog(
-      //title: Text("AlertDialog component"),
-      content: Column(
+  int? selectedIndex;
+
+  void toggleSelection(int index) {
+    setState(() {
+      if (selectedIndex == index) {
+        // If the same item is selected again, deselect it
+        selectedIndex = null;
+      } else {
+        // Otherwise, select the new item
+        selectedIndex = index;
+      }
+    });
+  }
+
+  /*
+  content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(listData + '      ' + listData2),
@@ -355,35 +367,51 @@ class _HomePageState extends State<HomePage> {
                   for (int index2 = 0; index2 < _data.length ; index2++)
                     if (_data[index2][0] == 3)
                       if (_data[index][4] == _data[index2][3])
-                        //Text("11111111111"),
-
+   */
+  showAlertDialog2(String listData, String listData2, int index) {
+    AlertDialog dialog = AlertDialog(
+      //title: Text("AlertDialog component"),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(listData + '      ' + listData2),
+          for (int index = 0; index < _data.length; index++)
+            if (_data[index][3] == listData && _data[index][4] != '')
+              Column(
+                children: [
+                  Text(_data[index][4]),
+                  //Text(_data.length as String),
+                  for (int index2 = 0; index2 < _data.length; index2++)
+                    if (_data[index2][0] == 3)
+                      if (_data[index][4] == _data[index2][3])
                         Row(
                           children: [
-                            Text(_data[index2][4]+'    '+_data[index2][5].toString()),
-                            TextButton(
-                              onPressed: () {
-                                //todo
-                              },
-                              child: const Icon(Icons.add_circle_outline_sharp,
-                                  color: Colors.blue),
+                            Text(
+                              _data[index2][4] +
+                                  '    ' +
+                                  _data[index2][5].toString(),
+                              style: TextStyle(
+                                color: selectedIndex == index2
+                                    ? Colors.blue // Selected color
+                                    : Colors.black, // Default color
+                              ),
                             ),
-
                             TextButton(
                               onPressed: () {
-                                //todo
+                                // Handle the toggle logic
+                                toggleSelection(index2);
                               },
-                              child: const Icon(Icons.remove_circle_outline,
-                                  color: Colors.red),
+                              child: Icon(
+                                Icons.add,
+                                color: selectedIndex == index2
+                                    ? Colors.blue // Selected color
+                                    : Colors.grey, // Deselected color
+                              ),
                             ),
                           ],
-                        )
-
-
-
+                        ),
                 ],
-              ),
-
-
+              )
         ],
       ),
       actions: [
@@ -588,7 +616,8 @@ class _HomePageState extends State<HomePage> {
                                         onPressed: () {
                                           showAlertDialog2(
                                               _data[index][3].toString(),
-                                              _data[index][5].toString());
+                                              _data[index][5].toString(),
+                                              index);
                                         },
                                         child: const Icon(
                                             Icons.add_circle_outline_sharp,
