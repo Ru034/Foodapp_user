@@ -280,9 +280,11 @@ class _HomePageState extends State<HomePage> {
     }
   }
   List<List<dynamic>> _tempData2 = [];
-  late int c;
 
-  showAlertDialog(String listData, String listData2) {
+
+  showAlertDialog(String listData, String listData2,int fir) {
+    _tempData2.clear();
+    _tempData2.add([_data[fir][2], 1]);
     AlertDialog dialog = AlertDialog(
       content: Column(
         mainAxisSize: MainAxisSize.min,
@@ -358,11 +360,11 @@ class _HomePageState extends State<HomePage> {
             // todo 功能
             // addNewDataAtIndex(listData);
 
+            // Append the values from _tempData2 to _data2
+            _data2.addAll(_tempData2);
+
             // You can access the temporary 2D array _tempData2 here
             print("_tempData2 in Add: $_tempData2");
-
-            // Here, you can set _data2 to the values in _tempData2
-            _data2 = List.from(_tempData2);
           },
         ),
       ],
@@ -589,7 +591,9 @@ class _HomePageState extends State<HomePage> {
                                     onPressed: () {
                                       showAlertDialog(
                                           _data[index][3].toString(),
-                                          _data[index][5].toString());
+                                          _data[index][5].toString(),
+                                          index,
+                                      );
                                     },
                                     child: const Icon(
                                         Icons.add_circle_outline_sharp,
@@ -681,7 +685,28 @@ class _HomePageState extends State<HomePage> {
               textStyle: const TextStyle(fontSize: 20),
             ),
             onPressed: () async {
-              // Your onPressed logic for the FilledButton
+              // Show a dialog with the content of _tempData2
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: Text('購物車內容'),
+                    content: Column(
+                      children: _data2.map((data) {
+                        return Text('${data[0]}: ${data[1]}');
+                      }).toList(),
+                    ),
+                    actions: [
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: Text('確定'),
+                      ),
+                    ],
+                  );
+                },
+              );
             },
             child: const Text('打開購物車'),
           ),
