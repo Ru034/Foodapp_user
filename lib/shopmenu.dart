@@ -279,18 +279,11 @@ class _HomePageState extends State<HomePage> {
       print("Account is null");
     }
   }
-
-  void addNewDataAtIndex(
-      String listData, String newOption, String newPrice, int ord, int index) {
-    List<dynamic> newData = [ord, "", "", listData, newOption, newPrice, ""];
-    setState(() {
-      _data.insert(index, newData);
-    });
-  }
+  List<List<dynamic>> _tempData2 = [];
+  late int c;
 
   showAlertDialog(String listData, String listData2) {
     AlertDialog dialog = AlertDialog(
-      //title: Text("AlertDialog component"),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -299,22 +292,59 @@ class _HomePageState extends State<HomePage> {
             if (_data[index][3] == listData && _data[index][4] != '')
               Row(
                 children: [
-                  Text(_data[index][4].toString() +
-                      '      ' +
-                      _data[index][5].toString()),
-                  TextButton(
-                    onPressed: () {
-                      //todo
-                    },
-                    child: const Icon(Icons.add_circle_outline_sharp,
-                        color: Colors.blue),
+                  Text(
+                    _data[index][4].toString() +
+                        '      ' +
+                        _data[index][5].toString(),
                   ),
                   TextButton(
                     onPressed: () {
-                      //todo
+                      // Get the value from _data[index][2]
+                      var valueToSave = _data[index][2];
+
+                      // Find the index in _tempData2
+                      int tempIndex = _tempData2.indexWhere(
+                            (element) => element[0] == valueToSave,
+                      );
+
+                      if (tempIndex != -1) {
+                        // If the value is already in _tempData2, increment the count
+                        _tempData2[tempIndex][1]++;
+                      } else {
+                        // If the value is not in _tempData2, add it with count 1
+                        _tempData2.add([valueToSave, 1]);
+                      }
+
+                      // You can print to verify the value is added to _tempData2
+                      print("_tempData2: $_tempData2");
                     },
-                    child: const Icon(Icons.remove_circle_outline,
-                        color: Colors.red),
+                    child: const Icon(
+                      Icons.add_circle_outline_sharp,
+                      color: Colors.blue,
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      // Get the value from _data[index][2]
+                      var valueToRemove = _data[index][2];
+
+                      // Find the index in _tempData2
+                      int tempIndex = _tempData2.indexWhere(
+                            (element) => element[0] == valueToRemove,
+                      );
+
+                      if (tempIndex != -1 && _tempData2[tempIndex][1] > 0) {
+                        // If the value is in _tempData2 and count is greater than 0, decrement the count
+                        _tempData2[tempIndex][1]--;
+                      }
+
+                      // You can print to verify the value is removed from _tempData2
+                      print("_tempData2: $_tempData2");
+                    },
+                    child: const Icon(
+                      Icons.remove_circle_outline,
+                      color: Colors.red,
+                    ),
                   ),
                 ],
               ),
@@ -327,6 +357,12 @@ class _HomePageState extends State<HomePage> {
             // Access input values using textFieldController1.text and textFieldController2.text
             // todo 功能
             // addNewDataAtIndex(listData);
+
+            // You can access the temporary 2D array _tempData2 here
+            print("_tempData2 in Add: $_tempData2");
+
+            // Here, you can set _data2 to the values in _tempData2
+            _data2 = List.from(_tempData2);
           },
         ),
       ],
