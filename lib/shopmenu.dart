@@ -76,7 +76,7 @@ class _HomePageState extends State<HomePage> {
       final String csvContent = const ListToCsvConverter().convert(_data);
 
       final Directory newDirectory =
-          Directory('/data/user/0/com.example.foodapp_user/new');
+      Directory('/data/user/0/com.example.foodapp_user/new');
       final file = File('${newDirectory.path}/new_data.csv');
 
       // Write the CSV content to the new directory
@@ -124,7 +124,7 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> createNewDirectory() async {
     final Directory newDirectory =
-        Directory('/data/user/0/com.example.foodapp_user/new');
+    Directory('/data/user/0/com.example.foodapp_user/new');
     if (!await newDirectory.exists()) {
       await newDirectory.create(recursive: true);
     }
@@ -133,7 +133,7 @@ class _HomePageState extends State<HomePage> {
   Future<void> movePhotosToNewDirectory() async {
     final Directory cacheDirectory = await getTemporaryDirectory();
     final Directory newDirectory =
-        Directory('/data/user/0/com.example.foodapp_user/new');
+    Directory('/data/user/0/com.example.foodapp_user/new');
 
     for (final file in await cacheDirectory.list().toList()) {
       if (file is File) {
@@ -146,7 +146,7 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> _incrementCounter() async {
     final googleSignIn =
-        signIn.GoogleSignIn.standard(scopes: [drive.DriveApi.driveScope]);
+    signIn.GoogleSignIn.standard(scopes: [drive.DriveApi.driveScope]);
     final signIn.GoogleSignInAccount? account = await googleSignIn.signIn();
     print("User account $account");
 
@@ -213,9 +213,9 @@ class _HomePageState extends State<HomePage> {
           }
 
           final media =
-              Media(fileSystemEntity.openRead(), fileSystemEntity.lengthSync());
+          Media(fileSystemEntity.openRead(), fileSystemEntity.lengthSync());
           final result =
-              await driveApi.files.create(driveFile, uploadMedia: media);
+          await driveApi.files.create(driveFile, uploadMedia: media);
           print("Uploaded ${driveFile.name}: ${result.toJson()}");
         } else if (fileSystemEntity is Directory) {
           // 上傳子文件夾
@@ -242,7 +242,7 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> _download() async {
     final googleSignIn =
-        signIn.GoogleSignIn.standard(scopes: [drive.DriveApi.driveScope]);
+    signIn.GoogleSignIn.standard(scopes: [drive.DriveApi.driveScope]);
     final signIn.GoogleSignInAccount? account = await googleSignIn.signIn();
     if (account != null) {
       final authHeaders = await account.authHeaders;
@@ -260,7 +260,7 @@ class _HomePageState extends State<HomePage> {
         }
         directory.createSync(recursive: true);
         final fileList =
-            await driveApi.files.list(q: "'$googleDriveFolderId' in parents");
+        await driveApi.files.list(q: "'$googleDriveFolderId' in parents");
         for (final file in fileList.files!) {
           final drive.Media fileData = await driveApi.files.get(file.id!,
               downloadOptions: drive.DownloadOptions.fullMedia) as drive.Media;
@@ -506,13 +506,13 @@ class _HomePageState extends State<HomePage> {
     await _download();
     try {
       final File file =
-          File('/data/user/0/com.example.foodapp_user/new/new_data.csv');
+      File('/data/user/0/com.example.foodapp_user/new/new_data.csv');
 
       // Check if the file exists in the app's data directory
       if (await file.exists()) {
         final String rawData = await file.readAsString();
         final List<List<dynamic>> listData =
-            const CsvToListConverter().convert(rawData);
+        const CsvToListConverter().convert(rawData);
 
         setState(() {
           _data = listData;
@@ -521,7 +521,7 @@ class _HomePageState extends State<HomePage> {
         // If the file doesn't exist in the app's data directory, copy it from assets
         final rawData = await rootBundle.loadString("assets/new_data.csv");
         List<List<dynamic>> listData =
-            const CsvToListConverter().convert(rawData);
+        const CsvToListConverter().convert(rawData);
         setState(() {
           _data = listData;
         });
@@ -543,168 +543,168 @@ class _HomePageState extends State<HomePage> {
       body: Column(children: [
         Expanded(
             child: ListView(
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start, // 將子元素靠左對齊
               children: [
-                const Padding(
-                  padding: EdgeInsets.all(15),
-                ),
-                const Padding(
-                  padding: EdgeInsets.all(15.0),
-                  child: Text(
-                    "店家菜單",
-                    style: TextStyle(
-                      fontSize: 30,
-                      fontWeight: FontWeight.bold,
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start, // 將子元素靠左對齊
+                  children: [
+                    const Padding(
+                      padding: EdgeInsets.all(15),
                     ),
-                  ),
-                ),
-                const Padding(
-                  padding: EdgeInsets.only(top: 15, left: 30.0, bottom: 15),
-                  //const EdgeInsets.only(left: 40.0)
-                  child: Text(
-                    "單點",
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-                for (int index = 0; index < _data.length; index++)
-                  if (_data[index][0] == 1 && (index > 0 && _data[index][3] != _data[index - 1][3]))
-                    ListTile(
-                      subtitle: Column(
-                        children: [
-                          Row(
-                            children: [
-                              Expanded(
-                                //新增圖片
-                                child: Row(
-                                  children: [
-                                    if (index == 0 &&
-                                            _data[index][6] != "" &&
-                                            index == 0 ||
-                                        (_data[index][3] !=
-                                                _data[index - 1][3] &&
-                                            index > 0 &&
-                                            _data[index][6] != ""))
-                                      Expanded(
-                                        child: Stack(
-                                          children: [
-                                            Image.file(
-                                              File(_data[index][6]),
-                                              width: 50,
-                                              height: 50,
-                                              fit: BoxFit.cover,
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                  ],
-                                ),
-                              ),
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(_data[index][3].toString()),
-                                  const Padding(
-                                    padding: EdgeInsets.only(
-                                        top: 0, left: 20.0, bottom: 0),
-                                  ),
-                                  Text(_data[index][5].toString()),
-                                  const Padding(
-                                    padding: EdgeInsets.only(
-                                        top: 0, left: 10.0, bottom: 0),
-                                  ),
-                                  TextButton(
-                                    onPressed: () {
-                                      showAlertDialog(
-                                          _data[index][3].toString(),
-                                          _data[index][5].toString(),
-                                          index,
-                                      );
-                                    },
-                                    child: const Icon(
-                                        Icons.add_circle_outline_sharp,
-                                        color: Colors.blue),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ],
+                    const Padding(
+                      padding: EdgeInsets.all(15.0),
+                      child: Text(
+                        "店家菜單",
+                        style: TextStyle(
+                          fontSize: 30,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
-                const Padding(
-                  padding: EdgeInsets.only(left: 30.0),
-                  //const EdgeInsets.only(left: 40.0)
-                  child: Text(
-                    "套餐",
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
+                    const Padding(
+                      padding: EdgeInsets.only(top: 15, left: 30.0, bottom: 15),
+                      //const EdgeInsets.only(left: 40.0)
+                      child: Text(
+                        "單點",
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-                for (int index = 0; index < _data.length; index++)
-                  if (_data[index][0] == 2)
-                    ListTile(
-                      subtitle: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                    for (int index = 0; index < _data.length; index++)
+                      if (_data[index][0] == 1 && (index > 0 && _data[index][3] != _data[index - 1][3])||index == 0)
+                        ListTile(
+                          subtitle: Column(
                             children: [
-                              const Padding(
-                                padding: EdgeInsets.only(left: 30.0),
-                              ),
-                              Expanded(
-                                child: Row(
-                                  children: [
-                                    if (index == 0 ||
-                                        (index > 0 &&
-                                            _data[index][3] !=
-                                                _data[index - 1][3]))
-                                      Text(_data[index][3].toString()),
-                                  ],
-                                ),
-                              ),
-                              Expanded(
-                                child: Row(
-                                  children: [
-                                    Text(_data[index][5].toString()),
-                                    const Padding(
-                                      padding: EdgeInsets.only(left: 30.0),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    //新增圖片
+                                    child: Row(
+                                      children: [
+                                        if (index == 0 &&
+                                            _data[index][6] != "" &&
+                                            index == 0 ||
+                                            (_data[index][3] !=
+                                                _data[index - 1][3] &&
+                                                index > 0 &&
+                                                _data[index][6] != ""))
+                                          Expanded(
+                                            child: Stack(
+                                              children: [
+                                                Image.file(
+                                                  File(_data[index][6]),
+                                                  width: 50,
+                                                  height: 50,
+                                                  fit: BoxFit.cover,
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                      ],
                                     ),
-                                    Text(_data[index][4].toString()),
-                                    if (index == 0 ||
-                                        (index > 0 &&
-                                            _data[index][3] !=
-                                                _data[index - 1][3]))
+                                  ),
+                                  Row(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(_data[index][3].toString()),
+                                      const Padding(
+                                        padding: EdgeInsets.only(
+                                            top: 0, left: 20.0, bottom: 0),
+                                      ),
+                                      Text(_data[index][5].toString()),
+                                      const Padding(
+                                        padding: EdgeInsets.only(
+                                            top: 0, left: 10.0, bottom: 0),
+                                      ),
                                       TextButton(
                                         onPressed: () {
-                                          showAlertDialog2(
-                                              _data[index][3].toString(),
-                                              _data[index][5].toString(),
-                                              index);
+                                          showAlertDialog(
+                                            _data[index][3].toString(),
+                                            _data[index][5].toString(),
+                                            index,
+                                          );
                                         },
                                         child: const Icon(
                                             Icons.add_circle_outline_sharp,
                                             color: Colors.blue),
                                       ),
-                                  ],
-                                ),
+                                    ],
+                                  ),
+                                ],
                               ),
                             ],
                           ),
-                        ],
+                        ),
+                    const Padding(
+                      padding: EdgeInsets.only(left: 30.0),
+                      //const EdgeInsets.only(left: 40.0)
+                      child: Text(
+                        "套餐",
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
+                    for (int index = 0; index < _data.length; index++)
+                      if (_data[index][0] == 2)
+                        ListTile(
+                          subtitle: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Padding(
+                                    padding: EdgeInsets.only(left: 30.0),
+                                  ),
+                                  Expanded(
+                                    child: Row(
+                                      children: [
+                                        if (index == 0 ||
+                                            (index > 0 &&
+                                                _data[index][3] !=
+                                                    _data[index - 1][3]))
+                                          Text(_data[index][3].toString()),
+                                      ],
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: Row(
+                                      children: [
+                                        Text(_data[index][5].toString()),
+                                        const Padding(
+                                          padding: EdgeInsets.only(left: 30.0),
+                                        ),
+                                        Text(_data[index][4].toString()),
+                                        if (index == 0 ||
+                                            (index > 0 &&
+                                                _data[index][3] !=
+                                                    _data[index - 1][3]))
+                                          TextButton(
+                                            onPressed: () {
+                                              showAlertDialog2(
+                                                  _data[index][3].toString(),
+                                                  _data[index][5].toString(),
+                                                  index);
+                                            },
+                                            child: const Icon(
+                                                Icons.add_circle_outline_sharp,
+                                                color: Colors.blue),
+                                          ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                  ],
+                ),
               ],
-            ),
-          ],
-        )),
+            )),
         SizedBox(
           height: 75,
           width: 250,
