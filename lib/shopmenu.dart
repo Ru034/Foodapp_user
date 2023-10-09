@@ -284,21 +284,37 @@ class _HomePageState extends State<HomePage> {
 
   showAlertDialog(String listData, String listData2,int fir) {
     _tempData2.clear();
-    _tempData2.add([_data[fir][2], 1]);
+    //_tempData2.add([_data[fir][2], 1]);
+
+    // Iterate through _data2 and check if each value is present in _data
+    for (var data2Item in _data2) {
+      var valueToCheck = data2Item[0];
+      var count = data2Item[1];
+
+      // Find the index in _data
+      int dataIndex = _data.indexWhere(
+            (element) => element[2] == valueToCheck,
+      );
+
+      if (dataIndex != -1) {
+        // If the value is found in _data, add it to _tempData2 with the count
+        _tempData2.add([valueToCheck, count]);
+      }
+    }
     AlertDialog dialog = AlertDialog(
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text(listData + '      ' + listData2),
-          for (int index = 0; index < _data.length; index++)
-            if (_data[index][3] == listData && _data[index][4] != '')
+          //Text(listData + '      ' + listData2),
+          for (int index = 0 ; index < _data.length; index++)
+            if (_data[index][3] == listData )
               Row(
                 children: [
-                  Text(
-                    _data[index][4].toString() +
-                        '      ' +
-                        _data[index][5].toString(),
-                  ),
+                  if ( (index > 0 && _data[index][3] != _data[index - 1][3]) || index ==0)
+                    Text(listData + '      ' + listData2),
+
+                  if( (index > 0 && _data[index][3] == _data[index - 1][3]) )
+                    Text(_data[index][4].toString() + '      ' + _data[index][5].toString(),),
                   TextButton(
                     onPressed: () {
                       // Get the value from _data[index][2]
@@ -541,8 +557,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
                 for (int index = 0; index < _data.length; index++)
-                  if (_data[index][0] == 1 &&
-                      (index > 0 && _data[index][3] != _data[index - 1][3]))
+                  if (_data[index][0] == 1 && (index > 0 && _data[index][3] != _data[index - 1][3]))
                     ListTile(
                       subtitle: Column(
                         children: [
