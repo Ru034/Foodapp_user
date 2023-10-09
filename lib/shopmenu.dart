@@ -376,11 +376,26 @@ class _HomePageState extends State<HomePage> {
             // todo 功能
             // addNewDataAtIndex(listData);
 
-            // Append the values from _tempData2 to _data2
-            _data2.addAll(_tempData2);
+            for (var tempData in _tempData2) {
+              var valueToSave = tempData[0];
+              var count = tempData[1];
 
-            // You can access the temporary 2D array _tempData2 here
-            print("_tempData2 in Add: $_tempData2");
+              // Find the index in _data2
+              int dataIndex = _data2.indexWhere(
+                    (element) => element[0] == valueToSave,
+              );
+
+              if (dataIndex != -1) {
+                // If the value is found in _data2, update the count
+                _data2[dataIndex][1] = count;
+              } else {
+                // If the value is not found in _data2, add a new entry
+                _data2.add([valueToSave, count]);
+              }
+            }
+
+            // You can access the modified _data2 here
+            print("_data2 after update or add: $_data2");
           },
         ),
       ],
