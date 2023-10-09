@@ -69,6 +69,8 @@ class _HomePageState extends State<HomePage> {
   List<List<dynamic>> _data = [];
   List<List<dynamic>> _data2 = [];
 
+
+
   get auth2 => null;
 
   Future<void> saveCsvToNewDirectory() async {
@@ -92,6 +94,7 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     //初始化狀態，然後調用 _loadCSV() 方法
     super.initState();
+    _data2 = List.generate(_data.length, (index) => [0, 0]);
     _loadCSV();
   }
 
@@ -282,58 +285,55 @@ class _HomePageState extends State<HomePage> {
   List<List<dynamic>> _tempData2 = [];
 
 
-  showAlertDialog(String listData, String listData2,int fir) {
-    _tempData2.clear();
-    //_tempData2.add([_data[fir][2], 1]);
 
-    // Iterate through _data2 and check if each value is present in _data
-    for (var data2Item in _data2) {
+  showAlertDialog(String listData, String listData2, int fir) {
+    List<List<dynamic>> _tempData2 = List.from(_data2);
+
+    for (var data2Item in _tempData2) {
       var valueToCheck = data2Item[0];
       var count = data2Item[1];
 
-      // Find the index in _data
       int dataIndex = _data.indexWhere(
             (element) => element[2] == valueToCheck,
       );
 
       if (dataIndex != -1) {
-        // If the value is found in _data, add it to _tempData2 with the count
-        _tempData2.add([valueToCheck, count]);
+        if (dataIndex < _tempData2.length) {
+          _tempData2[dataIndex][1] = count;
+        }
       }
     }
+
     AlertDialog dialog = AlertDialog(
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          //Text(listData + '      ' + listData2),
-          for (int index = 0 ; index < _data.length; index++)
-            if (_data[index][3] == listData )
+          for (int index = 0; index < _data.length; index++)
+            if (_data[index][3] == listData)
               Row(
                 children: [
-                  if ( (index > 0 && _data[index][3] != _data[index - 1][3]) || index ==0)
+                  if ((index > 0 && _data[index][3] != _data[index - 1][3]) ||
+                      index == 0)
                     Text(listData + '      ' + listData2),
-
-                  if( (index > 0 && _data[index][3] == _data[index - 1][3]) )
-                    Text(_data[index][4].toString() + '      ' + _data[index][5].toString(),),
+                  if ((index > 0 && _data[index][3] == _data[index - 1][3]))
+                    Text(
+                      _data[index][4].toString() +
+                          '      ' +
+                          _data[index][5].toString(),
+                    ),
                   TextButton(
                     onPressed: () {
-                      // Get the value from _data[index][2]
                       var valueToSave = _data[index][2];
-
-                      // Find the index in _tempData2
                       int tempIndex = _tempData2.indexWhere(
                             (element) => element[0] == valueToSave,
                       );
 
                       if (tempIndex != -1) {
-                        // If the value is already in _tempData2, increment the count
                         _tempData2[tempIndex][1]++;
                       } else {
-                        // If the value is not in _tempData2, add it with count 1
                         _tempData2.add([valueToSave, 1]);
                       }
 
-                      // You can print to verify the value is added to _tempData2
                       print("_tempData2: $_tempData2");
                     },
                     child: const Icon(
@@ -343,20 +343,15 @@ class _HomePageState extends State<HomePage> {
                   ),
                   TextButton(
                     onPressed: () {
-                      // Get the value from _data[index][2]
                       var valueToRemove = _data[index][2];
-
-                      // Find the index in _tempData2
                       int tempIndex = _tempData2.indexWhere(
                             (element) => element[0] == valueToRemove,
                       );
 
                       if (tempIndex != -1 && _tempData2[tempIndex][1] > 0) {
-                        // If the value is in _tempData2 and count is greater than 0, decrement the count
                         _tempData2[tempIndex][1]--;
                       }
 
-                      // You can print to verify the value is removed from _tempData2
                       print("_tempData2: $_tempData2");
                     },
                     child: const Icon(
@@ -372,30 +367,27 @@ class _HomePageState extends State<HomePage> {
         ElevatedButton(
           child: Text("新增"),
           onPressed: () {
-            // Access input values using textFieldController1.text and textFieldController2.text
-            // todo 功能
-            // addNewDataAtIndex(listData);
+            try {
+              for (var tempData in _tempData2) {
+                var valueToSave = tempData[0];
+                var count = tempData[1];
 
-            for (var tempData in _tempData2) {
-              var valueToSave = tempData[0];
-              var count = tempData[1];
+                int dataIndex = _data2.indexWhere(
+                      (element) => element[0] == valueToSave,
+                );
 
-              // Find the index in _data2
-              int dataIndex = _data2.indexWhere(
-                    (element) => element[0] == valueToSave,
-              );
-
-              if (dataIndex != -1) {
-                // If the value is found in _data2, update the count
-                _data2[dataIndex][1] = count;
-              } else {
-                // If the value is not found in _data2, add a new entry
-                _data2.add([valueToSave, count]);
+                if (dataIndex != -1) {
+                  _data2[dataIndex][1] = count;
+                } else {
+                  _data2.add([valueToSave, count]);
+                }
               }
-            }
 
-            // You can access the modified _data2 here
-            print("_data2 after update or add: $_data2");
+              print("_data2 after update or add: $_data2");
+
+            } catch (e) {
+              print("Error in onPressed: $e");
+            }
           },
         ),
       ],
@@ -408,7 +400,9 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+
   int? selectedIndex;
+
 
   void toggleSelection(int index) {
     setState(() {
@@ -422,21 +416,6 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  /*
-  content: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(listData + '      ' + listData2),
-          for (int index = 0; index < _data.length; index++)
-            if (_data[index][3] == listData && _data[index][4] != '')
-              Column(
-                children: [
-                  Text(_data[index][4]),
-                  //Text(_data.length as String),
-                  for (int index2 = 0; index2 < _data.length ; index2++)
-                    if (_data[index2][0] == 3)
-                      if (_data[index][4] == _data[index2][3])
-   */
   showAlertDialog2(String listData, String listData2, int index) {
     AlertDialog dialog = AlertDialog(
       //title: Text("AlertDialog component"),
@@ -715,16 +694,28 @@ class _HomePageState extends State<HomePage> {
               textStyle: const TextStyle(fontSize: 20),
             ),
             onPressed: () async {
-              // Show a dialog with the content of _tempData2
+              // 將 _data2 按照 _data 的順序進行排序
+              List<List<dynamic>> sortedData2 = List.from(_data2);
+              sortedData2.sort((a, b) {
+                int indexA = _data.indexWhere((element) => element[2] == a[0]);
+                int indexB = _data.indexWhere((element) => element[2] == b[0]);
+                return indexA.compareTo(indexB);
+              });
+
+              // Show a dialog with the content of _data2 greater than 0
               showDialog(
                 context: context,
                 builder: (BuildContext context) {
                   return AlertDialog(
                     title: Text('購物車內容'),
                     content: Column(
-                      children: _data2.map((data) {
-                        return Text('${data[0]}: ${data[1]}');
-                      }).toList(),
+                      children: sortedData2
+                          .where((data) => data[1] > 0)
+                          .map((data) {
+                        int index = _data.indexWhere((element) => element[2] == data[0]);
+                        return Text('${_data[index][2]}: ${data[1]}');
+                      })
+                          .toList(),
                     ),
                     actions: [
                       ElevatedButton(
