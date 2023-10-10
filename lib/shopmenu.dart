@@ -288,6 +288,7 @@ class _HomePageState extends State<HomePage> {
 
   showAlertDialog(String listData, String listData2, int fir) {
     List<List<dynamic>> _tempData2 = List.from(_data2);
+    //创建一个名为_tempData2的新列表，并用_data2的副本来初始化它。
 
     for (var data2Item in _tempData2) {
       var valueToCheck = data2Item[0];
@@ -296,6 +297,11 @@ class _HomePageState extends State<HomePage> {
       int dataIndex = _data.indexWhere(
             (element) => element[2] == valueToCheck,
       );
+      /*
+    遍历_tempData2中的每个项。
+    从当前项中提取valueToCheck和count的值。
+    在_data中查找第三个元素匹配valueToCheck的索引。
+     */
 
       if (dataIndex != -1) {
         if (dataIndex < _tempData2.length) {
@@ -303,6 +309,10 @@ class _HomePageState extends State<HomePage> {
         }
       }
     }
+    /*
+    检查索引是否有效（不等于-1）且小于_tempData2的长度。
+    在找到的索引处更新_tempData2中的计数。
+    */
 
     AlertDialog dialog = AlertDialog(
       content: Column(
@@ -402,8 +412,6 @@ class _HomePageState extends State<HomePage> {
 
 
   int? selectedIndex;
-
-
   void toggleSelection(int index) {
     setState(() {
       if (selectedIndex == index) {
@@ -415,10 +423,11 @@ class _HomePageState extends State<HomePage> {
       }
     });
   }
-
+  List<List<int>> _data3 = [];
   showAlertDialog2(String listData, String listData2, int index) {
+    Map<String, List<int>> selectedItemsMap = {};
+
     AlertDialog dialog = AlertDialog(
-      //title: Text("AlertDialog component"),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -428,7 +437,6 @@ class _HomePageState extends State<HomePage> {
               Column(
                 children: [
                   Text(_data[index][4]),
-                  //Text(_data.length as String),
                   for (int index2 = 0; index2 < _data.length; index2++)
                     if (_data[index2][0] == 3)
                       if (_data[index][4] == _data[index2][3])
@@ -439,7 +447,8 @@ class _HomePageState extends State<HomePage> {
                                   '    ' +
                                   _data[index2][5].toString(),
                               style: TextStyle(
-                                color: selectedIndex == index2
+                                color: selectedItemsMap.containsKey(_data[index2][3]) &&
+                                    selectedItemsMap[_data[index2][3]]!.contains(index2)
                                     ? Colors.blue // Selected color
                                     : Colors.black, // Default color
                               ),
@@ -447,11 +456,20 @@ class _HomePageState extends State<HomePage> {
                             TextButton(
                               onPressed: () {
                                 // Handle the toggle logic
-                                toggleSelection(index2);
+                                toggleAlertDialogSelection(
+                                  _data[index2][3],
+                                  index2,
+                                  selectedItemsMap,
+                                  updateUI: () {
+                                    // Force the UI to rebuild when selection changes
+                                    setState(() {});
+                                  },
+                                );
                               },
                               child: Icon(
                                 Icons.add,
-                                color: selectedIndex == index2
+                                color: selectedItemsMap.containsKey(_data[index2][3]) &&
+                                    selectedItemsMap[_data[index2][3]]!.contains(index2)
                                     ? Colors.blue // Selected color
                                     : Colors.grey, // Deselected color
                               ),
@@ -466,9 +484,18 @@ class _HomePageState extends State<HomePage> {
         ElevatedButton(
           child: Text("新增"),
           onPressed: () {
-            // Access input values using textFieldController1.text and textFieldController2.text
-            // todo 功能
+            // Access selected items using the selectedItemsMap
+            print(selectedItemsMap);
+
+            // Convert the selected items to a flat list and add it to allSelectedItems
+            List<int> flattenedSelectedItems = selectedItemsMap.values.expand((list) => list).toList();
+            _data3.add(flattenedSelectedItems);
+
+            // Add your logic to handle the selected items, e.g., add to a temporary list
             // addNewDataAtIndex(listData);
+
+            // Print allSelectedItems
+            print(_data3);
           },
         ),
       ],
@@ -480,6 +507,24 @@ class _HomePageState extends State<HomePage> {
       },
     );
   }
+
+  void toggleAlertDialogSelection(
+      String category, int index, Map<String, List<int>> selectedItemsMap, {required VoidCallback updateUI}) {
+    if (!selectedItemsMap.containsKey(category)) {
+      selectedItemsMap[category] = [index];
+    } else {
+      if (selectedItemsMap[category]!.contains(index)) {
+        // Item is already selected, remove it
+        selectedItemsMap[category]!.remove(index);
+      } else {
+        // Item is not selected, add it and remove others in the same category
+        selectedItemsMap[category] = [index];
+      }
+    }
+    // Trigger UI update
+    updateUI();
+  }
+
 
   Future<void> _loadCSV() async {
     await _download();
@@ -508,6 +553,37 @@ class _HomePageState extends State<HomePage> {
     } catch (e) {
       print('Error loading CSV file: $e');
     }
+  }
+  Future<void> _showDialog(List<List<dynamic>> dataToShow) async {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('購物車內容'),
+          content: Column(
+            children: dataToShow
+                .where((data) => data[1] > 0)
+                .map((data) {
+              int index = _data.indexWhere((element) => element[2] == data[0]);
+              return Text('${_data[index][2]}: ${data[1]}');
+            })
+                .toList(),
+          ),
+          actions: [
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pop(context);
+                // After closing the dialog, show the next set of data
+                if (dataToShow == _data2) {
+                  _showDialog(_data3);
+                }
+              },
+              child: Text('確定'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -702,32 +778,9 @@ class _HomePageState extends State<HomePage> {
                 return indexA.compareTo(indexB);
               });
 
-              // Show a dialog with the content of _data2 greater than 0
-              showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return AlertDialog(
-                    title: Text('購物車內容'),
-                    content: Column(
-                      children: sortedData2
-                          .where((data) => data[1] > 0)
-                          .map((data) {
-                        int index = _data.indexWhere((element) => element[2] == data[0]);
-                        return Text('${_data[index][2]}: ${data[1]}');
-                      })
-                          .toList(),
-                    ),
-                    actions: [
-                      ElevatedButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        child: Text('確定'),
-                      ),
-                    ],
-                  );
-                },
-              );
+              // Show the dialog with _data2
+              await _showDialog(sortedData2);
+              //await _showDialog(_data3);
             },
             child: const Text('打開購物車'),
           ),
