@@ -427,7 +427,7 @@ class _HomePageState extends State<HomePage> {
   showAlertDialog2(String listData, String listData2, int index) {
     //Map<String, List<int>> selectedItemsMap = {};
     Map<String, List<int>> selectedItemsMap = {
-      '0': [_data[index][2]], // Initialize with the desired value
+      '0': [_data[index][2] ], // Initialize with the desired value
     };
 
     AlertDialog dialog = AlertDialog(
@@ -435,20 +435,18 @@ class _HomePageState extends State<HomePage> {
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(listData + '      ' + listData2),
-          for (int index = 0; index < _data.length; index++)
-            if (_data[index][3] == listData && _data[index][4] != '')
+          for (int innerIndex = 0; innerIndex < _data.length; innerIndex++)
+            if (_data[innerIndex][3] == listData && _data[innerIndex][4] != '')
               Column(
                 children: [
-                  Text(_data[index][4]),
+                  Text(_data[innerIndex][4]),
                   for (int index2 = 0; index2 < _data.length; index2++)
                     if (_data[index2][0] == 3)
-                      if (_data[index][4] == _data[index2][3])
+                      if (_data[innerIndex][4] == _data[index2][3])
                         Row(
                           children: [
                             Text(
-                              _data[index2][4] +
-                                  '    ' +
-                                  _data[index2][5].toString(),
+                              _data[index2][4] + '    ' + _data[index2][5].toString(),
                               style: TextStyle(
                                 color: selectedItemsMap.containsKey(_data[index2][3]) &&
                                     selectedItemsMap[_data[index2][3]]!.contains(index2)
@@ -461,7 +459,7 @@ class _HomePageState extends State<HomePage> {
                                 // Handle the toggle logic
                                 toggleAlertDialogSelection(
                                   _data[index2][3],
-                                  index2,
+                                  index2+1,
                                   selectedItemsMap,
                                   updateUI: () {
                                     // Force the UI to rebuild when selection changes
@@ -490,19 +488,20 @@ class _HomePageState extends State<HomePage> {
             // Access selected items using the selectedItemsMap
             print(selectedItemsMap);
 
-            // Convert the selected items to a flat list and add it to allSelectedItems
+            // Convert the selected items to a flat list and add it to _data3
             List<int> flattenedSelectedItems = selectedItemsMap.values.expand((list) => list).toList();
             _data3.add(flattenedSelectedItems);
 
             // Add your logic to handle the selected items, e.g., add to a temporary list
             // addNewDataAtIndex(listData);
 
-            // Print allSelectedItems
+            // Print _data3
             print(_data3);
           },
         ),
       ],
     );
+
     showDialog(
       context: context,
       builder: (BuildContext context) {
