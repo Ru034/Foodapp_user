@@ -425,7 +425,10 @@ class _HomePageState extends State<HomePage> {
   }
   List<List<int>> _data3 = [];
   showAlertDialog2(String listData, String listData2, int index) {
-    Map<String, List<int>> selectedItemsMap = {};
+    //Map<String, List<int>> selectedItemsMap = {};
+    Map<String, List<int>> selectedItemsMap = {
+      '0': [_data[index][2]], // Initialize with the desired value
+    };
 
     AlertDialog dialog = AlertDialog(
       content: Column(
@@ -554,29 +557,28 @@ class _HomePageState extends State<HomePage> {
       print('Error loading CSV file: $e');
     }
   }
-  Future<void> _showDialog(List<List<dynamic>> dataToShow) async {
+  Future<void> _showDialog(List<List<dynamic>> data2, List<List<int>> data3) async {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text('購物車內容'),
           content: Column(
-            children: dataToShow
-                .where((data) => data[1] > 0)
-                .map((data) {
-              int index = _data.indexWhere((element) => element[2] == data[0]);
-              return Text('${_data[index][2]}: ${data[1]}');
-            })
-                .toList(),
+            children: [
+              // Display content of data2
+              for (var data in data2)
+                if (data[1] > 0)
+                  Text('${data[0]}: ${data[1]}'),
+
+              // Display content of data3 on separate lines
+              for (var indices in data3)
+                Text('${indices}'),
+            ],
           ),
           actions: [
             ElevatedButton(
               onPressed: () {
                 Navigator.pop(context);
-                // After closing the dialog, show the next set of data
-                if (dataToShow == _data2) {
-                  _showDialog(_data3);
-                }
               },
               child: Text('確定'),
             ),
@@ -585,7 +587,6 @@ class _HomePageState extends State<HomePage> {
       },
     );
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -779,7 +780,7 @@ class _HomePageState extends State<HomePage> {
               });
 
               // Show the dialog with _data2
-              await _showDialog(sortedData2);
+              await _showDialog(sortedData2, _data3);
               //await _showDialog(_data3);
             },
             child: const Text('打開購物車'),
