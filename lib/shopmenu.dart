@@ -147,14 +147,15 @@ class _HomePageState extends State<HomePage> {
   }
   List<List<int>> _data4 = [];
   void showAlertDialog(String listData, String listData2, int fir) {
-    List<int> selectedItems = [];
+    // Initialize selected items with the first item
+    Map<int, bool> selectedItemsMap = {fir+1: true};
 
     AlertDialog dialog = AlertDialog(
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           for (int index = 0; index < _data.length; index++)
-            if (_data[index][3] == listData)
+            if (_data[index][3] == listData && index != fir) // Exclude the first item
               Row(
                 children: [
                   if ((index > 0 && _data[index][3] != _data[index - 1][3]) ||
@@ -168,24 +169,22 @@ class _HomePageState extends State<HomePage> {
                     ),
                   TextButton(
                     onPressed: () {
-                      var valueToSave = _data[index][2];
-                      if (!selectedItems.contains(valueToSave)) {
-                        selectedItems.add(valueToSave);
-                      }
+                      // Handle the toggle logic
+                      toggleAlertDialogSelection2(
+                        index+1,
+                        selectedItemsMap,
+                        updateUI: () {
+                          // Force the UI to rebuild when selection changes
+                          setState(() {});
+                        },
+                      );
                     },
-                    child: const Icon(
+                    child: Icon(
                       Icons.add_circle_outline_sharp,
-                      color: Colors.blue,
-                    ),
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      var valueToRemove = _data[index][2];
-                      selectedItems.remove(valueToRemove);
-                    },
-                    child: const Icon(
-                      Icons.remove_circle_outline,
-                      color: Colors.red,
+                      color: selectedItemsMap.containsKey(index) &&
+                          selectedItemsMap[index]!
+                          ? Colors.blue // Selected color
+                          : Colors.grey, // Deselected color
                     ),
                   ),
                 ],
@@ -197,11 +196,14 @@ class _HomePageState extends State<HomePage> {
           child: Text("更新"),
           onPressed: () {
             try {
-              // Append selected items to _data4
-              _data4.add([...selectedItems]);
+              // Convert selected items to a list of indices
+              List<int> selectedIndices = selectedItemsMap.keys.toList();
 
-              // Access selected items using the 'selectedItems' list
-              print("Selected items: $selectedItems");
+              // Append selected items to _data4
+              _data4.add([...selectedIndices]);
+
+              // Access selected items using the 'selectedIndices' list
+              print("Selected items indices: $selectedIndices");
 
               // Print _data4
               print("_data4: $_data4");
@@ -209,7 +211,7 @@ class _HomePageState extends State<HomePage> {
               // Add your logic to handle the selected items, e.g., add to a temporary list
               // addNewDataAtIndex(listData);
 
-              // You can use 'selectedItems' directly for further processing
+              // You can use 'selectedIndices' directly for further processing
             } catch (e) {
               print("Error in onPressed: $e");
             }
@@ -224,6 +226,19 @@ class _HomePageState extends State<HomePage> {
       },
     );
   }
+  void toggleAlertDialogSelection2(int index, Map<int, bool> selectedItemsMap,
+      {required VoidCallback updateUI}) {
+    if (selectedItemsMap.containsKey(index)) {
+      // Item is already selected, remove it
+      selectedItemsMap.remove(index);
+    } else {
+      // Item is not selected, add it
+      selectedItemsMap[index] = true;
+    }
+    // Trigger UI update
+    updateUI();
+  }
+
 
   List<List<int>> _data3 = [];
 
