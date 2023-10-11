@@ -357,13 +357,22 @@ class _HomePageState extends State<HomePage> {
     await _download();
     try {
       final File file =
-          File('/data/user/0/com.example.foodapp_user/new/new_data.csv');
+      File('/data/user/0/com.example.foodapp_user/new/new_data.csv');
 
       // Check if the file exists in the app's data directory
       if (await file.exists()) {
         final String rawData = await file.readAsString();
         final List<List<dynamic>> listData =
-            const CsvToListConverter().convert(rawData);
+        const CsvToListConverter().convert(rawData);
+
+        // Update the image paths in the loaded data
+        for (int index = 0; index < listData.length; index++) {
+          final imagePath = listData[index][6].toString();
+          if (imagePath.isNotEmpty) {
+            // Replace 'foodapp' with 'foodapp_user'
+            listData[index][6] = imagePath.replaceAll('foodapp', 'foodapp_user');
+          }
+        }
 
         setState(() {
           _data = listData;
@@ -372,7 +381,17 @@ class _HomePageState extends State<HomePage> {
         // If the file doesn't exist in the app's data directory, copy it from assets
         final rawData = await rootBundle.loadString("assets/new_data.csv");
         List<List<dynamic>> listData =
-            const CsvToListConverter().convert(rawData);
+        const CsvToListConverter().convert(rawData);
+
+        // Update the image paths in the loaded data
+        for (int index = 0; index < listData.length; index++) {
+          final imagePath = listData[index][6].toString();
+          if (imagePath.isNotEmpty) {
+            // Replace 'foodapp' with 'foodapp_user'
+            listData[index][6] = imagePath.replaceAll('foodapp', 'foodapp_user');
+          }
+        }
+
         setState(() {
           _data = listData;
         });
