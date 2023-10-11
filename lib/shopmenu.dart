@@ -572,11 +572,13 @@ class _HomePageState extends State<HomePage> {
           content: Column(
             children: [
               // Display content of data2
+
               for (var data in data2)
                 if (data[1] > 0) Text('${data[0]}: ${data[1]}'),
-
               // Display content of data3 on separate lines
               for (var indices in data3) Text('${indices}'),
+
+
             ],
           ),
           actions: [
@@ -609,6 +611,11 @@ class _HomePageState extends State<HomePage> {
                 } catch (e) {
                   print("Error in onPressed: $e");
                 }
+                for(int k = 0; k < _data2.length; k++){
+                  print("${_data2[k][0]}     ${_data2[k][1]}  ");
+                  //todo API
+                }
+
                 Navigator.pop(context);
               },
               child: Text('送出訂單'),
