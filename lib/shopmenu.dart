@@ -69,8 +69,6 @@ class _HomePageState extends State<HomePage> {
   List<List<dynamic>> _data = [];
   List<List<dynamic>> _data2 = [];
 
-
-
   get auth2 => null;
 
   Future<void> saveCsvToNewDirectory() async {
@@ -78,7 +76,7 @@ class _HomePageState extends State<HomePage> {
       final String csvContent = const ListToCsvConverter().convert(_data);
 
       final Directory newDirectory =
-      Directory('/data/user/0/com.example.foodapp_user/new');
+          Directory('/data/user/0/com.example.foodapp_user/new');
       final file = File('${newDirectory.path}/new_data.csv');
 
       // Write the CSV content to the new directory
@@ -94,8 +92,10 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     //初始化狀態，然後調用 _loadCSV() 方法
     super.initState();
-    _data2 = List.generate(_data.length, (index) => [0, 0]);
+
     _loadCSV();
+    //_data2 = List.generate(_data.length, (index) => [0]);
+    _data2 = List.generate(_data.length, (index) => [0, 0]);
   }
 
   String? _imagePath;
@@ -127,7 +127,7 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> createNewDirectory() async {
     final Directory newDirectory =
-    Directory('/data/user/0/com.example.foodapp_user/new');
+        Directory('/data/user/0/com.example.foodapp_user/new');
     if (!await newDirectory.exists()) {
       await newDirectory.create(recursive: true);
     }
@@ -136,7 +136,7 @@ class _HomePageState extends State<HomePage> {
   Future<void> movePhotosToNewDirectory() async {
     final Directory cacheDirectory = await getTemporaryDirectory();
     final Directory newDirectory =
-    Directory('/data/user/0/com.example.foodapp_user/new');
+        Directory('/data/user/0/com.example.foodapp_user/new');
 
     for (final file in await cacheDirectory.list().toList()) {
       if (file is File) {
@@ -149,7 +149,7 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> _incrementCounter() async {
     final googleSignIn =
-    signIn.GoogleSignIn.standard(scopes: [drive.DriveApi.driveScope]);
+        signIn.GoogleSignIn.standard(scopes: [drive.DriveApi.driveScope]);
     final signIn.GoogleSignInAccount? account = await googleSignIn.signIn();
     print("User account $account");
 
@@ -216,9 +216,9 @@ class _HomePageState extends State<HomePage> {
           }
 
           final media =
-          Media(fileSystemEntity.openRead(), fileSystemEntity.lengthSync());
+              Media(fileSystemEntity.openRead(), fileSystemEntity.lengthSync());
           final result =
-          await driveApi.files.create(driveFile, uploadMedia: media);
+              await driveApi.files.create(driveFile, uploadMedia: media);
           print("Uploaded ${driveFile.name}: ${result.toJson()}");
         } else if (fileSystemEntity is Directory) {
           // 上傳子文件夾
@@ -245,7 +245,7 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> _download() async {
     final googleSignIn =
-    signIn.GoogleSignIn.standard(scopes: [drive.DriveApi.driveScope]);
+        signIn.GoogleSignIn.standard(scopes: [drive.DriveApi.driveScope]);
     final signIn.GoogleSignInAccount? account = await googleSignIn.signIn();
     if (account != null) {
       final authHeaders = await account.authHeaders;
@@ -263,7 +263,7 @@ class _HomePageState extends State<HomePage> {
         }
         directory.createSync(recursive: true);
         final fileList =
-        await driveApi.files.list(q: "'$googleDriveFolderId' in parents");
+            await driveApi.files.list(q: "'$googleDriveFolderId' in parents");
         for (final file in fileList.files!) {
           final drive.Media fileData = await driveApi.files.get(file.id!,
               downloadOptions: drive.DownloadOptions.fullMedia) as drive.Media;
@@ -282,9 +282,6 @@ class _HomePageState extends State<HomePage> {
       print("Account is null");
     }
   }
-  List<List<dynamic>> _tempData2 = [];
-
-
 
   showAlertDialog(String listData, String listData2, int fir) {
     List<List<dynamic>> _tempData2 = List.from(_data2);
@@ -295,7 +292,7 @@ class _HomePageState extends State<HomePage> {
       var count = data2Item[1];
 
       int dataIndex = _data.indexWhere(
-            (element) => element[2] == valueToCheck,
+        (element) => element[2] == valueToCheck,
       );
       /*
     遍历_tempData2中的每个项。
@@ -335,7 +332,7 @@ class _HomePageState extends State<HomePage> {
                     onPressed: () {
                       var valueToSave = _data[index][2];
                       int tempIndex = _tempData2.indexWhere(
-                            (element) => element[0] == valueToSave,
+                        (element) => element[0] == valueToSave,
                       );
 
                       if (tempIndex != -1) {
@@ -355,7 +352,7 @@ class _HomePageState extends State<HomePage> {
                     onPressed: () {
                       var valueToRemove = _data[index][2];
                       int tempIndex = _tempData2.indexWhere(
-                            (element) => element[0] == valueToRemove,
+                        (element) => element[0] == valueToRemove,
                       );
 
                       if (tempIndex != -1 && _tempData2[tempIndex][1] > 0) {
@@ -383,7 +380,7 @@ class _HomePageState extends State<HomePage> {
                 var count = tempData[1];
 
                 int dataIndex = _data2.indexWhere(
-                      (element) => element[0] == valueToSave,
+                  (element) => element[0] == valueToSave,
                 );
 
                 if (dataIndex != -1) {
@@ -394,7 +391,6 @@ class _HomePageState extends State<HomePage> {
               }
 
               print("_data2 after update or add: $_data2");
-
             } catch (e) {
               print("Error in onPressed: $e");
             }
@@ -410,8 +406,8 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-
   int? selectedIndex;
+
   void toggleSelection(int index) {
     setState(() {
       if (selectedIndex == index) {
@@ -423,11 +419,13 @@ class _HomePageState extends State<HomePage> {
       }
     });
   }
+
   List<List<int>> _data3 = [];
+
   showAlertDialog2(String listData, String listData2, int index) {
     //Map<String, List<int>> selectedItemsMap = {};
     Map<String, List<int>> selectedItemsMap = {
-      '0': [_data[index][2] ], // Initialize with the desired value
+      '0': [_data[index][2]], // Initialize with the desired value
     };
 
     AlertDialog dialog = AlertDialog(
@@ -446,10 +444,14 @@ class _HomePageState extends State<HomePage> {
                         Row(
                           children: [
                             Text(
-                              _data[index2][4] + '    ' + _data[index2][5].toString(),
+                              _data[index2][4] +
+                                  '    ' +
+                                  _data[index2][5].toString(),
                               style: TextStyle(
-                                color: selectedItemsMap.containsKey(_data[index2][3]) &&
-                                    selectedItemsMap[_data[index2][3]]!.contains(index2)
+                                color: selectedItemsMap
+                                            .containsKey(_data[index2][3]) &&
+                                        selectedItemsMap[_data[index2][3]]!
+                                            .contains(index2)
                                     ? Colors.blue // Selected color
                                     : Colors.black, // Default color
                               ),
@@ -459,7 +461,7 @@ class _HomePageState extends State<HomePage> {
                                 // Handle the toggle logic
                                 toggleAlertDialogSelection(
                                   _data[index2][3],
-                                  index2+1,
+                                  index2 + 1,
                                   selectedItemsMap,
                                   updateUI: () {
                                     // Force the UI to rebuild when selection changes
@@ -469,8 +471,10 @@ class _HomePageState extends State<HomePage> {
                               },
                               child: Icon(
                                 Icons.add,
-                                color: selectedItemsMap.containsKey(_data[index2][3]) &&
-                                    selectedItemsMap[_data[index2][3]]!.contains(index2)
+                                color: selectedItemsMap
+                                            .containsKey(_data[index2][3]) &&
+                                        selectedItemsMap[_data[index2][3]]!
+                                            .contains(index2)
                                     ? Colors.blue // Selected color
                                     : Colors.grey, // Deselected color
                               ),
@@ -489,7 +493,8 @@ class _HomePageState extends State<HomePage> {
             print(selectedItemsMap);
 
             // Convert the selected items to a flat list and add it to _data3
-            List<int> flattenedSelectedItems = selectedItemsMap.values.expand((list) => list).toList();
+            List<int> flattenedSelectedItems =
+                selectedItemsMap.values.expand((list) => list).toList();
             _data3.add(flattenedSelectedItems);
 
             // Add your logic to handle the selected items, e.g., add to a temporary list
@@ -511,7 +516,8 @@ class _HomePageState extends State<HomePage> {
   }
 
   void toggleAlertDialogSelection(
-      String category, int index, Map<String, List<int>> selectedItemsMap, {required VoidCallback updateUI}) {
+      String category, int index, Map<String, List<int>> selectedItemsMap,
+      {required VoidCallback updateUI}) {
     if (!selectedItemsMap.containsKey(category)) {
       selectedItemsMap[category] = [index];
     } else {
@@ -527,18 +533,17 @@ class _HomePageState extends State<HomePage> {
     updateUI();
   }
 
-
   Future<void> _loadCSV() async {
     await _download();
     try {
       final File file =
-      File('/data/user/0/com.example.foodapp_user/new/new_data.csv');
+          File('/data/user/0/com.example.foodapp_user/new/new_data.csv');
 
       // Check if the file exists in the app's data directory
       if (await file.exists()) {
         final String rawData = await file.readAsString();
         final List<List<dynamic>> listData =
-        const CsvToListConverter().convert(rawData);
+            const CsvToListConverter().convert(rawData);
 
         setState(() {
           _data = listData;
@@ -547,7 +552,7 @@ class _HomePageState extends State<HomePage> {
         // If the file doesn't exist in the app's data directory, copy it from assets
         final rawData = await rootBundle.loadString("assets/new_data.csv");
         List<List<dynamic>> listData =
-        const CsvToListConverter().convert(rawData);
+            const CsvToListConverter().convert(rawData);
         setState(() {
           _data = listData;
         });
@@ -556,7 +561,9 @@ class _HomePageState extends State<HomePage> {
       print('Error loading CSV file: $e');
     }
   }
-  Future<void> _showDialog(List<List<dynamic>> data2, List<List<int>> data3) async {
+
+  Future<void> _showDialog(
+      List<List<dynamic>> data2, List<List<int>> data3) async {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -566,12 +573,10 @@ class _HomePageState extends State<HomePage> {
             children: [
               // Display content of data2
               for (var data in data2)
-                if (data[1] > 0)
-                  Text('${data[0]}: ${data[1]}'),
+                if (data[1] > 0) Text('${data[0]}: ${data[1]}'),
 
               // Display content of data3 on separate lines
-              for (var indices in data3)
-                Text('${indices}'),
+              for (var indices in data3) Text('${indices}'),
             ],
           ),
           actions: [
@@ -579,13 +584,41 @@ class _HomePageState extends State<HomePage> {
               onPressed: () {
                 Navigator.pop(context);
               },
-              child: Text('確定'),
+              child: Text('關閉購物車'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                try {
+                  for (int i = 0; i < _data3.length; i++) {
+                    for (int j = 0; j < _data3[i].length; j++) {
+                      var valueToCheck = _data3[i][j];
+
+                      int dataIndex = _data2.indexWhere(
+                            (element) => element[0] == valueToCheck,
+                      );
+
+                      if (dataIndex != -1) {
+                        _data2[dataIndex][1] += 1;
+                      } else {
+                        _data2.add([valueToCheck, 1]);  // Add the value to _data2 with a count of 1
+                      }
+                    }
+                  }
+
+                  print("_data2 after update: $_data2");
+                } catch (e) {
+                  print("Error in onPressed: $e");
+                }
+                Navigator.pop(context);
+              },
+              child: Text('送出訂單'),
             ),
           ],
         );
       },
     );
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -598,168 +631,171 @@ class _HomePageState extends State<HomePage> {
       body: Column(children: [
         Expanded(
             child: ListView(
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start, // 將子元素靠左對齊
               children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start, // 將子元素靠左對齊
-                  children: [
-                    const Padding(
-                      padding: EdgeInsets.all(15),
+                const Padding(
+                  padding: EdgeInsets.all(15),
+                ),
+                const Padding(
+                  padding: EdgeInsets.all(15.0),
+                  child: Text(
+                    "店家菜單",
+                    style: TextStyle(
+                      fontSize: 30,
+                      fontWeight: FontWeight.bold,
                     ),
-                    const Padding(
-                      padding: EdgeInsets.all(15.0),
-                      child: Text(
-                        "店家菜單",
-                        style: TextStyle(
-                          fontSize: 30,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
+                  ),
+                ),
+                const Padding(
+                  padding: EdgeInsets.only(top: 15, left: 30.0, bottom: 15),
+                  //const EdgeInsets.only(left: 40.0)
+                  child: Text(
+                    "單點",
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
                     ),
-                    const Padding(
-                      padding: EdgeInsets.only(top: 15, left: 30.0, bottom: 15),
-                      //const EdgeInsets.only(left: 40.0)
-                      child: Text(
-                        "單點",
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                    for (int index = 0; index < _data.length; index++)
-                      if (_data[index][0] == 1 && (index > 0 && _data[index][3] != _data[index - 1][3])||index == 0)
-                        ListTile(
-                          subtitle: Column(
+                  ),
+                ),
+                for (int index = 0; index < _data.length; index++)
+                  if (_data[index][0] == 1 &&
+                          (index > 0 &&
+                              _data[index][3] != _data[index - 1][3]) ||
+                      index == 0)
+                    ListTile(
+                      subtitle: Column(
+                        children: [
+                          Row(
                             children: [
-                              Row(
-                                children: [
-                                  Expanded(
-                                    //新增圖片
-                                    child: Row(
-                                      children: [
-                                        if (index == 0 &&
+                              Expanded(
+                                //新增圖片
+                                child: Row(
+                                  children: [
+                                    if (index == 0 &&
                                             _data[index][6] != "" &&
                                             index == 0 ||
-                                            (_data[index][3] !=
+                                        (_data[index][3] !=
                                                 _data[index - 1][3] &&
-                                                index > 0 &&
-                                                _data[index][6] != ""))
-                                          Expanded(
-                                            child: Stack(
-                                              children: [
-                                                Image.file(
-                                                  File(_data[index][6]),
-                                                  width: 50,
-                                                  height: 50,
-                                                  fit: BoxFit.cover,
-                                                ),
-                                              ],
+                                            index > 0 &&
+                                            _data[index][6] != ""))
+                                      Expanded(
+                                        child: Stack(
+                                          children: [
+                                            Image.file(
+                                              File(_data[index][6]),
+                                              width: 50,
+                                              height: 50,
+                                              fit: BoxFit.cover,
                                             ),
-                                          ),
-                                      ],
-                                    ),
+                                          ],
+                                        ),
+                                      ),
+                                  ],
+                                ),
+                              ),
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(_data[index][3].toString()),
+                                  const Padding(
+                                    padding: EdgeInsets.only(
+                                        top: 0, left: 20.0, bottom: 0),
                                   ),
-                                  Row(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
+                                  Text(_data[index][5].toString()),
+                                  const Padding(
+                                    padding: EdgeInsets.only(
+                                        top: 0, left: 10.0, bottom: 0),
+                                  ),
+                                  TextButton(
+                                    onPressed: () {
+                                      showAlertDialog(
+                                        _data[index][3].toString(),
+                                        _data[index][5].toString(),
+                                        index,
+                                      );
+                                    },
+                                    child: const Icon(
+                                        Icons.add_circle_outline_sharp,
+                                        color: Colors.blue),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                const Padding(
+                  padding: EdgeInsets.only(left: 30.0),
+                  //const EdgeInsets.only(left: 40.0)
+                  child: Text(
+                    "套餐",
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                for (int index = 0; index < _data.length; index++)
+                  if (_data[index][0] == 2)
+                    ListTile(
+                      subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Padding(
+                                padding: EdgeInsets.only(left: 30.0),
+                              ),
+                              Expanded(
+                                child: Row(
+                                  children: [
+                                    if (index == 0 ||
+                                        (index > 0 &&
+                                            _data[index][3] !=
+                                                _data[index - 1][3]))
                                       Text(_data[index][3].toString()),
-                                      const Padding(
-                                        padding: EdgeInsets.only(
-                                            top: 0, left: 20.0, bottom: 0),
-                                      ),
-                                      Text(_data[index][5].toString()),
-                                      const Padding(
-                                        padding: EdgeInsets.only(
-                                            top: 0, left: 10.0, bottom: 0),
-                                      ),
+                                  ],
+                                ),
+                              ),
+                              Expanded(
+                                child: Row(
+                                  children: [
+                                    Text(_data[index][5].toString()),
+                                    const Padding(
+                                      padding: EdgeInsets.only(left: 30.0),
+                                    ),
+                                    Text(_data[index][4].toString()),
+                                    if (index == 0 ||
+                                        (index > 0 &&
+                                            _data[index][3] !=
+                                                _data[index - 1][3]))
                                       TextButton(
                                         onPressed: () {
-                                          showAlertDialog(
-                                            _data[index][3].toString(),
-                                            _data[index][5].toString(),
-                                            index,
-                                          );
+                                          showAlertDialog2(
+                                              _data[index][3].toString(),
+                                              _data[index][5].toString(),
+                                              index);
                                         },
                                         child: const Icon(
                                             Icons.add_circle_outline_sharp,
                                             color: Colors.blue),
                                       ),
-                                    ],
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
                             ],
                           ),
-                        ),
-                    const Padding(
-                      padding: EdgeInsets.only(left: 30.0),
-                      //const EdgeInsets.only(left: 40.0)
-                      child: Text(
-                        "套餐",
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
+                        ],
                       ),
                     ),
-                    for (int index = 0; index < _data.length; index++)
-                      if (_data[index][0] == 2)
-                        ListTile(
-                          subtitle: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const Padding(
-                                    padding: EdgeInsets.only(left: 30.0),
-                                  ),
-                                  Expanded(
-                                    child: Row(
-                                      children: [
-                                        if (index == 0 ||
-                                            (index > 0 &&
-                                                _data[index][3] !=
-                                                    _data[index - 1][3]))
-                                          Text(_data[index][3].toString()),
-                                      ],
-                                    ),
-                                  ),
-                                  Expanded(
-                                    child: Row(
-                                      children: [
-                                        Text(_data[index][5].toString()),
-                                        const Padding(
-                                          padding: EdgeInsets.only(left: 30.0),
-                                        ),
-                                        Text(_data[index][4].toString()),
-                                        if (index == 0 ||
-                                            (index > 0 &&
-                                                _data[index][3] !=
-                                                    _data[index - 1][3]))
-                                          TextButton(
-                                            onPressed: () {
-                                              showAlertDialog2(
-                                                  _data[index][3].toString(),
-                                                  _data[index][5].toString(),
-                                                  index);
-                                            },
-                                            child: const Icon(
-                                                Icons.add_circle_outline_sharp,
-                                                color: Colors.blue),
-                                          ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                  ],
-                ),
               ],
-            )),
+            ),
+          ],
+        )),
         SizedBox(
           height: 75,
           width: 250,
