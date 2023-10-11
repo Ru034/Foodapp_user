@@ -372,7 +372,7 @@ class _HomePageState extends State<HomePage> {
       ),
       actions: [
         ElevatedButton(
-          child: Text("新增"),
+          child: Text("更新"),
           onPressed: () {
             try {
               for (var tempData in _tempData2) {
@@ -487,7 +487,7 @@ class _HomePageState extends State<HomePage> {
       ),
       actions: [
         ElevatedButton(
-          child: Text("新增"),
+          child: Text("更新"),
           onPressed: () {
             // Access selected items using the selectedItemsMap
             print(selectedItemsMap);
@@ -574,11 +574,38 @@ class _HomePageState extends State<HomePage> {
               // Display content of data2
 
               for (var data in data2)
-                if (data[1] > 0) Text('${data[0]}: ${data[1]}'),
+                if (data[1] > 0) //Text('${data[0]}: ${data[1]}'),
+                  Text(
+                      '${_data[data[0] - 1][3]}     ${_data[data[0] - 1][4]}: ${data[1]}'),
               // Display content of data3 on separate lines
-              for (var indices in data3) Text('${indices}'),
+              //for (var indices in data3) Text('${indices}'),
 
+              for (int i = 0; i < _data3.length; i++)
+                Row(
+                    mainAxisAlignment:MainAxisAlignment.center,
+                    children: [
+                  for (int j = 0; j < _data3[i].length; j++)
+                    Row(children: [
 
+                      if (_data[_data3[i][j]][0] == 2)
+                        Text('${_data[_data3[i][j] - 1][3]}'),
+                      Padding(
+                          padding: EdgeInsets.only(top: 15, left: 10.0, bottom: 15),
+                      ),
+                      if (_data[_data3[i][j]][0] == 3)
+                        Text('${_data[_data3[i][j] - 1][4]}'),
+                    ]),
+                      TextButton(
+                        onPressed: () {
+                          setState(() {
+                            _data3.removeAt(i);
+                          });
+                        },
+                        child: const Icon(Icons.remove_circle_outline,
+                            color: Colors.red),
+                      ),
+                ]
+                )
             ],
           ),
           actions: [
@@ -596,13 +623,16 @@ class _HomePageState extends State<HomePage> {
                       var valueToCheck = _data3[i][j];
 
                       int dataIndex = _data2.indexWhere(
-                            (element) => element[0] == valueToCheck,
+                        (element) => element[0] == valueToCheck,
                       );
 
                       if (dataIndex != -1) {
                         _data2[dataIndex][1] += 1;
                       } else {
-                        _data2.add([valueToCheck, 1]);  // Add the value to _data2 with a count of 1
+                        _data2.add([
+                          valueToCheck,
+                          1
+                        ]); // Add the value to _data2 with a count of 1
                       }
                     }
                   }
@@ -611,7 +641,7 @@ class _HomePageState extends State<HomePage> {
                 } catch (e) {
                   print("Error in onPressed: $e");
                 }
-                for(int k = 0; k < _data2.length; k++){
+                for (int k = 0; k < _data2.length; k++) {
                   print("${_data2[k][0]}     ${_data2[k][1]}  ");
                   //todo API
                 }
