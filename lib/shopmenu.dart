@@ -69,6 +69,7 @@ class _HomePageState extends State<HomePage> {
   List<List<dynamic>> _data = [];
   List<List<dynamic>> _data2 = [];
 
+
   get auth2 => null;
 
   Future<void> saveCsvToNewDirectory() async {
@@ -144,35 +145,9 @@ class _HomePageState extends State<HomePage> {
       print("Account is null");
     }
   }
-
-  showAlertDialog(String listData, String listData2, int fir) {
-    List<List<dynamic>> _tempData2 = List.from(_data2);
-    //_data2 = List.generate(_data.length, (index) => [0, 0]);
-    //创建一个名为_tempData2的新列表，并用_data2的副本来初始化它。
-
-    for (var data2Item in _tempData2) {
-      var valueToCheck = data2Item[0];
-      var count = data2Item[1];
-
-      int dataIndex = _data.indexWhere(
-        (element) => element[2] == valueToCheck,
-      );
-      /*
-    遍历_tempData2中的每个项。
-    从当前项中提取valueToCheck和count的值。
-    在_data中查找第三个元素匹配valueToCheck的索引。
-     */
-
-      if (dataIndex != -1) {
-        if (dataIndex < _tempData2.length) {
-          _tempData2[dataIndex][1] = count;
-        }
-      }
-    }
-    /*
-    检查索引是否有效（不等于-1）且小于_tempData2的长度。
-    在找到的索引处更新_tempData2中的计数。
-    */
+  List<List<int>> _data4 = [];
+  void showAlertDialog(String listData, String listData2, int fir) {
+    List<int> selectedItems = [];
 
     AlertDialog dialog = AlertDialog(
       content: Column(
@@ -194,17 +169,9 @@ class _HomePageState extends State<HomePage> {
                   TextButton(
                     onPressed: () {
                       var valueToSave = _data[index][2];
-                      int tempIndex = _tempData2.indexWhere(
-                        (element) => element[0] == valueToSave,
-                      );
-
-                      if (tempIndex != -1) {
-                        _tempData2[tempIndex][1]++;
-                      } else {
-                        _tempData2.add([valueToSave, 1]);
+                      if (!selectedItems.contains(valueToSave)) {
+                        selectedItems.add(valueToSave);
                       }
-
-                      print("_tempData2: $_tempData2");
                     },
                     child: const Icon(
                       Icons.add_circle_outline_sharp,
@@ -214,15 +181,7 @@ class _HomePageState extends State<HomePage> {
                   TextButton(
                     onPressed: () {
                       var valueToRemove = _data[index][2];
-                      int tempIndex = _tempData2.indexWhere(
-                        (element) => element[0] == valueToRemove,
-                      );
-
-                      if (tempIndex != -1 && _tempData2[tempIndex][1] > 0) {
-                        _tempData2[tempIndex][1]--;
-                      }
-
-                      print("_tempData2: $_tempData2");
+                      selectedItems.remove(valueToRemove);
                     },
                     child: const Icon(
                       Icons.remove_circle_outline,
@@ -238,22 +197,19 @@ class _HomePageState extends State<HomePage> {
           child: Text("更新"),
           onPressed: () {
             try {
-              for (var tempData in _tempData2) {
-                var valueToSave = tempData[0];
-                var count = tempData[1];
+              // Append selected items to _data4
+              _data4.add([...selectedItems]);
 
-                int dataIndex = _data2.indexWhere(
-                  (element) => element[0] == valueToSave,
-                );
+              // Access selected items using the 'selectedItems' list
+              print("Selected items: $selectedItems");
 
-                if (dataIndex != -1) {
-                  _data2[dataIndex][1] = count;
-                } else {
-                  _data2.add([valueToSave, count]);
-                }
-              }
+              // Print _data4
+              print("_data4: $_data4");
 
-              print("_data2 after update or add: $_data2");
+              // Add your logic to handle the selected items, e.g., add to a temporary list
+              // addNewDataAtIndex(listData);
+
+              // You can use 'selectedItems' directly for further processing
             } catch (e) {
               print("Error in onPressed: $e");
             }
@@ -267,20 +223,6 @@ class _HomePageState extends State<HomePage> {
         return dialog;
       },
     );
-  }
-
-  int? selectedIndex;
-
-  void toggleSelection(int index) {
-    setState(() {
-      if (selectedIndex == index) {
-        // If the same item is selected again, deselect it
-        selectedIndex = null;
-      } else {
-        // Otherwise, select the new item
-        selectedIndex = index;
-      }
-    });
   }
 
   List<List<int>> _data3 = [];
@@ -426,7 +368,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> _showDialog(
-      List<List<dynamic>> data2, List<List<int>> data3) async {
+      List<List<dynamic>> data2, List<List<int>> data3,List<List<int>> data4) async {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -436,12 +378,32 @@ class _HomePageState extends State<HomePage> {
             children: [
               // Display content of data2
 
-              for (var data in data2)
-                if (data[1] > 0) //Text('${data[0]}: ${data[1]}'),
-                  Text(
-                      '${_data[data[0] - 1][3]}     ${_data[data[0] - 1][4]}: ${data[1]}'),
-              // Display content of data3 on separate lines
-              //for (var indices in data3) Text('${indices}'),
+              for (int i = 0; i < _data4.length; i++)
+                Row(
+                    mainAxisAlignment:MainAxisAlignment.center,
+                    children: [
+                      for (int j = 0; j < _data4[i].length; j++)
+                        Row(children: [
+
+                          if (j==0)
+                            Text('${_data[_data4[i][j] - 1][3]}'),
+                          Padding(
+                            padding: EdgeInsets.only(top: 15, left: 10.0, bottom: 15),
+                          ),
+                          if (j>0)
+                            Text('${_data[_data4[i][j] - 1][4]}'),
+                        ]),
+                      TextButton(
+                        onPressed: () {
+                          setState(() {
+                            _data4.removeAt(i);
+                          });
+                        },
+                        child: const Icon(Icons.remove_circle_outline,
+                            color: Colors.red),
+                      ),
+                    ]
+                ),
 
               for (int i = 0; i < _data3.length; i++)
                 Row(
@@ -480,6 +442,7 @@ class _HomePageState extends State<HomePage> {
             ),
             ElevatedButton(
               onPressed: () {
+
                 try {
                   for (int i = 0; i < _data3.length; i++) {
                     for (int j = 0; j < _data3[i].length; j++) {
@@ -487,6 +450,24 @@ class _HomePageState extends State<HomePage> {
 
                       int dataIndex = _data2.indexWhere(
                         (element) => element[0] == valueToCheck,
+                      );
+
+                      if (dataIndex != -1) {
+                        _data2[dataIndex][1] += 1;
+                      } else {
+                        _data2.add([
+                          valueToCheck,
+                          1
+                        ]); // Add the value to _data2 with a count of 1
+                      }
+                    }
+                  }
+                  for (int i = 0; i < _data4.length; i++) {
+                    for (int j = 0; j < _data4[i].length; j++) {
+                      var valueToCheck = _data4[i][j];
+
+                      int dataIndex = _data2.indexWhere(
+                            (element) => element[0] == valueToCheck,
                       );
 
                       if (dataIndex != -1) {
@@ -715,7 +696,7 @@ class _HomePageState extends State<HomePage> {
               });
 
               // Show the dialog with _data2
-              await _showDialog(sortedData2, _data3);
+              await _showDialog(sortedData2, _data3,_data4);
               //await _showDialog(_data3);
             },
             child: const Text('打開購物車'),
