@@ -580,6 +580,14 @@ class _HomePageState extends State<HomePage> {
                         Card(
                           color: Colors.blueGrey,
                           child: ListTile(
+                            onTap: () {
+                              // 將原本 TextButton 的功能移到這裡
+                              showAlertDialog(
+                                _data[index][3].toString(),
+                                _data[index][5].toString(),
+                                index,
+                              );
+                            },
                             subtitle: Column(
                               children: [
                                 Row(
@@ -622,19 +630,6 @@ class _HomePageState extends State<HomePage> {
                                           padding: EdgeInsets.only(
                                               top: 0, left: 10.0, bottom: 0),
                                         ),
-                                        TextButton(
-                                          onPressed: () {
-                                            showAlertDialog(
-                                              _data[index][3].toString(),
-                                              _data[index][5].toString(),
-                                              index,
-                                            );
-                                          },
-                                          child: const Icon(
-                                            Icons.add_circle_outline_sharp,
-                                            color: Colors.blue,
-                                          ),
-                                        ),
                                       ],
                                     ),
                                   ],
@@ -660,6 +655,14 @@ class _HomePageState extends State<HomePage> {
                         Card(
                           color: Colors.white38,
                           child: ListTile(
+                            onTap: () {
+                              // 將原本 TextButton 的功能移到這裡
+                              showAlertDialog2(
+                                _data[index][3].toString(),
+                                _data[index][5].toString(),
+                                index,
+                              );
+                            },
                             subtitle: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -688,23 +691,7 @@ class _HomePageState extends State<HomePage> {
                                             padding: EdgeInsets.only(left: 30.0),
                                           ),
                                           Text(_data[index][4].toString()),
-                                          if (index == 0 ||
-                                              (index > 0 &&
-                                                  _data[index][3] !=
-                                                      _data[index - 1][3]))
-                                            TextButton(
-                                              onPressed: () {
-                                                showAlertDialog2(
-                                                  _data[index][3].toString(),
-                                                  _data[index][5].toString(),
-                                                  index,
-                                                );
-                                              },
-                                              child: const Icon(
-                                                Icons.add_circle_outline_sharp,
-                                                color: Colors.blue,
-                                              ),
-                                            ),
+
                                         ],
                                       ),
                                     ),
