@@ -68,8 +68,10 @@ class _HomePageState extends State<HomePage> {
   //HomePage 的狀態類別，用於管理狀態變化
   List<List<dynamic>> _data = [];
   List<List<dynamic>> _data2 = [];
-  List<List<int>> _data4 = [];
-  List<List<int>> _data3 = [];
+  //List<List<int>> _data4 = [];
+  //List<List<int>> _data3 = [];
+  List<List<String>> _data4 = [];
+  List<List<String>> _data3 = [];
 
   get auth2 => null;
 
@@ -152,7 +154,7 @@ class _HomePageState extends State<HomePage> {
 
   void showAlertDialog(String listData, String listData2, int fir) {
     // Initialize selected items with the first item
-    Map<int, bool> selectedItemsMap = {fir + 1: true};
+    Map<String, bool> selectedItemsMap = {(fir + 1).toString(): true};
 
     AlertDialog dialog = AlertDialog(
       content: Column(
@@ -186,8 +188,7 @@ class _HomePageState extends State<HomePage> {
                     },
                     child: Icon(
                       Icons.add_circle_outline_sharp,
-                      color: selectedItemsMap.containsKey(index) &&
-                          selectedItemsMap[index]!
+                      color: selectedItemsMap.containsKey(index+1) && selectedItemsMap[index+1]!
                           ? Colors.blue // Selected color
                           : Colors.grey, // Deselected color
                     ),
@@ -201,18 +202,11 @@ class _HomePageState extends State<HomePage> {
           child: Text("更新"),
           onPressed: () {
             try {
-              // Convert selected items to a list of indices
-              List<int> selectedIndices = selectedItemsMap.keys.toList();
 
-              // Append selected items to _data4
-              _data4.add([...selectedIndices]);
-
-              // Access selected items using the 'selectedIndices' list
-              print("Selected items indices: $selectedIndices");
-
-              // Print _data4
+              List<int> selectedIndices = selectedItemsMap.keys.map((key) => int.parse(key)).toList();
+              _data4.add(selectedIndices.map((index) => index.toString()).toList());
+              //print("選定的項目索引: $selectedIndices");
               print("_data4: $_data4");
-
               // Add your logic to handle the selected items, e.g., add to a temporary list
               // addNewDataAtIndex(listData);
 
@@ -232,14 +226,14 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  void toggleAlertDialogSelection2(int index, Map<int, bool> selectedItemsMap,
+  void toggleAlertDialogSelection2(int index, Map<String, bool> selectedItemsMap,
       {required VoidCallback updateUI}) {
     if (selectedItemsMap.containsKey(index)) {
       // Item is already selected, remove it
       selectedItemsMap.remove(index);
     } else {
       // Item is not selected, add it
-      selectedItemsMap[index] = true;
+      selectedItemsMap[index.toString()] = true;
     }
     // Trigger UI update
     updateUI();
@@ -249,8 +243,8 @@ class _HomePageState extends State<HomePage> {
 
   showAlertDialog2(String listData, String listData2, int index) {
     //Map<String, List<int>> selectedItemsMap = {};
-    Map<String, List<int>> selectedItemsMap = {
-      '0': [_data[index][2]], // Initialize with the desired value
+    Map<String, List<String>> selectedItemsMap = {
+      '0': [_data[index][2].toString()], // Initialize with the desired value
     };
 
     AlertDialog dialog = AlertDialog(
@@ -315,18 +309,22 @@ class _HomePageState extends State<HomePage> {
           child: Text("更新"),
           onPressed: () {
             // Access selected items using the selectedItemsMap
-            print(selectedItemsMap);
+            //print(selectedItemsMap);
 
             // Convert the selected items to a flat list and add it to _data3
-            List<int> flattenedSelectedItems =
-            selectedItemsMap.values.expand((list) => list).toList();
-            _data3.add(flattenedSelectedItems);
+            List<int> flattenedSelectedItems = selectedItemsMap.values.expand((list) {
+              // 在這裡進行轉換，將 String 轉為 int
+              return list.map((item) => int.parse(item)).toList();
+            }).toList();
+
+            List<String> stringList = flattenedSelectedItems.map((intItem) => intItem.toString()).toList();
+            _data3.add(stringList);
 
             // Add your logic to handle the selected items, e.g., add to a temporary list
             // addNewDataAtIndex(listData);
 
             // Print _data3
-            print(_data3);
+            print("_data3: $_data3");
           },
         ),
       ],
@@ -341,17 +339,17 @@ class _HomePageState extends State<HomePage> {
   }
 
   void toggleAlertDialogSelection(
-      String category, int index, Map<String, List<int>> selectedItemsMap,
+      String category, int index, Map<String, List<String>> selectedItemsMap,
       {required VoidCallback updateUI}) {
     if (!selectedItemsMap.containsKey(category)) {
-      selectedItemsMap[category] = [index];
+      selectedItemsMap[category] = [index.toString()];
     } else {
       if (selectedItemsMap[category]!.contains(index)) {
         // Item is already selected, remove it
         selectedItemsMap[category]!.remove(index);
       } else {
         // Item is not selected, add it and remove others in the same category
-        selectedItemsMap[category] = [index];
+        selectedItemsMap[category] = [index.toString()];
       }
     }
     // Trigger UI update
@@ -408,8 +406,7 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  Future<void> _showDialog(List<List<dynamic>> data2, List<List<int>> data3,
-      List<List<int>> data4) async {
+  Future<void> _showDialog( List<List<String>> data3, List<List<String>> data4) async {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -423,12 +420,12 @@ class _HomePageState extends State<HomePage> {
                 Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                   for (int j = 0; j < _data4[i].length; j++)
                     Row(children: [
-                      if (j == 0) Text('${_data[_data4[i][j] - 1][3]}'),
+                      if (j == 0) Text('${_data[int.parse(_data4[i][j]) - 1][3]}'),
                       Padding(
                         padding:
                         EdgeInsets.only(top: 15, left: 10.0, bottom: 15),
                       ),
-                      if (j > 0) Text('${_data[_data4[i][j] - 1][4]}'),
+                      if (j > 0) Text('${_data[int.parse(_data4[i][j]) - 1][4]}'),
                     ]),
                   TextButton(
                     onPressed: () {
@@ -445,14 +442,15 @@ class _HomePageState extends State<HomePage> {
                 Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                   for (int j = 0; j < _data3[i].length; j++)
                     Row(children: [
-                      if (_data[_data3[i][j]][0] == 2)
-                        Text('${_data[_data3[i][j] - 1][3]}'),
+                      if (_data[int.parse(_data3[i][j])][0] == 2)
+                        Text('${_data[int.parse(_data3[i][j]) - 1][3]}'),
                       Padding(
                         padding:
                         EdgeInsets.only(top: 15, left: 10.0, bottom: 15),
                       ),
-                      if (_data[_data3[i][j]][0] == 3)
-                        Text('${_data[_data3[i][j] - 1][4]}'),
+                      //if (_data[_data3[i][j]][0] == 3)
+                      if (_data[int.parse(_data3[i][j])][0] == 3)
+                        Text('${_data[int.parse(_data3[i][j]) - 1][4]}'),
                     ]),
                   TextButton(
                     onPressed: () {
@@ -473,13 +471,13 @@ class _HomePageState extends State<HomePage> {
               },
               child: Text('關閉購物車'),
             ),
+            /*
             ElevatedButton(
               onPressed: () {
                 try {
                   for (int i = 0; i < _data3.length; i++) {
                     for (int j = 0; j < _data3[i].length; j++) {
                       var valueToCheck = _data3[i][j];
-
                       int dataIndex = _data2.indexWhere(
                             (element) => element[0] == valueToCheck,
                       );
@@ -526,6 +524,8 @@ class _HomePageState extends State<HomePage> {
               },
               child: Text('送出訂單'),
             ),
+
+             */
           ],
         );
       },
@@ -719,6 +719,7 @@ class _HomePageState extends State<HomePage> {
               textStyle: const TextStyle(fontSize: 20),
             ),
             onPressed: () async {
+              /*
               // 將 _data2 按照 _data 的順序進行排序
               List<List<dynamic>> sortedData2 = List.from(_data2);
               sortedData2.sort((a, b) {
@@ -726,9 +727,9 @@ class _HomePageState extends State<HomePage> {
                 int indexB = _data.indexWhere((element) => element[2] == b[0]);
                 return indexA.compareTo(indexB);
               });
-
+*/
               // Show the dialog with _data2
-              await _showDialog(sortedData2, _data3, _data4);
+              await _showDialog( _data3, _data4);
               //await _showDialog(_data3);
             },
             child: const Text('打開購物車'),
