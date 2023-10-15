@@ -67,11 +67,10 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   //HomePage 的狀態類別，用於管理狀態變化
   List<List<dynamic>> _data = [];
-  List<List<dynamic>> _data2 = [];
-  //List<List<int>> _data4 = [];
-  //List<List<int>> _data3 = [];
-  List<List<String>> _data4 = [];
-  List<List<String>> _data3 = [];
+  //List<List<String>> _data4 = [];
+  //List<List<String>> _data3 = [];
+  List<List<List<String>>> _data4 = [];
+  List<List<List<String>>> _data3 = [];
 
   get auth2 => null;
 
@@ -99,7 +98,7 @@ class _HomePageState extends State<HomePage> {
 
     _loadCSV();
     //_data2 = List.generate(_data.length, (index) => [0]);
-    _data2 = List.generate(_data.length, (index) => [0, 0]);
+    //_data2 = List.generate(_data.length, (index) => [0, 0]);
   }
 
   String? _imagePath;
@@ -204,8 +203,7 @@ class _HomePageState extends State<HomePage> {
             try {
 
               List<int> selectedIndices = selectedItemsMap.keys.map((key) => int.parse(key)).toList();
-              _data4.add(selectedIndices.map((index) => index.toString()).toList());
-              //print("選定的項目索引: $selectedIndices");
+              _data4.add([selectedIndices.map((index) => index.toString()).toList()]);
               print("_data4: $_data4");
               // Add your logic to handle the selected items, e.g., add to a temporary list
               // addNewDataAtIndex(listData);
@@ -318,7 +316,7 @@ class _HomePageState extends State<HomePage> {
             }).toList();
 
             List<String> stringList = flattenedSelectedItems.map((intItem) => intItem.toString()).toList();
-            _data3.add(stringList);
+            _data3.add([stringList]);
 
             // Add your logic to handle the selected items, e.g., add to a temporary list
             // addNewDataAtIndex(listData);
@@ -406,7 +404,7 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  Future<void> _showDialog( List<List<String>> data3, List<List<String>> data4) async {
+  Future<void> _showDialog( List<List<List<String>>> data3, List<List<List<String>>> data4) async {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -418,14 +416,14 @@ class _HomePageState extends State<HomePage> {
 
               for (int i = 0; i < _data4.length; i++)
                 Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                  for (int j = 0; j < _data4[i].length; j++)
+                  for (int j = 0; j < _data4[i][0].length; j++)
                     Row(children: [
-                      if (j == 0) Text('${_data[int.parse(_data4[i][j]) - 1][3]}'),
+                      if (j == 0) Text('${_data[int.parse(_data4[i][0][j])-1 ][3]}'),
                       Padding(
                         padding:
                         EdgeInsets.only(top: 15, left: 10.0, bottom: 15),
                       ),
-                      if (j > 0) Text('${_data[int.parse(_data4[i][j]) - 1][4]}'),
+                      if (j > 0) Text('${_data[int.parse(_data4[i][0][j])-1 ][4]}'),
                     ]),
                   TextButton(
                     onPressed: () {
@@ -440,17 +438,19 @@ class _HomePageState extends State<HomePage> {
 
               for (int i = 0; i < _data3.length; i++)
                 Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                  for (int j = 0; j < _data3[i].length; j++)
+                  for (int j = 0; j < _data3[i][0].length; j++)
                     Row(children: [
-                      if (_data[int.parse(_data3[i][j])][0] == 2)
-                        Text('${_data[int.parse(_data3[i][j]) - 1][3]}'),
+                      //if (_data[int.parse(_data3[i][0][j])][0] == 2)
+                      if (j==0)
+                        Text('${_data[int.parse(_data3[i][0][j]) -1][3]}'),
                       Padding(
                         padding:
                         EdgeInsets.only(top: 15, left: 10.0, bottom: 15),
                       ),
                       //if (_data[_data3[i][j]][0] == 3)
-                      if (_data[int.parse(_data3[i][j])][0] == 3)
-                        Text('${_data[int.parse(_data3[i][j]) - 1][4]}'),
+                      //if (_data[int.parse(_data3[i][0][j])][0] == 3)
+                      if (j>0)
+                        Text('${_data[int.parse(_data3[i][0][j]) -1][4]}'),
                     ]),
                   TextButton(
                     onPressed: () {
