@@ -156,6 +156,7 @@ class _HomePageState extends State<HomePage> {
   void showAlertDialog(String listData, String listData2, int fir) {
     Map<String, bool> selectedItemsMap = {(fir + 1).toString(): true};
     counte = 0;
+    int sum =0;
 
     showDialog<List<String>>(
       context: context,
@@ -184,6 +185,7 @@ class _HomePageState extends State<HomePage> {
                             ),
                           ],
                         ),
+
                       TextButton(
                         onPressed: () {
                           toggleAlertDialogSelection2(
@@ -204,32 +206,54 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ],
                   ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Text(
+                    '份數:',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.amber,
+                    ),
+                  ),
+                  Text(counte.toString()),
+                  TextButton(
+                    onPressed: () {
+                      setState(() {
+                        if (counte > 1) counte--;
+                        print(counte);
+                      });
+                    },
+                    child: const Icon(Icons.remove, color: Colors.grey),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      setState(() {
+                        counte++;
+                        print(counte);
+                      });
+                    },
+                    child: const Icon(Icons.add, color: Colors.grey),
+                  ),
+                ],
+              ),
             ],
           ),
           actions: [
             Row(
               children: [
-                TextButton(
-                  onPressed: () {
-                    setState(() {
-                      counte++;
-                      print(counte);
-                    });
-                  },
-                  child: const Icon(Icons.add_circle_outline_sharp, color: Colors.blue),
+                Text(
+                  '總金額為$sum',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.blue,
+                  ),
                 ),
-                Text(counte.toString()),
-                TextButton(
-                  onPressed: () {
-                    setState(() {
-                      if (counte > 1) counte--;
-                      print(counte);
-                    });
-                  },
-                  child: const Icon(Icons.remove_circle_outline, color: Colors.red),
+                const Padding(
+                  padding: EdgeInsets.all(15),
                 ),
                 ElevatedButton(
-                  child: Text("更新"),
+                  child: Text("新增至購物車"),
                   onPressed: () {
                     try {
                       List<int> selectedIndices = selectedItemsMap.keys.map((key) => int.parse(key)).toList();
