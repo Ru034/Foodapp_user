@@ -68,8 +68,8 @@ class _HomePageState extends State<HomePage> {
   //HomePage 的狀態類別，用於管理狀態變化
   List<List<dynamic>> _data = [];
 
-  //List<List<String>> _data4 = [];
-  //List<List<String>> _data3 = [];
+  //List<List<int>> _data4 = [];  //單點
+  //List<List<int>> _data3 = [];  //套餐
   List<List<List<String>>> _data4 = [];
   List<List<List<String>>> _data3 = [];
   int counte = 1;
@@ -172,15 +172,28 @@ class _HomePageState extends State<HomePage> {
                           if ((index > 0 &&
                                   _data[index][3] != _data[index - 1][3]) ||
                               index == 0)
-                            Text(listData + '      ' + listData2),
+                            Text(
+                              listData + '      ' + listData2,
+                              style: TextStyle(
+                                fontSize: 100.0, // Adjust the font size as needed
+                                // You can also add other styles if desired, e.g., fontWeight, color, etc.
+                              ),
+                            ),
                           if ((index > 0 &&
                               _data[index][3] == _data[index - 1][3]))
                             Row(
                               children: [
-                                Text(_data[index][4].toString()),
+                                Text(
+                                  _data[index][4].toString(),
+                                  style: TextStyle(
+                                    fontSize: 15.0, // Adjust the font size as needed
+                                    // You can also add other styles if desired, e.g., fontWeight, color, etc.
+                                  ),
+                                ),
                                 Text(
                                   '      \$${_data[index][5].toString()}',
                                   style: TextStyle(
+                                    fontSize: 15.0,
                                     fontWeight: FontWeight.bold,
                                     color: Colors.green,
                                   ),
@@ -198,9 +211,10 @@ class _HomePageState extends State<HomePage> {
                               );
                             },
                             child: Icon(
-                              Icons.add_circle_outline_sharp,
-                              color: selectedItemsMap.containsKey(index + 1) &&
-                                      selectedItemsMap[index + 1]!
+                              selectedItemsMap.containsKey((index + 1).toString())
+                                  ? Icons.check_circle
+                                  : Icons.circle,
+                              color: selectedItemsMap.containsKey((index + 1).toString())
                                   ? Colors.blue
                                   : Colors.grey,
                             ),
@@ -210,6 +224,7 @@ class _HomePageState extends State<HomePage> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
+                      /*
                       Text(
                         '份數:',
                         style: TextStyle(
@@ -217,24 +232,54 @@ class _HomePageState extends State<HomePage> {
                           color: Colors.blue,
                         ),
                       ),
-                      Text(counte.toString()),
-                      TextButton(
-                        onPressed: () {
-                          setState(() {
-                            if (counte > 1) counte--;
-                            print(counte);
-                          });
-                        },
-                        child: const Icon(Icons.remove, color: Colors.grey),
+
+                       */
+                      SizedBox(
+                        width: 1, // Adjust the width as needed
+                        height: 1,
                       ),
-                      TextButton(
-                        onPressed: () {
-                          setState(() {
-                            counte++;
-                            print(counte);
-                          });
-                        },
-                        child: const Icon(Icons.add, color: Colors.grey),
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Colors.grey,
+                          borderRadius: BorderRadius.circular(20.0), // Adjust the radius as needed
+                        ),
+                        child: Row(
+                          children: [
+                            TextButton(
+                              onPressed: () {
+                                setState(() {
+                                  if (counte > 1) counte--;
+                                  print(counte);
+                                });
+                              },
+                              child: Container(
+                                width: 30.0, // Adjust the width as needed
+                                height: 30.0, // Adjust the height as needed
+                                child: const Icon(Icons.remove, color: Colors.white),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 1.0),
+                              child: Text(
+                                counte.toString(),
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                setState(() {
+                                  counte++;
+                                  print(counte);
+                                });
+                              },
+                              child: Container(
+                                width: 30.0, // Adjust the width as needed
+                                height: 30.0, // Adjust the height as needed
+                                child: const Icon(Icons.add, color: Colors.white),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ],
                   ),
@@ -304,9 +349,9 @@ class _HomePageState extends State<HomePage> {
   void toggleAlertDialogSelection2(
       int index, Map<String, bool> selectedItemsMap,
       {required VoidCallback updateUI}) {
-    if (selectedItemsMap.containsKey(index)) {
+    if (selectedItemsMap.containsKey(index.toString())) {
       // Item is already selected, remove it
-      selectedItemsMap.remove(index);
+      selectedItemsMap.remove(index.toString());
     } else {
       // Item is not selected, add it
       selectedItemsMap[index.toString()] = true;
@@ -314,7 +359,6 @@ class _HomePageState extends State<HomePage> {
     // Trigger UI update
     updateUI();
   }
-
   showAlertDialog2(String listData, String listData2, int index) {
     //Map<String, List<int>> selectedItemsMap = {};
     Map<String, List<String>> selectedItemsMap = {
