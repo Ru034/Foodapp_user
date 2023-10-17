@@ -155,7 +155,7 @@ class _HomePageState extends State<HomePage> {
   }
   void showAlertDialog(String listData, String listData2, int fir) {
     Map<String, bool> selectedItemsMap = {(fir + 1).toString(): true};
-    counte = 0;
+    counte = 1;
     int sum =0;
 
     showDialog<List<String>>(
@@ -213,7 +213,7 @@ class _HomePageState extends State<HomePage> {
                     '份數:',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      color: Colors.amber,
+                      color: Colors.blue,
                     ),
                   ),
                   Text(counte.toString()),
@@ -246,7 +246,7 @@ class _HomePageState extends State<HomePage> {
                   '總金額為$sum',
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
-                    color: Colors.blue,
+                    color: Colors.amber,
                   ),
                 ),
                 const Padding(
@@ -259,14 +259,25 @@ class _HomePageState extends State<HomePage> {
                       List<int> selectedIndices = selectedItemsMap.keys.map((key) => int.parse(key)).toList();
                       List<String> selectedItems = selectedIndices.map((index) => index.toString()).toList();
 
-                      // Adding selected items and counte to the result
-                      List<List<String>> result = [selectedItems, [counte.toString()]];
-                      _data4.add(result);
+                      // Check if a similar entry exists in _data4
+                      bool found = false;
+                      for (List<List<String>> entry in _data4) {
+                        if (entry[0].toString() == selectedItems.toString()) {
+                          // Entry with similar selected items found, update the count
+                          entry[1][0] = (int.parse(entry[1][0]) + counte).toString();
+                          found = true;
+                          break;
+                        }
+                      }
+
+                      if (!found) {
+                        // No similar entry found, add a new entry to _data4
+                        List<List<String>> result = [selectedItems, [counte.toString()]];
+                        _data4.add(result);
+                      }
+
                       print("_data4: $_data4");
-
-
-                    }
-                    catch (e) {
+                    } catch (e) {
                       print("Error in onPressed: $e");
                     }
                   },
