@@ -324,9 +324,9 @@ class _HomePageState extends State<HomePage> {
                             bool found = false;
                             for (List<List<String>> entry in _data4) {
                               if (entry[0].toString() == selectedItems.toString()) {
-                                // Entry with similar selected items found, update the count
-                                entry[1][0] =
-                                    (int.parse(entry[1][0]) + counte).toString();
+                                // Entry with similar selected items found, update the count and sum1
+                                entry[1][0] = (int.parse(entry[1][0]) + counte).toString();
+                                entry[2] = [sum1.toString()]; // Add sum1 to the entry
                                 found = true;
                                 break;
                               }
@@ -335,7 +335,8 @@ class _HomePageState extends State<HomePage> {
                               // No similar entry found, add a new entry to _data4
                               List<List<String>> result = [
                                 selectedItems,
-                                [counte.toString()]
+                                [counte.toString()],
+                                [sum1.toString()] // Add sum1 to the new entry
                               ];
                               _data4.add(result);
                             }
