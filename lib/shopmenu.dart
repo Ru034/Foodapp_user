@@ -73,6 +73,8 @@ class _HomePageState extends State<HomePage> {
   List<List<List<String>>> _data4 = [];
   List<List<List<String>>> _data3 = [];
   int counte = 1;
+  int sum1 = 0;
+  int sum2 = 0;
 
   get auth2 => null;
 
@@ -154,7 +156,11 @@ class _HomePageState extends State<HomePage> {
   void showAlertDialog(String listData, String listData2, int fir) {
     Map<String, bool> selectedItemsMap = {(fir + 1).toString(): true};
     counte = 1;
-    int sum = 0;
+    setState(() {
+      sum1 = _data[fir][5];
+      sum2=sum1*counte;
+    });
+
 
     showDialog<List<String>>(
       context: context,
@@ -248,7 +254,10 @@ class _HomePageState extends State<HomePage> {
                             TextButton(
                               onPressed: () {
                                 setState(() {
-                                  if (counte > 1) counte--;
+                                  if (counte > 1)
+                                    counte--;
+                                  print(counte);
+                                  sum2=sum1*counte;
                                   print(counte);
                                 });
                               },
@@ -270,6 +279,8 @@ class _HomePageState extends State<HomePage> {
                                 setState(() {
                                   counte++;
                                   print(counte);
+                                  sum2=sum1*counte;
+                                  print(counte);
                                 });
                               },
                               child: Container(
@@ -278,8 +289,61 @@ class _HomePageState extends State<HomePage> {
                                 child: const Icon(Icons.add, color: Colors.white),
                               ),
                             ),
+
                           ],
                         ),
+                      ),
+
+                    ],
+                  ),
+                  Row(
+                    children: [
+
+                      Text(
+                        '總金額為$sum2',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.amber,
+                        ),
+                      ),
+                      const Padding(
+                        padding: EdgeInsets.all(15),
+                      ),
+                      ElevatedButton(
+                        child: Text("新增至購物車"),
+                        onPressed: () {
+                          try {
+                            List<int> selectedIndices = selectedItemsMap.keys
+                                .map((key) => int.parse(key))
+                                .toList();
+                            List<String> selectedItems = selectedIndices
+                                .map((index) => index.toString())
+                                .toList();
+
+                            // Check if a similar entry exists in _data4
+                            bool found = false;
+                            for (List<List<String>> entry in _data4) {
+                              if (entry[0].toString() == selectedItems.toString()) {
+                                // Entry with similar selected items found, update the count
+                                entry[1][0] =
+                                    (int.parse(entry[1][0]) + counte).toString();
+                                found = true;
+                                break;
+                              }
+                            }
+                            if (!found) {
+                              // No similar entry found, add a new entry to _data4
+                              List<List<String>> result = [
+                                selectedItems,
+                                [counte.toString()]
+                              ];
+                              _data4.add(result);
+                            }
+                            print("_data4: $_data4");
+                          } catch (e) {
+                            print("Error in onPressed: $e");
+                          }
+                        },
                       ),
                     ],
                   ),
@@ -287,60 +351,7 @@ class _HomePageState extends State<HomePage> {
               );
             },
           ),
-          actions: [
-            Row(
-              children: [
-                Text(
-                  '總金額為$sum',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.amber,
-                  ),
-                ),
-                const Padding(
-                  padding: EdgeInsets.all(15),
-                ),
-                ElevatedButton(
-                  child: Text("新增至購物車"),
-                  onPressed: () {
-                    try {
-                      List<int> selectedIndices = selectedItemsMap.keys
-                          .map((key) => int.parse(key))
-                          .toList();
-                      List<String> selectedItems = selectedIndices
-                          .map((index) => index.toString())
-                          .toList();
 
-                      // Check if a similar entry exists in _data4
-                      bool found = false;
-                      for (List<List<String>> entry in _data4) {
-                        if (entry[0].toString() == selectedItems.toString()) {
-                          // Entry with similar selected items found, update the count
-                          entry[1][0] =
-                              (int.parse(entry[1][0]) + counte).toString();
-                          found = true;
-                          break;
-                        }
-                      }
-
-                      if (!found) {
-                        // No similar entry found, add a new entry to _data4
-                        List<List<String>> result = [
-                          selectedItems,
-                          [counte.toString()]
-                        ];
-                        _data4.add(result);
-                      }
-
-                      print("_data4: $_data4");
-                    } catch (e) {
-                      print("Error in onPressed: $e");
-                    }
-                  },
-                ),
-              ],
-            ),
-          ],
         );
       },
     );
@@ -350,11 +361,22 @@ class _HomePageState extends State<HomePage> {
       int index, Map<String, bool> selectedItemsMap,
       {required VoidCallback updateUI}) {
     if (selectedItemsMap.containsKey(index.toString())) {
-      // Item is already selected, remove it
+      // Item is already selected, remove it and subtract the amount from sum
       selectedItemsMap.remove(index.toString());
+      setState(() {
+        sum1 -= (_data[index-1 ][5] as int); // Adjust index for data
+        print(sum1);
+        sum2=sum1*counte;
+      });
+
     } else {
-      // Item is not selected, add it
+      // Item is not selected, add it and add the amount to sum
       selectedItemsMap[index.toString()] = true;
+      setState(() {
+        sum1 += (_data[index-1 ][5] as int);// Adjust index for data
+        print(sum1);
+        sum2=sum1*counte;
+      });
     }
     // Trigger UI update
     updateUI();
