@@ -548,7 +548,7 @@ class _HomePageState extends State<HomePage> {
                           List<String> selectedItems = selectedIndices
                               .map((intItem) => intItem.toString())
                               .toList();
-                          _data3.add([selectedItems]);
+                          //_data3.add([selectedItems]);
 
                           // Check if a similar entry exists in _data3
                           bool found = false;
