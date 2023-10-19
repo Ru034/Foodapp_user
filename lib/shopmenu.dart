@@ -153,15 +153,14 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+
   void showAlertDialog(String listData, String listData2, int fir) {
     Map<String, bool> selectedItemsMap = {(fir + 1).toString(): true};
     counte = 1;
     setState(() {
       sum1 = _data[fir][5];
-      sum2=sum1*counte;
+      sum2 = sum1 * counte;
     });
-
-
     showDialog<List<String>>(
       context: context,
       builder: (BuildContext context) {
@@ -181,7 +180,8 @@ class _HomePageState extends State<HomePage> {
                             Text(
                               listData + '      ' + listData2,
                               style: TextStyle(
-                                fontSize: 100.0, // Adjust the font size as needed
+                                fontSize:
+                                    100.0, // Adjust the font size as needed
                                 // You can also add other styles if desired, e.g., fontWeight, color, etc.
                               ),
                             ),
@@ -192,7 +192,8 @@ class _HomePageState extends State<HomePage> {
                                 Text(
                                   _data[index][4].toString(),
                                   style: TextStyle(
-                                    fontSize: 15.0, // Adjust the font size as needed
+                                    fontSize:
+                                        15.0, // Adjust the font size as needed
                                     // You can also add other styles if desired, e.g., fontWeight, color, etc.
                                   ),
                                 ),
@@ -208,7 +209,7 @@ class _HomePageState extends State<HomePage> {
                             ),
                           TextButton(
                             onPressed: () {
-                              toggleAlertDialogSelection2(
+                              toggleAlertDialogSelection(
                                 index + 1,
                                 selectedItemsMap,
                                 updateUI: () {
@@ -217,10 +218,12 @@ class _HomePageState extends State<HomePage> {
                               );
                             },
                             child: Icon(
-                              selectedItemsMap.containsKey((index + 1).toString())
+                              selectedItemsMap
+                                      .containsKey((index + 1).toString())
                                   ? Icons.check_circle
                                   : Icons.circle,
-                              color: selectedItemsMap.containsKey((index + 1).toString())
+                              color: selectedItemsMap
+                                      .containsKey((index + 1).toString())
                                   ? Colors.blue
                                   : Colors.grey,
                             ),
@@ -247,28 +250,30 @@ class _HomePageState extends State<HomePage> {
                       Container(
                         decoration: BoxDecoration(
                           color: Colors.grey,
-                          borderRadius: BorderRadius.circular(20.0), // Adjust the radius as needed
+                          borderRadius: BorderRadius.circular(
+                              20.0), // Adjust the radius as needed
                         ),
                         child: Row(
                           children: [
                             TextButton(
                               onPressed: () {
                                 setState(() {
-                                  if (counte > 1)
-                                    counte--;
+                                  if (counte > 1) counte--;
                                   print(counte);
-                                  sum2=sum1*counte;
+                                  sum2 = sum1 * counte;
                                   print(counte);
                                 });
                               },
                               child: Container(
                                 width: 30.0, // Adjust the width as needed
                                 height: 30.0, // Adjust the height as needed
-                                child: const Icon(Icons.remove, color: Colors.white),
+                                child: const Icon(Icons.remove,
+                                    color: Colors.white),
                               ),
                             ),
                             Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 1.0),
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 1.0),
                               child: Text(
                                 counte.toString(),
                                 style: TextStyle(color: Colors.white),
@@ -279,26 +284,24 @@ class _HomePageState extends State<HomePage> {
                                 setState(() {
                                   counte++;
                                   print(counte);
-                                  sum2=sum1*counte;
+                                  sum2 = sum1 * counte;
                                   print(counte);
                                 });
                               },
                               child: Container(
                                 width: 30.0, // Adjust the width as needed
                                 height: 30.0, // Adjust the height as needed
-                                child: const Icon(Icons.add, color: Colors.white),
+                                child:
+                                    const Icon(Icons.add, color: Colors.white),
                               ),
                             ),
-
                           ],
                         ),
                       ),
-
                     ],
                   ),
                   Row(
                     children: [
-
                       Text(
                         '總金額為$sum2',
                         style: TextStyle(
@@ -323,10 +326,14 @@ class _HomePageState extends State<HomePage> {
                             // Check if a similar entry exists in _data4
                             bool found = false;
                             for (List<List<String>> entry in _data4) {
-                              if (entry[0].toString() == selectedItems.toString()) {
+                              if (entry[0].toString() ==
+                                  selectedItems.toString()) {
                                 // Entry with similar selected items found, update the count and sum1
-                                entry[1][0] = (int.parse(entry[1][0]) + counte).toString();
-                                entry[2] = [sum1.toString()]; // Add sum1 to the entry
+                                entry[1][0] = (int.parse(entry[1][0]) + counte)
+                                    .toString();
+                                entry[2] = [
+                                  sum1.toString()
+                                ]; // Add sum1 to the entry
                                 found = true;
                                 break;
                               }
@@ -352,148 +359,233 @@ class _HomePageState extends State<HomePage> {
               );
             },
           ),
-
         );
       },
     );
   }
-
-  void toggleAlertDialogSelection2(
+  void toggleAlertDialogSelection(
       int index, Map<String, bool> selectedItemsMap,
       {required VoidCallback updateUI}) {
     if (selectedItemsMap.containsKey(index.toString())) {
       // Item is already selected, remove it and subtract the amount from sum
       selectedItemsMap.remove(index.toString());
       setState(() {
-        sum1 -= (_data[index-1 ][5] as int); // Adjust index for data
+        sum1 -= (_data[index - 1][5] as int); // Adjust index for data
         print(sum1);
-        sum2=sum1*counte;
+        sum2 = sum1 * counte;
       });
-
     } else {
       // Item is not selected, add it and add the amount to sum
       selectedItemsMap[index.toString()] = true;
       setState(() {
-        sum1 += (_data[index-1 ][5] as int);// Adjust index for data
+        sum1 += (_data[index - 1][5] as int); // Adjust index for data
         print(sum1);
-        sum2=sum1*counte;
+        sum2 = sum1 * counte;
       });
     }
     // Trigger UI update
     updateUI();
   }
-  showAlertDialog2(String listData, String listData2, int index) {
-    //Map<String, List<int>> selectedItemsMap = {};
+
+  void showAlertDialog2(String listData, String listData2, int fir) {
     Map<String, List<String>> selectedItemsMap = {
-      '0': [_data[index][2].toString()], // Initialize with the desired value
+      '0': [_data[fir][2].toString()], // Initialize with the desired value
     };
+    counte = 1;
+    setState(() {
+      sum1 = _data[fir][5];
+      sum2 = sum1 * counte;
+    });
 
-    AlertDialog dialog = AlertDialog(
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(listData + '      ' + listData2),
-          for (int innerIndex = 0; innerIndex < _data.length; innerIndex++)
-            if (_data[innerIndex][3] == listData && _data[innerIndex][4] != '')
-              Column(
-                children: [
-                  Text(
-                    '${_data[innerIndex][4]}',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.red, // 將文字顏色設為綠色
-                    ),
-                  ),
-                  for (int index2 = 0; index2 < _data.length; index2++)
-                    if (_data[index2][0] == 3)
-                      if (_data[innerIndex][4] == _data[index2][3])
-                        Row(
-                          children: [
-                            Text(
-                              _data[index2][4],
-                              style: TextStyle(
-                                color: selectedItemsMap
-                                            .containsKey(_data[index2][3]) &&
-                                        selectedItemsMap[_data[index2][3]]!
-                                            .contains(index2)
-                                    ? Colors.blue // Selected color
-                                    : Colors.black, // Default color
-                              ),
-                            ),
-                            Text(
-                              '       \$${_data[index2][5].toString()}',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.green, // 將文字顏色設為綠色
-                              ),
-                            ),
-                            TextButton(
-                              onPressed: () {
-                                // Handle the toggle logic
-                                toggleAlertDialogSelection(
-                                  _data[index2][3],
-                                  index2 + 1,
-                                  selectedItemsMap,
-                                  updateUI: () {
-                                    // Force the UI to rebuild when selection changes
-                                    setState(() {});
-                                  },
-                                );
-                              },
-                              child: Icon(
-                                Icons.add,
-                                color: selectedItemsMap
-                                            .containsKey(_data[index2][3]) &&
-                                        selectedItemsMap[_data[index2][3]]!
-                                            .contains(index2)
-                                    ? Colors.blue // Selected color
-                                    : Colors.grey, // Deselected color
-                              ),
-                            ),
-                          ],
-                        ),
-                ],
-              )
-        ],
-      ),
-      actions: [
-        ElevatedButton(
-          child: Text("更新"),
-          onPressed: () {
-            // Access selected items using the selectedItemsMap
-            //print(selectedItemsMap);
-
-            // Convert the selected items to a flat list and add it to _data3
-            List<int> flattenedSelectedItems =
-                selectedItemsMap.values.expand((list) {
-              // 在這裡進行轉換，將 String 轉為 int
-              return list.map((item) => int.parse(item)).toList();
-            }).toList();
-
-            List<String> stringList = flattenedSelectedItems
-                .map((intItem) => intItem.toString())
-                .toList();
-            _data3.add([stringList]);
-
-            // Add your logic to handle the selected items, e.g., add to a temporary list
-            // addNewDataAtIndex(listData);
-
-            // Print _data3
-            print("_data3: $_data3");
-          },
-        ),
-      ],
-    );
-
-    showDialog(
+    showDialog<List<String>>(
       context: context,
       builder: (BuildContext context) {
-        return dialog;
+        return AlertDialog(
+          content: StatefulBuilder(
+            builder: (BuildContext context, StateSetter setState) {
+              return Column(mainAxisSize: MainAxisSize.min, children: [
+                for (int innerIndex = 0;
+                    innerIndex < _data.length;
+                    innerIndex++)
+                  if (_data[innerIndex][3] == listData &&
+                      _data[innerIndex][4] != '')
+                    Column(
+                      children: [
+                        Text(
+                          '${_data[innerIndex][4]}',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.red, // 將文字顏色設為綠色
+                          ),
+                        ),
+                        for (int index2 = 0; index2 < _data.length; index2++)
+                          if (_data[index2][0] == 3)
+                            if (_data[innerIndex][4] == _data[index2][3])
+                              Row(
+                                children: [
+                                  Text(
+                                    _data[index2][4],
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                  Text(
+                                    '       \$${_data[index2][5].toString()}',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.green, // 將文字顏色設為綠色
+                                    ),
+                                  ),
+                                  TextButton(
+                                    onPressed: () {
+                                      //print("Before toggle: $selectedItemsMap");
+                                      toggleAlertDialogSelection2(
+                                        _data[index2][3],
+                                        index2 + 1,
+                                        selectedItemsMap,
+                                        updateUI: () {
+                                          //print("UI will be updated");
+                                          // Force the UI to rebuild when selection changes
+                                          setState(() {});
+                                        },
+                                      );
+                                      print( selectedItemsMap);
+                                    },//selectedItemsMap.containsKey(_data[index2][3]) && selectedItemsMap[_data[index2][3]]!.contains(index2)
+                                    child: Icon(
+                                      selectedItemsMap.containsKey(_data[index2][3]) && selectedItemsMap[_data[index2][3]]!.contains(index2)
+                                          ? Icons.check_circle
+                                          : Icons.circle,
+                                      color: selectedItemsMap.containsKey(_data[index2][3]) && selectedItemsMap[_data[index2][3]]!.contains(index2)
+                                          ? Colors.blue
+                                          : Colors.grey,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                      ],
+                    ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      width: 1, // Adjust the width as needed
+                      height: 1,
+                    ),
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Colors.grey,
+                        borderRadius: BorderRadius.circular(
+                            20.0), // Adjust the radius as needed
+                      ),
+                      child: Row(
+                        children: [
+                          TextButton(
+                            onPressed: () {
+                              setState(() {
+                                if (counte > 1) counte--;
+                                print(counte);
+                                sum2 = sum1 * counte;
+                                print(counte);
+                              });
+                            },
+                            child: Container(
+                              width: 30.0, // Adjust the width as needed
+                              height: 30.0, // Adjust the height as needed
+                              child:
+                                  const Icon(Icons.remove, color: Colors.white),
+                            ),
+                          ),
+                          Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 1.0),
+                            child: Text(
+                              counte.toString(),
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              setState(() {
+                                counte++;
+                                print(counte);
+                                sum2 = sum1 * counte;
+                                print(counte);
+                              });
+                            },
+                            child: Container(
+                              width: 30.0, // Adjust the width as needed
+                              height: 30.0, // Adjust the height as needed
+                              child: const Icon(Icons.add, color: Colors.white),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    Text(
+                      '總金額為$sum2',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.amber,
+                      ),
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.all(15),
+                    ),
+                    ElevatedButton(
+                      child: Text("新增至購物車"),
+                      onPressed: () {
+                        try {
+
+                          List<int> selectedIndices = selectedItemsMap.values.expand((list) {
+                            // 在這裡進行轉換，將 String 轉為 int
+                            return list.map((item) => int.parse(item)).toList();
+                          }).toList();
+
+                          List<String> selectedItems = selectedIndices
+                              .map((intItem) => intItem.toString())
+                              .toList();
+                          _data3.add([selectedItems]);
+
+                          // Check if a similar entry exists in _data3
+                          bool found = false;
+                          for (List<List<String>> entry in _data3) {
+                            if (entry[0].toString() == selectedItems.toString()) {
+                              // Entry with similar selected items found, update the count and sum1
+                              entry[1][0] = (int.parse(entry[1][0]) + counte).toString();
+                              entry[2] = [sum1.toString()]; // Add sum1 to the entry
+                              found = true;
+                              break;
+                            }
+                          }
+                          if (!found) {
+                            // No similar entry found, add a new entry to _data3
+                            List<List<String>> result = [
+                              selectedItems,
+                              [counte.toString()],
+                              [sum1.toString()] // Add sum1 to the new entry
+                            ];
+                            _data3.add(result);
+                          }
+                          print("_data3: $_data3");
+                        } catch (e) {
+                          print("Error in onPressed: $e");
+                        }
+                      },
+                    ),
+                  ],
+                ),
+              ]);
+            },
+          ),
+        );
       },
     );
   }
-
-  void toggleAlertDialogSelection(
+  void toggleAlertDialogSelection2(
       String category, int index, Map<String, List<String>> selectedItemsMap,
       {required VoidCallback updateUI}) {
     if (!selectedItemsMap.containsKey(category)) {
@@ -510,6 +602,25 @@ class _HomePageState extends State<HomePage> {
     // Trigger UI update
     updateUI();
   }
+    /*
+    setState(() {
+      for (String category in selectedItemsMap.keys) {
+        for (String indexStr in selectedItemsMap[category]!) {
+          int? index = int.tryParse(indexStr);
+          if (index != null && index >= 0 && index < _data.length) {
+            sum1 += _data[index][5] as int;
+          }
+        }
+      }
+      print(sum1);
+      sum2=sum1*counte;
+    });
+
+     */
+    // Trigger UI update
+
+
+
 
   Future<void> _loadCSV() async {
     await _download();
