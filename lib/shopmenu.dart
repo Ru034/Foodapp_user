@@ -233,16 +233,7 @@ class _HomePageState extends State<HomePage> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      /*
-                      Text(
-                        '份數:',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.blue,
-                        ),
-                      ),
 
-                       */
                       SizedBox(
                         width: 1, // Adjust the width as needed
                         height: 1,
@@ -396,6 +387,7 @@ class _HomePageState extends State<HomePage> {
       sum1 = _data[fir][5];
       sum2 = sum1 * counte;
     });
+    List<String> selectedItems = [];
 
     showDialog<List<String>>(
       context: context,
@@ -444,18 +436,26 @@ class _HomePageState extends State<HomePage> {
                                         index2 + 1,
                                         selectedItemsMap,
                                         updateUI: () {
-                                          //print("UI will be updated");
-                                          // Force the UI to rebuild when selection changes
                                           setState(() {});
                                         },
                                       );
-                                      print( selectedItemsMap);
+                                      //print( selectedItemsMap);
+                                      List<int> selectedIndices = selectedItemsMap.values.expand((list) {
+                                        // 在這裡進行轉換，將 String 轉為 int
+                                        return list.map((item) => int.parse(item)).toList();
+                                      }).toList();
+
+                                      selectedItems = selectedIndices
+                                          .map((intItem) => intItem.toString())
+                                          .toList();
+                                      print(selectedItems);
                                     },//selectedItemsMap.containsKey(_data[index2][3]) && selectedItemsMap[_data[index2][3]]!.contains(index2)
+                                    //.containsKey((index + 1).toString())
                                     child: Icon(
-                                      selectedItemsMap.containsKey(_data[index2][3]) && selectedItemsMap[_data[index2][3]]!.contains(index2)
+                                      selectedItems.contains((index2 + 1).toString())
                                           ? Icons.check_circle
                                           : Icons.circle,
-                                      color: selectedItemsMap.containsKey(_data[index2][3]) && selectedItemsMap[_data[index2][3]]!.contains(index2)
+                                      color: selectedItems.contains((index2 + 1).toString())
                                           ? Colors.blue
                                           : Colors.grey,
                                     ),
@@ -602,6 +602,49 @@ class _HomePageState extends State<HomePage> {
     // Trigger UI update
     updateUI();
   }
+    /*
+    setState(() {
+      for (String category in selectedItemsMap.keys) {
+        for (String indexStr in selectedItemsMap[category]!) {
+          int? index = int.tryParse(indexStr);
+          if (index != null && index >= 0 && index < _data.length) {
+            sum1 += _data[index][5] as int;
+          }
+        }
+      }
+      print(sum1);
+      sum2=sum1*counte;
+    });
+*/
+    // Trigger UI update
+
+
+
+  /*
+   void toggleAlertDialogSelection(
+      int index, Map<String, bool> selectedItemsMap,
+      {required VoidCallback updateUI}) {
+    if (selectedItemsMap.containsKey(index.toString())) {
+      // Item is already selected, remove it and subtract the amount from sum
+      selectedItemsMap.remove(index.toString());
+      setState(() {
+        sum1 -= (_data[index - 1][5] as int); // Adjust index for data
+        print(sum1);
+        sum2 = sum1 * counte;
+      });
+    } else {
+      // Item is not selected, add it and add the amount to sum
+      selectedItemsMap[index.toString()] = true;
+      setState(() {
+        sum1 += (_data[index - 1][5] as int); // Adjust index for data
+        print(sum1);
+        sum2 = sum1 * counte;
+      });
+    }
+    // Trigger UI update
+    updateUI();
+  }
+   */
     /*
     setState(() {
       for (String category in selectedItemsMap.keys) {
