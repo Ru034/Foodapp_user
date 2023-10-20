@@ -153,7 +153,6 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-
   void showAlertDialog(String listData, String listData2, int fir) {
     Map<String, bool> selectedItemsMap = {(fir + 1).toString(): true};
     counte = 1;
@@ -233,7 +232,6 @@ class _HomePageState extends State<HomePage> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-
                       SizedBox(
                         width: 1, // Adjust the width as needed
                         height: 1,
@@ -354,8 +352,8 @@ class _HomePageState extends State<HomePage> {
       },
     );
   }
-  void toggleAlertDialogSelection(
-      int index, Map<String, bool> selectedItemsMap,
+
+  void toggleAlertDialogSelection(int index, Map<String, bool> selectedItemsMap,
       {required VoidCallback updateUI}) {
     if (selectedItemsMap.containsKey(index.toString())) {
       // Item is already selected, remove it and subtract the amount from sum
@@ -440,31 +438,40 @@ class _HomePageState extends State<HomePage> {
                                         },
                                       );
                                       //print( selectedItemsMap);
-                                      List<int> selectedIndices = selectedItemsMap.values.expand((list) {
+                                      List<int> selectedIndices =
+                                          selectedItemsMap.values
+                                              .expand((list) {
                                         // 在這裡進行轉換，將 String 轉為 int
-                                        return list.map((item) => int.parse(item)).toList();
+                                        return list
+                                            .map((item) => int.parse(item))
+                                            .toList();
                                       }).toList();
 
                                       selectedItems = selectedIndices
                                           .map((intItem) => intItem.toString())
-
                                           .toList();
                                       print(selectedItems);
                                       setState(() {
-                                        sum1=0;
-                                        for(int i=0;i<selectedItems.length;i++)
+                                        sum1 = 0;
+                                        for (int i = 0;
+                                            i < selectedItems.length;
+                                            i++)
                                           //sum1 += _data[int.parse(selectedItems[i])][5] as int;
-                                          sum1 += _data[int.parse(selectedItems[i])-1][5] as int;
-                                          //sum1 += int.parse(selectedItems[i]);
+                                          sum1 += _data[
+                                              int.parse(selectedItems[i]) -
+                                                  1][5] as int;
+                                        //sum1 += int.parse(selectedItems[i]);
                                         sum2 = sum1 * counte;
                                         print(counte);
                                       });
                                     },
                                     child: Icon(
-                                      selectedItems.contains((index2 + 1).toString())
+                                      selectedItems
+                                              .contains((index2 + 1).toString())
                                           ? Icons.check_circle
                                           : Icons.circle,
-                                      color: selectedItems.contains((index2 + 1).toString())
+                                      color: selectedItems
+                                              .contains((index2 + 1).toString())
                                           ? Colors.blue
                                           : Colors.grey,
                                     ),
@@ -548,8 +555,8 @@ class _HomePageState extends State<HomePage> {
                       child: Text("新增至購物車"),
                       onPressed: () {
                         try {
-
-                          List<int> selectedIndices = selectedItemsMap.values.expand((list) {
+                          List<int> selectedIndices =
+                              selectedItemsMap.values.expand((list) {
                             // 在這裡進行轉換，將 String 轉為 int
                             return list.map((item) => int.parse(item)).toList();
                           }).toList();
@@ -562,10 +569,14 @@ class _HomePageState extends State<HomePage> {
                           // Check if a similar entry exists in _data3
                           bool found = false;
                           for (List<List<String>> entry in _data3) {
-                            if (entry[0].toString() == selectedItems.toString()) {
+                            if (entry[0].toString() ==
+                                selectedItems.toString()) {
                               // Entry with similar selected items found, update the count and sum1
-                              entry[1][0] = (int.parse(entry[1][0]) + counte).toString();
-                              entry[2] = [sum1.toString()]; // Add sum1 to the entry
+                              entry[1][0] =
+                                  (int.parse(entry[1][0]) + counte).toString();
+                              entry[2] = [
+                                sum1.toString()
+                              ]; // Add sum1 to the entry
                               found = true;
                               break;
                             }
@@ -594,6 +605,7 @@ class _HomePageState extends State<HomePage> {
       },
     );
   }
+
   void toggleAlertDialogSelection2(
       String category, int index, Map<String, List<String>> selectedItemsMap,
       {required VoidCallback updateUI}) {
@@ -611,68 +623,6 @@ class _HomePageState extends State<HomePage> {
     // Trigger UI update
     updateUI();
   }
-    /*
-    setState(() {
-      for (String category in selectedItemsMap.keys) {
-        for (String indexStr in selectedItemsMap[category]!) {
-          int? index = int.tryParse(indexStr);
-          if (index != null && index >= 0 && index < _data.length) {
-            sum1 += _data[index][5] as int;
-          }
-        }
-      }
-      print(sum1);
-      sum2=sum1*counte;
-    });
-*/
-    // Trigger UI update
-
-
-
-  /*
-   void toggleAlertDialogSelection(
-      int index, Map<String, bool> selectedItemsMap,
-      {required VoidCallback updateUI}) {
-    if (selectedItemsMap.containsKey(index.toString())) {
-      // Item is already selected, remove it and subtract the amount from sum
-      selectedItemsMap.remove(index.toString());
-      setState(() {
-        sum1 -= (_data[index - 1][5] as int); // Adjust index for data
-        print(sum1);
-        sum2 = sum1 * counte;
-      });
-    } else {
-      // Item is not selected, add it and add the amount to sum
-      selectedItemsMap[index.toString()] = true;
-      setState(() {
-        sum1 += (_data[index - 1][5] as int); // Adjust index for data
-        print(sum1);
-        sum2 = sum1 * counte;
-      });
-    }
-    // Trigger UI update
-    updateUI();
-  }
-   */
-    /*
-    setState(() {
-      for (String category in selectedItemsMap.keys) {
-        for (String indexStr in selectedItemsMap[category]!) {
-          int? index = int.tryParse(indexStr);
-          if (index != null && index >= 0 && index < _data.length) {
-            sum1 += _data[index][5] as int;
-          }
-        }
-      }
-      print(sum1);
-      sum2=sum1*counte;
-    });
-
-     */
-    // Trigger UI update
-
-
-
 
   Future<void> _loadCSV() async {
     await _download();
@@ -731,65 +681,128 @@ class _HomePageState extends State<HomePage> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text('購物車內容'),
-          content: Column(
-            children: [
-              // Display content of data2
-
-              for (int i = 0; i < _data4.length; i++)
-                Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                  for (int j = 0; j < _data4[i][0].length; j++)
-                    Row(children: [
-                      if (j == 0)
-                        Text('${_data[int.parse(_data4[i][0][j]) - 1][3]}'),
-                      Padding(
-                        padding:
-                            EdgeInsets.only(top: 15, left: 10.0, bottom: 15),
+          content: SingleChildScrollView(
+            child: Column(
+              children: [
+                for (int i = 0; i < _data4.length; i++)
+                  Card(
+                    // 使用 Card 包装每个项目
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              for (int j = 0; j < _data4[i][0].length; j++)
+                                Row(
+                                  children: [
+                                    if (j == 0)
+                                      Text(
+                                          '${_data[int.parse(_data4[i][0][j]) - 1][3]}'),
+                                    if (j > 0)
+                                      Text(
+                                          '${_data[int.parse(_data4[i][0][j]) - 1][4]}'),
+                                  ],
+                                ),
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              TextButton(
+                                onPressed: () {
+                                  setState(() {
+                                    if (counte > 1) counte--;
+                                    print(counte);
+                                    sum2 = sum1 * counte;
+                                    print(counte);
+                                  });
+                                },
+                                child: Container(
+                                  width: 30.0, // Adjust the width as needed
+                                  height: 30.0, // Adjust the height as needed
+                                  child: const Icon(Icons.remove,
+                                      color: Colors.black),
+                                ),
+                              ),
+                              Text(
+                                counte.toString(),
+                                style: TextStyle(color: Colors.black),
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  setState(() {
+                                    counte++;
+                                    print(counte);
+                                    sum2 = sum1 * counte;
+                                    print(counte);
+                                  });
+                                },
+                                child: Container(
+                                  width: 30.0, // Adjust the width as needed
+                                  height: 30.0, // Adjust the height as needed
+                                  child: const Icon(Icons.add,
+                                      color: Colors.black),
+                                ),
+                              ),
+                            ],
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              setState(() {
+                                if (int.parse(_data4[i][1][0]) > 1)
+                                  _data4[i][1][0] =
+                                      (int.parse(_data4[i][1][0]) - 1)
+                                          .toString();
+                                else
+                                  _data4.removeAt(i);
+                              });
+                            },
+                            child: const Icon(Icons.remove_circle_outline,
+                                color: Colors.red),
+                          ),
+                        ],
                       ),
-                      if (j > 0)
-                        Text('${_data[int.parse(_data4[i][0][j]) - 1][4]}'),
-                    ]),
-                  TextButton(
-                    onPressed: () {
-                      setState(() {
-                        if (int.parse(_data4[i][1][0]) > 1)
-                          _data4[i][1][0] =
-                              (int.parse(_data4[i][1][0]) - 1).toString();
-                        else
-                          _data4.removeAt(i);
-                      });
-                    },
-                    child: const Icon(Icons.remove_circle_outline,
-                        color: Colors.red),
+                    ),
                   ),
-                ]),
-
-              for (int i = 0; i < _data3.length; i++)
-                Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                  for (int j = 0; j < _data3[i][0].length; j++)
-                    Row(children: [
-                      //if (_data[int.parse(_data3[i][0][j])][0] == 2)
-                      if (j == 0)
-                        Text('${_data[int.parse(_data3[i][0][j]) - 1][3]}'),
-                      Padding(
-                        padding:
-                            EdgeInsets.only(top: 15, left: 10.0, bottom: 15),
+                for (int i = 0; i < _data3.length; i++)
+                  Card(
+                    // 使用 Card 包装每个项目
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              for (int j = 0; j < _data3[i][0].length; j++)
+                                Row(
+                                  children: [
+                                    if (j == 0)
+                                      Text(
+                                          '${_data[int.parse(_data3[i][0][j]) - 1][3]}'),
+                                    if (j > 0)
+                                      Text(
+                                          '${_data[int.parse(_data3[i][0][j]) - 1][4]}'),
+                                  ],
+                                ),
+                            ],
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              setState(() {
+                                _data3.removeAt(i);
+                              });
+                            },
+                            child: const Icon(Icons.remove_circle_outline,
+                                color: Colors.red),
+                          ),
+                        ],
                       ),
-                      //if (_data[_data3[i][j]][0] == 3)
-                      //if (_data[int.parse(_data3[i][0][j])][0] == 3)
-                      if (j > 0)
-                        Text('${_data[int.parse(_data3[i][0][j]) - 1][4]}'),
-                    ]),
-                  TextButton(
-                    onPressed: () {
-                      setState(() {
-                        _data3.removeAt(i);
-                      });
-                    },
-                    child: const Icon(Icons.remove_circle_outline,
-                        color: Colors.red),
+                    ),
                   ),
-                ])
-            ],
+              ],
+            ),
           ),
           actions: [
             ElevatedButton(
