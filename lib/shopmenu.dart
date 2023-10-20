@@ -447,10 +447,19 @@ class _HomePageState extends State<HomePage> {
 
                                       selectedItems = selectedIndices
                                           .map((intItem) => intItem.toString())
+
                                           .toList();
                                       print(selectedItems);
-                                    },//selectedItemsMap.containsKey(_data[index2][3]) && selectedItemsMap[_data[index2][3]]!.contains(index2)
-                                    //.containsKey((index + 1).toString())
+                                      setState(() {
+                                        sum1=0;
+                                        for(int i=0;i<selectedItems.length;i++)
+                                          //sum1 += _data[int.parse(selectedItems[i])][5] as int;
+                                          sum1 += _data[int.parse(selectedItems[i])-1][5] as int;
+                                          //sum1 += int.parse(selectedItems[i]);
+                                        sum2 = sum1 * counte;
+                                        print(counte);
+                                      });
+                                    },
                                     child: Icon(
                                       selectedItems.contains((index2 + 1).toString())
                                           ? Icons.check_circle
