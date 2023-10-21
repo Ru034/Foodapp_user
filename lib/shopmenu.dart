@@ -84,7 +84,7 @@ class _HomePageState extends State<HomePage> {
       final String csvContent = const ListToCsvConverter().convert(_data);
 
       final Directory newDirectory =
-          Directory('/data/user/0/com.example.foodapp_user/new');
+      Directory('/data/user/0/com.example.foodapp_user/new');
       final file = File('${newDirectory.path}/new_data.csv');
 
       // Write the CSV content to the new directory
@@ -116,7 +116,7 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> _download() async {
     final googleSignIn =
-        signIn.GoogleSignIn.standard(scopes: [drive.DriveApi.driveScope]);
+    signIn.GoogleSignIn.standard(scopes: [drive.DriveApi.driveScope]);
     final signIn.GoogleSignInAccount? account = await googleSignIn.signIn();
     if (account != null) {
       final authHeaders = await account.authHeaders;
@@ -134,7 +134,7 @@ class _HomePageState extends State<HomePage> {
         }
         directory.createSync(recursive: true);
         final fileList =
-            await driveApi.files.list(q: "'$googleDriveFolderId' in parents");
+        await driveApi.files.list(q: "'$googleDriveFolderId' in parents");
         for (final file in fileList.files!) {
           final drive.Media fileData = await driveApi.files.get(file.id!,
               downloadOptions: drive.DownloadOptions.fullMedia) as drive.Media;
@@ -175,13 +175,13 @@ class _HomePageState extends State<HomePage> {
                       Row(
                         children: [
                           if ((index > 0 &&
-                                  _data[index][3] != _data[index - 1][3]) ||
+                              _data[index][3] != _data[index - 1][3]) ||
                               index == 0)
                             Text(
                               listData + '      ' + listData2,
                               style: TextStyle(
                                 fontSize:
-                                    100.0, // Adjust the font size as needed
+                                100.0, // Adjust the font size as needed
                                 // You can also add other styles if desired, e.g., fontWeight, color, etc.
                               ),
                             ),
@@ -193,7 +193,7 @@ class _HomePageState extends State<HomePage> {
                                   _data[index][4].toString(),
                                   style: TextStyle(
                                     fontSize:
-                                        15.0, // Adjust the font size as needed
+                                    15.0, // Adjust the font size as needed
                                     // You can also add other styles if desired, e.g., fontWeight, color, etc.
                                   ),
                                 ),
@@ -219,11 +219,11 @@ class _HomePageState extends State<HomePage> {
                             },
                             child: Icon(
                               selectedItemsMap
-                                      .containsKey((index + 1).toString())
+                                  .containsKey((index + 1).toString())
                                   ? Icons.check_circle
                                   : Icons.circle,
                               color: selectedItemsMap
-                                      .containsKey((index + 1).toString())
+                                  .containsKey((index + 1).toString())
                                   ? Colors.blue
                                   : Colors.grey,
                             ),
@@ -263,7 +263,7 @@ class _HomePageState extends State<HomePage> {
                             ),
                             Padding(
                               padding:
-                                  const EdgeInsets.symmetric(horizontal: 1.0),
+                              const EdgeInsets.symmetric(horizontal: 1.0),
                               child: Text(
                                 counte.toString(),
                                 style: TextStyle(color: Colors.white),
@@ -282,7 +282,7 @@ class _HomePageState extends State<HomePage> {
                                 width: 30.0, // Adjust the width as needed
                                 height: 30.0, // Adjust the height as needed
                                 child:
-                                    const Icon(Icons.add, color: Colors.white),
+                                const Icon(Icons.add, color: Colors.white),
                               ),
                             ),
                           ],
@@ -403,8 +403,8 @@ class _HomePageState extends State<HomePage> {
             builder: (BuildContext context, StateSetter setState) {
               return Column(mainAxisSize: MainAxisSize.min, children: [
                 for (int innerIndex = 0;
-                    innerIndex < _data.length;
-                    innerIndex++)
+                innerIndex < _data.length;
+                innerIndex++)
                   if (_data[innerIndex][3] == listData &&
                       _data[innerIndex][4] != '')
                     Column(
@@ -447,8 +447,8 @@ class _HomePageState extends State<HomePage> {
                                       );
                                       //print( selectedItemsMap);
                                       List<int> selectedIndices =
-                                          selectedItemsMap.values
-                                              .expand((list) {
+                                      selectedItemsMap.values
+                                          .expand((list) {
                                         // 在這裡進行轉換，將 String 轉為 int
                                         return list
                                             .map((item) => int.parse(item))
@@ -462,12 +462,12 @@ class _HomePageState extends State<HomePage> {
                                       setState(() {
                                         sum1 = 0;
                                         for (int i = 0;
-                                            i < selectedItems.length;
-                                            i++)
+                                        i < selectedItems.length;
+                                        i++)
                                           //sum1 += _data[int.parse(selectedItems[i])][5] as int;
                                           sum1 += _data[
-                                              int.parse(selectedItems[i]) -
-                                                  1][5] as int;
+                                          int.parse(selectedItems[i]) -
+                                              1][5] as int;
                                         //sum1 += int.parse(selectedItems[i]);
                                         sum2 = sum1 * counte;
                                         print(counte);
@@ -475,11 +475,11 @@ class _HomePageState extends State<HomePage> {
                                     },
                                     child: Icon(
                                       selectedItems
-                                              .contains((index2 + 1).toString())
+                                          .contains((index2 + 1).toString())
                                           ? Icons.check_circle
                                           : Icons.circle,
                                       color: selectedItems
-                                              .contains((index2 + 1).toString())
+                                          .contains((index2 + 1).toString())
                                           ? Colors.blue
                                           : Colors.grey,
                                     ),
@@ -516,12 +516,12 @@ class _HomePageState extends State<HomePage> {
                               width: 30.0, // Adjust the width as needed
                               height: 30.0, // Adjust the height as needed
                               child:
-                                  const Icon(Icons.remove, color: Colors.white),
+                              const Icon(Icons.remove, color: Colors.white),
                             ),
                           ),
                           Padding(
                             padding:
-                                const EdgeInsets.symmetric(horizontal: 1.0),
+                            const EdgeInsets.symmetric(horizontal: 1.0),
                             child: Text(
                               counte.toString(),
                               style: TextStyle(color: Colors.white),
@@ -564,7 +564,7 @@ class _HomePageState extends State<HomePage> {
                       onPressed: () {
                         try {
                           List<int> selectedIndices =
-                              selectedItemsMap.values.expand((list) {
+                          selectedItemsMap.values.expand((list) {
                             // 在這裡進行轉換，將 String 轉為 int
                             return list.map((item) => int.parse(item)).toList();
                           }).toList();
@@ -621,8 +621,8 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  void toggleAlertDialogSelection2(
-      String category, int index, Map<String, List<String>> selectedItemsMap,
+  void toggleAlertDialogSelection2(String category, int index,
+      Map<String, List<String>> selectedItemsMap,
       {required VoidCallback updateUI}) {
     if (!selectedItemsMap.containsKey(category)) {
       selectedItemsMap[category] = [index.toString()];
@@ -643,13 +643,13 @@ class _HomePageState extends State<HomePage> {
     await _download();
     try {
       final File file =
-          File('/data/user/0/com.example.foodapp_user/new/new_data.csv');
+      File('/data/user/0/com.example.foodapp_user/new/new_data.csv');
 
       // Check if the file exists in the app's data directory
       if (await file.exists()) {
         final String rawData = await file.readAsString();
         final List<List<dynamic>> listData =
-            const CsvToListConverter().convert(rawData);
+        const CsvToListConverter().convert(rawData);
 
         // Update the image paths in the loaded data
         for (int index = 0; index < listData.length; index++) {
@@ -668,7 +668,7 @@ class _HomePageState extends State<HomePage> {
         // If the file doesn't exist in the app's data directory, copy it from assets
         final rawData = await rootBundle.loadString("assets/new_data.csv");
         List<List<dynamic>> listData =
-            const CsvToListConverter().convert(rawData);
+        const CsvToListConverter().convert(rawData);
 
         // Update the image paths in the loaded data
         for (int index = 0; index < listData.length; index++) {
@@ -706,351 +706,398 @@ class _HomePageState extends State<HomePage> {
     updateUI(); // Call the callback function to update the UI.
   }
 
-
-  Future<void> _showDialog(
-      List<List<List<String>>> data3, List<List<List<String>>> data4) async {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('購物車內容'),
-          content: SingleChildScrollView(
-            // Wrap the content with SingleChildScrollView
-            child: StatefulBuilder(
-              builder: (BuildContext context, StateSetter setState) {
-                return Column(mainAxisSize: MainAxisSize.min, children: [
-                  for (int i = 0; i < _data4.length; i++)
-                    Card(
-                      // 使用 Card 包装每个项目
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Column(
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                for (int j = 0; j < _data4[i][0].length; j++)
-                                  Row(
-                                    children: [
-                                      if (j == 0)
-                                        Text(
-                                            '${_data[int.parse(_data4[i][0][j]) - 1][3]}'),
-                                      if (j > 0)
-                                        Text(
-                                            '${_data[int.parse(_data4[i][0][j]) - 1][4]}'),
-                                    ],
-                                  ),
-                              ],
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                TextButton(
-                                  onPressed: () {
-                                    setState(() {
-                                      if (int.parse(_data4[i][1][0]) > 1)
-                                        _data4[i][1][0] =
-                                            (int.parse(_data4[i][1][0]) - 1)
-                                                .toString();
-                                      else
-                                        _data4.removeAt(i);
-                                      allsum(
-                                        _data3,
-                                        _data4,
-                                        updateUI: () {
-                                          setState(() {});
-                                        },
-                                      );
-                                    });
-                                  },
-                                  child: Container(
-                                    width: 30.0, // Adjust the width as needed
-                                    height: 30.0, // Adjust the height as needed
-                                    child: const Icon(Icons.remove,
-                                        color: Colors.black),
-                                  ),
-                                ),
-                                Text(
-                                  _data4[i][1][0].toString(),
-                                  style: TextStyle(color: Colors.black),
-                                ),
-                                TextButton(
-                                  onPressed: () {
-                                    setState(() {
-                                      _data4[i][1][0] =
-                                          (int.parse(_data4[i][1][0]) + 1)
-                                              .toString();
-                                      allsum(
-                                        _data3,
-                                        _data4,
-                                        updateUI: () {
-                                          setState(() {});
-                                        },
-                                      );
-                                    });
-                                  },
-                                  child: Container(
-                                    width: 30.0, // Adjust the width as needed
-                                    height: 30.0, // Adjust the height as needed
-                                    child: const Icon(Icons.add,
-                                        color: Colors.black),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    '\$${(int.parse(_data4[i][1][0]) * int.parse(_data4[i][2][0])).toString()}',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.amber,
-                                    ),
-                                  ),
-                                  TextButton(
-                                    onPressed: () {
-                                      setState(() {
-                                        _data4.removeAt(i);
-                                        allsum(
-                                          _data3,
-                                          _data4,
-                                          updateUI: () {
-                                            setState(() {});
-                                          },
-                                        );
-                                      });
-                                    },
-                                    child: const Icon(Icons.delete,
-                                        color: Colors.red),
-                                  ),
-                                ]),
-                          ],
-                        ),
-                      ),
-                    ),
-                  for (int i = 0; i < _data3.length; i++)
-                    Card(
-                      // 使用 Card 包装每个项目
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Column(
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                for (int j = 0; j < _data3[i][0].length; j++)
-                                  Row(
-                                    children: [
-                                      if (j == 0)
-                                        Text(
-                                            '${_data[int.parse(_data3[i][0][j]) - 1][3]}'),
-                                      if (j > 0)
-                                        Text(
-                                            '${_data[int.parse(_data3[i][0][j]) - 1][4]}'),
-                                    ],
-                                  ),
-                              ],
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                TextButton(
-                                  onPressed: () {
-                                    setState(() {
-                                      if (int.parse(_data3[i][1][0]) > 1)
-                                        _data3[i][1][0] =
-                                            (int.parse(_data3[i][1][0]) - 1)
-                                                .toString();
-                                      else
-                                        _data3.removeAt(i);
-                                      allsum(
-                                        _data3,
-                                        _data4,
-                                        updateUI: () {
-                                          setState(() {});
-                                        },
-                                      );
-                                    });
-                                  },
-                                  child: Container(
-                                    width: 30.0, // Adjust the width as needed
-                                    height: 30.0, // Adjust the height as needed
-                                    child: const Icon(Icons.remove,
-                                        color: Colors.black),
-                                  ),
-                                ),
-                                Text(
-                                  _data3[i][1][0].toString(),
-                                  style: TextStyle(color: Colors.black),
-                                ),
-                                TextButton(
-                                  onPressed: () {
-                                    setState(() {
-                                      _data3[i][1][0] =
-                                          (int.parse(_data3[i][1][0]) + 1)
-                                              .toString();
-                                      allsum(
-                                        _data3,
-                                        _data4,
-                                        updateUI: () {
-                                          setState(() {});
-                                        },
-                                      );
-                                    });
-                                  },
-                                  child: Container(
-                                    width: 30.0, // Adjust the width as needed
-                                    height: 30.0, // Adjust the height as needed
-                                    child: const Icon(Icons.add,
-                                        color: Colors.black),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    '\$${(int.parse(_data3[i][1][0]) * int.parse(_data3[i][2][0])).toString()}',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.amber,
-                                    ),
-                                  ),
-                                  TextButton(
-                                    onPressed: () {
-                                      setState(() {
-                                        _data3.removeAt(i);
-                                        allsum(
-                                          _data3,
-                                          _data4,
-                                          updateUI: () {
-                                            setState(() {});
-                                          },
-                                        );
-                                      });
-                                    },
-                                    child: const Icon(Icons.delete,
-                                        color: Colors.red),
-                                  ),
-                                ]),
-                          ],
-                        ),
-                      ),
-                    ),
-
-                    Row(
-                      children: [
-                        Text(
-                          '總金額為\$:${sum3.toString()}       ',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.purpleAccent,
-                          ),
-                        ),
-                        ElevatedButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          child: Text('關閉購物車'),
-                        ),
-                      ],
-                    )
-                  ],
-                );
-              },
-            ),
-          ),
-
-        );
-      },
-    );
+  void uptheblock(List<List<List<String>>> data3, List<List<List<String>>> data4) {
+    String concatenatedText = "";
+    for (int i = 0; i < _data4.length; i++) {//單點
+      concatenatedText = "";
+      for (int j = 0; j < _data4[i][0].length; j++) {
+        if (j == 0)
+          concatenatedText += '${_data[int.parse(data4[i][0][j]) - 1][3]} ';
+        if (j > 0)
+          concatenatedText += '${_data[int.parse(data4[i][0][j]) - 1][4]} ';
+      }
+      print(concatenatedText+'   '+_data4[i][1][0]);
+    }
+    for (int i = 0; i < _data3.length; i++) {//套餐
+      concatenatedText = "";
+      for (int j = 0; j < _data3[i][0].length; j++) {
+        if (j == 0)
+          concatenatedText += '${_data[int.parse(data3[i][0][j]) - 1][3]} ';
+        if (j > 0)
+          concatenatedText += '${_data[int.parse(data3[i][0][j]) - 1][4]} ';
+      }
+      print(concatenatedText+'    '+_data3[i][1][0]);
+    }
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      /*
+    Future<void> _showDialog(List<List<List<String>>> data3,
+        List<List<List<String>>> data4) async {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('購物車內容'),
+            content: SingleChildScrollView(
+              // Wrap the content with SingleChildScrollView
+              child: StatefulBuilder(
+                builder: (BuildContext context, StateSetter setState) {
+                  return Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      for (int i = 0; i < _data4.length; i++)
+                        Card(
+                          // 使用 Card 包装每个项目
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Column(
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    for (int j = 0; j <
+                                        _data4[i][0].length; j++)
+                                      Row(
+                                        children: [
+                                          if (j == 0)
+                                            Text(
+                                                '${_data[int.parse(
+                                                    _data4[i][0][j]) - 1][3]}'),
+                                          if (j > 0)
+                                            Text(
+                                                '${_data[int.parse(
+                                                    _data4[i][0][j]) - 1][4]}'),
+                                        ],
+                                      ),
+                                  ],
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    TextButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          if (int.parse(_data4[i][1][0]) > 1)
+                                            _data4[i][1][0] =
+                                                (int.parse(_data4[i][1][0]) - 1)
+                                                    .toString();
+                                          else
+                                            _data4.removeAt(i);
+                                          allsum(
+                                            _data3,
+                                            _data4,
+                                            updateUI: () {
+                                              setState(() {});
+                                            },
+                                          );
+                                        });
+                                      },
+                                      child: Container(
+                                        width: 30.0,
+                                        // Adjust the width as needed
+                                        height:
+                                        30.0,
+                                        // Adjust the height as needed
+                                        child: const Icon(Icons.remove,
+                                            color: Colors.black),
+                                      ),
+                                    ),
+                                    Text(
+                                      _data4[i][1][0].toString(),
+                                      style: TextStyle(color: Colors.black),
+                                    ),
+                                    TextButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          _data4[i][1][0] =
+                                              (int.parse(_data4[i][1][0]) + 1)
+                                                  .toString();
+                                          allsum(
+                                            _data3,
+                                            _data4,
+                                            updateUI: () {
+                                              setState(() {});
+                                            },
+                                          );
+                                        });
+                                      },
+                                      child: Container(
+                                        width: 30.0,
+                                        // Adjust the width as needed
+                                        height:
+                                        30.0,
+                                        // Adjust the height as needed
+                                        child: const Icon(Icons.add,
+                                            color: Colors.black),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        '\$${(int.parse(_data4[i][1][0]) *
+                                            int.parse(_data4[i][2][0]))
+                                            .toString()}',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.amber,
+                                        ),
+                                      ),
+                                      TextButton(
+                                        onPressed: () {
+                                          setState(() {
+                                            _data4.removeAt(i);
+                                            allsum(
+                                              _data3,
+                                              _data4,
+                                              updateUI: () {
+                                                setState(() {});
+                                              },
+                                            );
+                                          });
+                                        },
+                                        child: const Icon(Icons.delete,
+                                            color: Colors.red),
+                                      ),
+                                    ]),
+                              ],
+                            ),
+                          ),
+                        ),
+                      for (int i = 0; i < _data3.length; i++)
+                        Card(
+                          // 使用 Card 包装每个项目
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Column(
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    for (int j = 0; j <
+                                        _data3[i][0].length; j++)
+                                      Row(
+                                        children: [
+                                          if (j == 0)
+                                            Text(
+                                                '${_data[int.parse(
+                                                    _data3[i][0][j]) - 1][3]}'),
+                                          if (j > 0)
+                                            Text(
+                                                '${_data[int.parse(
+                                                    _data3[i][0][j]) - 1][4]}'),
+                                        ],
+                                      ),
+                                  ],
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    TextButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          if (int.parse(_data3[i][1][0]) > 1)
+                                            _data3[i][1][0] =
+                                                (int.parse(_data3[i][1][0]) - 1)
+                                                    .toString();
+                                          else
+                                            _data3.removeAt(i);
+                                          allsum(
+                                            _data3,
+                                            _data4,
+                                            updateUI: () {
+                                              setState(() {});
+                                            },
+                                          );
+                                        });
+                                      },
+                                      child: Container(
+                                        width: 30.0,
+                                        // Adjust the width as needed
+                                        height:
+                                        30.0,
+                                        // Adjust the height as needed
+                                        child: const Icon(Icons.remove,
+                                            color: Colors.black),
+                                      ),
+                                    ),
+                                    Text(
+                                      _data3[i][1][0].toString(),
+                                      style: TextStyle(color: Colors.black),
+                                    ),
+                                    TextButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          _data3[i][1][0] =
+                                              (int.parse(_data3[i][1][0]) + 1)
+                                                  .toString();
+                                          allsum(
+                                            _data3,
+                                            _data4,
+                                            updateUI: () {
+                                              setState(() {});
+                                            },
+                                          );
+                                        });
+                                      },
+                                      child: Container(
+                                        width: 30.0,
+                                        // Adjust the width as needed
+                                        height:
+                                        30.0,
+                                        // Adjust the height as needed
+                                        child: const Icon(Icons.add,
+                                            color: Colors.black),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        '\$${(int.parse(_data3[i][1][0]) *
+                                            int.parse(_data3[i][2][0]))
+                                            .toString()}',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.amber,
+                                        ),
+                                      ),
+                                      TextButton(
+                                        onPressed: () {
+                                          setState(() {
+                                            _data3.removeAt(i);
+                                            allsum(
+                                              _data3,
+                                              _data4,
+                                              updateUI: () {
+                                                setState(() {});
+                                              },
+                                            );
+                                          });
+                                        },
+                                        child: const Icon(Icons.delete,
+                                            color: Colors.red),
+                                      ),
+                                    ]),
+                              ],
+                            ),
+                          ),
+                        ),
+                      Row(
+                        children: [
+                          Text(
+                            '總金額為\$:${sum3.toString()}       ',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.purpleAccent,
+                            ),
+                          ),
+                          ElevatedButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                              uptheblock(_data3, _data4);
+                            },
+                            child: Text('送出訂單'),
+                          ),
+                        ],
+                      )
+                    ],
+                  );
+                },
+              ),
+            ),
+          );
+        },
+      );
+    }
+
+    @override
+    Widget build(BuildContext context) {
+      return Scaffold(
+        /*
       appBar: AppBar(
         title: Text("Blofood"),
       ),
       */
 
-      body: Column(children: [
-        Expanded(
-            child: ListView(
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start, // 將子元素靠左對齊
-              children: [
-                const Padding(
-                  padding: EdgeInsets.all(15),
-                ),
-                const Padding(
-                  padding: EdgeInsets.all(15.0),
-                  child: Text(
-                    "店家菜單",
-                    style: TextStyle(
-                      fontSize: 30,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-                const Padding(
-                  padding: EdgeInsets.only(top: 15, left: 30.0, bottom: 15),
-                  //const EdgeInsets.only(left: 40.0)
-                  child: Text(
-                    "單點",
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-                for (int index = 0; index < _data.length; index++)
-                  if (_data[index][0] == 1 &&
-                          (index > 0 &&
-                              _data[index][3] != _data[index - 1][3]) ||
-                      index == 0)
-                    Card(
-                      color: Colors.white70,
-                      child: ListTile(
-                        onTap: () {
-                          // 將原本 TextButton 的功能移到這裡
-                          showAlertDialog(
-                            _data[index][3].toString(),
-                            _data[index][5].toString(),
-                            index,
-                          );
-                        },
-                        subtitle: Column(
-                          children: [
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: Row(
+        body: Column(children: [
+          Expanded(
+              child: ListView(
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start, // 將子元素靠左對齊
+                    children: [
+                      const Padding(
+                        padding: EdgeInsets.all(15),
+                      ),
+                      const Padding(
+                        padding: EdgeInsets.all(15.0),
+                        child: Text(
+                          "店家菜單",
+                          style: TextStyle(
+                            fontSize: 30,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      const Padding(
+                        padding: EdgeInsets.only(
+                            top: 15, left: 30.0, bottom: 15),
+                        //const EdgeInsets.only(left: 40.0)
+                        child: Text(
+                          "單點",
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      for (int index = 0; index < _data.length; index++)
+                        if (_data[index][0] == 1 &&
+                            (index > 0 &&
+                                _data[index][3] != _data[index - 1][3]) ||
+                            index == 0)
+                          Card(
+                            color: Colors.white70,
+                            child: ListTile(
+                              onTap: () {
+                                // 將原本 TextButton 的功能移到這裡
+                                showAlertDialog(
+                                  _data[index][3].toString(),
+                                  _data[index][5].toString(),
+                                  index,
+                                );
+                              },
+                              subtitle: Column(
+                                children: [
+                                  Row(
                                     children: [
-                                      if (index == 0 &&
-                                              _data[index][6] != "" &&
-                                              index == 0 ||
-                                          (_data[index][3] !=
-                                                  _data[index - 1][3] &&
-                                              index > 0 &&
-                                              _data[index][6] != ""))
-                                        Expanded(
-                                          child: Stack(
-                                            children: [
-                                              Image.file(
-                                                File(_data[index][6]),
-                                                width: 100,
-                                                height: 100,
-                                                fit: BoxFit.cover,
+                                      Expanded(
+                                        child: Row(
+                                          children: [
+                                            if (index == 0 &&
+                                                _data[index][6] != "" &&
+                                                index == 0 ||
+                                                (_data[index][3] !=
+                                                    _data[index - 1][3] &&
+                                                    index > 0 &&
+                                                    _data[index][6] != ""))
+                                              Expanded(
+                                                child: Stack(
+                                                  children: [
+                                                    Image.file(
+                                                      File(_data[index][6]),
+                                                      width: 100,
+                                                      height: 100,
+                                                      fit: BoxFit.cover,
+                                                    ),
+                                                  ],
+                                                ),
                                               ),
-                                            ],
-                                          ),
-                                        ),
-                                      /*
+                                            /*
                                       if (index == 0 &&
                                               _data[index][6] == "" &&
                                               index == 0 ||
@@ -1068,138 +1115,145 @@ class _HomePageState extends State<HomePage> {
                                         ),
 
                                        */
+                                          ],
+                                        ),
+                                      ),
+                                      Column(
+                                        crossAxisAlignment: CrossAxisAlignment
+                                            .end,
+                                        children: [
+                                          Text(
+                                            _data[index][3].toString(),
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          const Padding(
+                                            padding: EdgeInsets.only(
+                                                top: 0, left: 20.0, bottom: 0),
+                                          ),
+                                          Text(
+                                            '\$${_data[index][5].toString()}',
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.green, // 將文字顏色設為綠色
+                                            ),
+                                          ),
+                                          const Padding(
+                                            padding: EdgeInsets.only(
+                                                top: 0, left: 10.0, bottom: 0),
+                                          ),
+                                        ],
+                                      ),
                                     ],
                                   ),
-                                ),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                  children: [
-                                    Text(
-                                      _data[index][3].toString(),
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    const Padding(
-                                      padding: EdgeInsets.only(
-                                          top: 0, left: 20.0, bottom: 0),
-                                    ),
-                                    Text(
-                                      '\$${_data[index][5].toString()}',
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.green, // 將文字顏色設為綠色
-                                      ),
-                                    ),
-                                    const Padding(
-                                      padding: EdgeInsets.only(
-                                          top: 0, left: 10.0, bottom: 0),
-                                    ),
-                                  ],
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
-                          ],
+                          ),
+                      const Padding(
+                        padding: EdgeInsets.only(
+                            top: 15, left: 30.0, bottom: 15),
+                        //const EdgeInsets.only(left: 40.0)
+                        child: Text(
+                          "套餐",
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
-                    ),
-                const Padding(
-                  padding: EdgeInsets.only(top: 15, left: 30.0, bottom: 15),
-                  //const EdgeInsets.only(left: 40.0)
-                  child: Text(
-                    "套餐",
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-                // 套餐卡片
-                for (int index = 0; index < _data.length; index++)
-                  if (_data[index][0] == 2 &&
-                      _data[index - 1][3] != _data[index][3])
-                    Card(
-                      color: Colors.white38,
-                      child: ListTile(
-                        onTap: () {
-                          // 將原本 TextButton 的功能移到這裡
-                          showAlertDialog2(
-                            _data[index][3].toString(),
-                            _data[index][5].toString(),
-                            index,
-                          );
-                        },
-                        subtitle: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Padding(
-                                  padding: EdgeInsets.only(left: 30.0),
-                                ),
-                                Expanded(
-                                  child: Row(
+                      // 套餐卡片
+                      for (int index = 0; index < _data.length; index++)
+                        if (_data[index][0] == 2 &&
+                            _data[index - 1][3] != _data[index][3])
+                          Card(
+                            color: Colors.white38,
+                            child: ListTile(
+                              onTap: () {
+                                // 將原本 TextButton 的功能移到這裡
+                                showAlertDialog2(
+                                  _data[index][3].toString(),
+                                  _data[index][5].toString(),
+                                  index,
+                                );
+                              },
+                              subtitle: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    crossAxisAlignment: CrossAxisAlignment
+                                        .start,
                                     children: [
-                                      if (index == 0 ||
-                                          (index > 0 &&
-                                              _data[index][3] !=
-                                                  _data[index - 1][3]))
-                                        Text(
-                                          _data[index][3].toString(),
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                    ],
-                                  ),
-                                ),
-                                Expanded(
-                                  child: Row(
-                                    children: [
-                                      Text(
-                                        '\$${_data[index][5].toString()}',
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.green,
-                                        ),
-                                      ),
                                       const Padding(
                                         padding: EdgeInsets.only(left: 30.0),
                                       ),
-                                      Column(children: [
-                                        for (int test = index;
-                                            test < _data.length;
-                                            test++)
-                                          if (_data[test][3] == _data[index][3])
+                                      Expanded(
+                                        child: Row(
+                                          children: [
+                                            if (index == 0 ||
+                                                (index > 0 &&
+                                                    _data[index][3] !=
+                                                        _data[index - 1][3]))
+                                              Text(
+                                                _data[index][3].toString(),
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight
+                                                        .bold),
+                                              ),
+                                          ],
+                                        ),
+                                      ),
+                                      Expanded(
+                                        child: Row(
+                                          children: [
                                             Text(
-                                              _data[test][4].toString(),
+                                              '\$${_data[index][5].toString()}',
                                               style: TextStyle(
-                                                  fontWeight: FontWeight.bold),
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.green,
+                                              ),
                                             ),
-                                      ])
+                                            const Padding(
+                                              padding: EdgeInsets.only(
+                                                  left: 30.0),
+                                            ),
+                                            Column(children: [
+                                              for (int test = index;
+                                              test < _data.length;
+                                              test++)
+                                                if (_data[test][3] ==
+                                                    _data[index][3])
+                                                  Text(
+                                                    _data[test][4].toString(),
+                                                    style: TextStyle(
+                                                        fontWeight: FontWeight
+                                                            .bold),
+                                                  ),
+                                            ])
+                                          ],
+                                        ),
+                                      ),
                                     ],
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
-                          ],
-                        ),
-                      ),
-                    ),
-              ],
-            ),
-          ],
-        )),
-        SizedBox(
-          height: 75,
-          width: 250,
-          child: FilledButton(
-            style: TextButton.styleFrom(
-              backgroundColor: Colors.red,
-              padding: const EdgeInsets.all(16.0),
-              textStyle: const TextStyle(fontSize: 20),
-            ),
-            onPressed: () async {
-              /*
+                          ),
+                    ],
+                  ),
+                ],
+              )),
+          SizedBox(
+            height: 75,
+            width: 250,
+            child: FilledButton(
+              style: TextButton.styleFrom(
+                backgroundColor: Colors.red,
+                padding: const EdgeInsets.all(16.0),
+                textStyle: const TextStyle(fontSize: 20),
+              ),
+              onPressed: () async {
+                /*
               // 將 _data2 按照 _data 的順序進行排序
               List<List<dynamic>> sortedData2 = List.from(_data2);
               sortedData2.sort((a, b) {
@@ -1208,14 +1262,14 @@ class _HomePageState extends State<HomePage> {
                 return indexA.compareTo(indexB);
               });
 */
-              // Show the dialog with _data2
-              await _showDialog(_data3, _data4);
-              //await _showDialog(_data3);
-            },
-            child: const Text('打開購物車'),
+                // Show the dialog with _data2
+                await _showDialog(_data3, _data4);
+                //await _showDialog(_data3);
+              },
+              child: const Text('打開購物車'),
+            ),
           ),
-        ),
-      ]),
-    );
+        ]),
+      );
+    }
   }
-}
