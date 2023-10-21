@@ -681,193 +681,192 @@ class _HomePageState extends State<HomePage> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text('購物車內容'),
-          content: StatefulBuilder(
-            builder: (BuildContext context, StateSetter setState) {
-              return Column(mainAxisSize: MainAxisSize.min, children: [
-                for (int i = 0; i < _data4.length; i++)
-                  Card(
-                    // 使用 Card 包装每个项目
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Column(
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              for (int j = 0; j < _data4[i][0].length; j++)
-                                Row(
-                                  children: [
-                                    if (j == 0)
-                                      Text(
-                                          '${_data[int.parse(_data4[i][0][j]) - 1][3]}'),
-                                    if (j > 0)
-                                      Text(
-                                          '${_data[int.parse(_data4[i][0][j]) - 1][4]}'),
-                                  ],
+          content: SingleChildScrollView(
+            // Wrap the content with SingleChildScrollView
+            child: StatefulBuilder(
+              builder: (BuildContext context, StateSetter setState) {
+                return Column(mainAxisSize: MainAxisSize.min, children: [
+                  for (int i = 0; i < _data4.length; i++)
+                    Card(
+                      // 使用 Card 包装每个项目
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                for (int j = 0; j < _data4[i][0].length; j++)
+                                  Row(
+                                    children: [
+                                      if (j == 0)
+                                        Text(
+                                            '${_data[int.parse(_data4[i][0][j]) - 1][3]}'),
+                                      if (j > 0)
+                                        Text(
+                                            '${_data[int.parse(_data4[i][0][j]) - 1][4]}'),
+                                    ],
+                                  ),
+                              ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                TextButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      if (int.parse(_data4[i][1][0]) > 1)
+                                        _data4[i][1][0] =
+                                            (int.parse(_data4[i][1][0]) - 1)
+                                                .toString();
+                                      else
+                                        _data4.removeAt(i);
+                                    });
+                                  },
+                                  child: Container(
+                                    width: 30.0, // Adjust the width as needed
+                                    height: 30.0, // Adjust the height as needed
+                                    child: const Icon(Icons.remove,
+                                        color: Colors.black),
+                                  ),
                                 ),
-                            ],
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              TextButton(
-                                onPressed: () {
-                                  setState(() {
-                                    if (int.parse(_data4[i][1][0]) > 1)
+                                Text(
+                                  _data4[i][1][0].toString(),
+                                  style: TextStyle(color: Colors.black),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    setState(() {
                                       _data4[i][1][0] =
-                                          (int.parse(_data4[i][1][0]) - 1)
+                                          (int.parse(_data4[i][1][0]) + 1)
                                               .toString();
-                                    else
-                                      _data4.removeAt(i);
-                                  });
-                                },
-                                child: Container(
-                                  width: 30.0, // Adjust the width as needed
-                                  height: 30.0, // Adjust the height as needed
-                                  child: const Icon(Icons.remove,
-                                      color: Colors.black),
+                                    });
+                                  },
+                                  child: Container(
+                                    width: 30.0, // Adjust the width as needed
+                                    height: 30.0, // Adjust the height as needed
+                                    child: const Icon(Icons.add,
+                                        color: Colors.black),
+                                  ),
                                 ),
-                              ),
-                              Text(
-                                _data4[i][1][0].toString(),
-                                style: TextStyle(color: Colors.black),
-                              ),
-                              TextButton(
-                                onPressed: () {
-                                  setState(() {
-                                    _data4[i][1][0] =
-                                        (int.parse(_data4[i][1][0]) + 1)
-                                            .toString();
-                                  });
-                                },
-                                child: Container(
-                                  width: 30.0, // Adjust the width as needed
-                                  height: 30.0, // Adjust the height as needed
-                                  child: const Icon(Icons.add,
-                                      color: Colors.black),
-                                ),
-                              ),
-                            ],
-                          ),
-                          Row(
+                              ],
+                            ),
+                            Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    '\$${(int.parse(_data4[i][1][0]) * int.parse(_data4[i][2][0])).toString()}',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.amber,
+                                    ),
+                                  ),
+                                  TextButton(
+                                    onPressed: () {
+                                      setState(() {
+                                        _data4.removeAt(i);
+                                      });
+                                    },
+                                    child: const Icon(Icons.delete,
+                                        color: Colors.red),
+                                  ),
+                                ]),
+                          ],
+                        ),
+                      ),
+                    ),
+                  for (int i = 0; i < _data3.length; i++)
+                    Card(
+                      // 使用 Card 包装每个项目
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          children: [
+                            Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Text(
-                                  '\$${(int.parse(_data4[i][1][0]) * int.parse(_data4[i][2][0])).toString()}',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.amber,
+                                for (int j = 0; j < _data3[i][0].length; j++)
+                                  Row(
+                                    children: [
+                                      if (j == 0)
+                                        Text(
+                                            '${_data[int.parse(_data3[i][0][j]) - 1][3]}'),
+                                      if (j > 0)
+                                        Text(
+                                            '${_data[int.parse(_data3[i][0][j]) - 1][4]}'),
+                                    ],
                                   ),
+                              ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                TextButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      if (int.parse(_data3[i][1][0]) > 1)
+                                        _data3[i][1][0] =
+                                            (int.parse(_data3[i][1][0]) - 1)
+                                                .toString();
+                                      else
+                                        _data3.removeAt(i);
+                                    });
+                                  },
+                                  child: Container(
+                                    width: 30.0, // Adjust the width as needed
+                                    height: 30.0, // Adjust the height as needed
+                                    child: const Icon(Icons.remove,
+                                        color: Colors.black),
+                                  ),
+                                ),
+                                Text(
+                                  _data3[i][1][0].toString(),
+                                  style: TextStyle(color: Colors.black),
                                 ),
                                 TextButton(
                                   onPressed: () {
                                     setState(() {
-                                      _data4.removeAt(i);
-                                    });
-                                  },
-                                  child: const Icon(Icons.delete,
-                                      color: Colors.red),
-                                ),
-                              ]),
-                        ],
-                      ),
-                    ),
-                  ),
-
-
-
-                for (int i = 0; i < _data3.length; i++)
-                  Card(
-                    // 使用 Card 包装每个项目
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Column(
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              for (int j = 0; j < _data3[i][0].length; j++)
-                                Row(
-                                  children: [
-                                    if (j == 0)
-                                      Text(
-                                          '${_data[int.parse(_data3[i][0][j]) - 1][3]}'),
-                                    if (j > 0)
-                                      Text(
-                                          '${_data[int.parse(_data3[i][0][j]) - 1][4]}'),
-                                  ],
-                                ),
-                            ],
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              TextButton(
-                                onPressed: () {
-                                  setState(() {
-                                    if (int.parse(_data3[i][1][0]) > 1)
                                       _data3[i][1][0] =
-                                          (int.parse(_data3[i][1][0]) - 1)
+                                          (int.parse(_data3[i][1][0]) + 1)
                                               .toString();
-                                    else
-                                      _data3.removeAt(i);
-                                  });
-                                },
-                                child: Container(
-                                  width: 30.0, // Adjust the width as needed
-                                  height: 30.0, // Adjust the height as needed
-                                  child: const Icon(Icons.remove,
-                                      color: Colors.black),
-                                ),
-                              ),
-                              Text(
-                                _data3[i][1][0].toString(),
-                                style: TextStyle(color: Colors.black),
-                              ),
-                              TextButton(
-                                onPressed: () {
-                                  setState(() {
-                                    _data3[i][1][0] =
-                                        (int.parse(_data3[i][1][0]) + 1)
-                                            .toString();
-                                  });
-                                },
-                                child: Container(
-                                  width: 30.0, // Adjust the width as needed
-                                  height: 30.0, // Adjust the height as needed
-                                  child: const Icon(Icons.add,
-                                      color: Colors.black),
-                                ),
-                              ),
-                            ],
-                          ),
-                          Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  '\$${(int.parse(_data3[i][1][0]) * int.parse(_data3[i][2][0])).toString()}',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.amber,
-                                  ),
-                                ),
-                                TextButton(
-                                  onPressed: () {
-                                    setState(() {
-                                      _data3.removeAt(i);
                                     });
                                   },
-                                  child: const Icon(Icons.delete,
-                                      color: Colors.red),
+                                  child: Container(
+                                    width: 30.0, // Adjust the width as needed
+                                    height: 30.0, // Adjust the height as needed
+                                    child: const Icon(Icons.add,
+                                        color: Colors.black),
+                                  ),
                                 ),
-                              ]),
-                        ],
+                              ],
+                            ),
+                            Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    '\$${(int.parse(_data3[i][1][0]) * int.parse(_data3[i][2][0])).toString()}',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.amber,
+                                    ),
+                                  ),
+                                  TextButton(
+                                    onPressed: () {
+                                      setState(() {
+                                        _data3.removeAt(i);
+                                      });
+                                    },
+                                    child: const Icon(Icons.delete,
+                                        color: Colors.red),
+                                  ),
+                                ]),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-
-              ]);
-            },
+                ]);
+              },
+            ),
           ),
           actions: [
             ElevatedButton(
