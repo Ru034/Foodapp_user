@@ -75,6 +75,7 @@ class _HomePageState extends State<HomePage> {
   int counte = 1;
   int sum1 = 0;
   int sum2 = 0;
+  int sum3 = 0;
 
   get auth2 => null;
 
@@ -337,6 +338,13 @@ class _HomePageState extends State<HomePage> {
                               _data4.add(result);
                             }
                             print("_data4: $_data4");
+                            allsum(
+                              _data3,
+                              _data4,
+                              updateUI: () {
+                                setState(() {});
+                              },
+                            );
                           } catch (e) {
                             print("Error in onPressed: $e");
                           }
@@ -590,6 +598,13 @@ class _HomePageState extends State<HomePage> {
                             ];
                             _data3.add(result);
                           }
+                          allsum(
+                            _data3,
+                            _data4,
+                            updateUI: () {
+                              setState(() {});
+                            },
+                          );
                           print("_data3: $_data3");
                         } catch (e) {
                           print("Error in onPressed: $e");
@@ -674,6 +689,24 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  void allsum(List<List<List<String>>> data3, List<List<List<String>>> data4,
+      {required VoidCallback updateUI}) {
+    int newSum3 = 0; // Create a new variable to store the updated sum3 value.
+    for (int i = 0; i < data3.length; i++) {
+      newSum3 += int.parse(data3[i][1][0]) * int.parse(data3[i][2][0]);
+    }
+    for (int i = 0; i < data4.length; i++) {
+      newSum3 += int.parse(data4[i][1][0]) * int.parse(data4[i][2][0]);
+    }
+
+    setState(() {
+      sum3 = newSum3; // Update the sum3 value using setState.
+    });
+
+    updateUI(); // Call the callback function to update the UI.
+  }
+
+
   Future<void> _showDialog(
       List<List<List<String>>> data3, List<List<List<String>>> data4) async {
     showDialog(
@@ -721,6 +754,13 @@ class _HomePageState extends State<HomePage> {
                                                 .toString();
                                       else
                                         _data4.removeAt(i);
+                                      allsum(
+                                        _data3,
+                                        _data4,
+                                        updateUI: () {
+                                          setState(() {});
+                                        },
+                                      );
                                     });
                                   },
                                   child: Container(
@@ -740,6 +780,13 @@ class _HomePageState extends State<HomePage> {
                                       _data4[i][1][0] =
                                           (int.parse(_data4[i][1][0]) + 1)
                                               .toString();
+                                      allsum(
+                                        _data3,
+                                        _data4,
+                                        updateUI: () {
+                                          setState(() {});
+                                        },
+                                      );
                                     });
                                   },
                                   child: Container(
@@ -765,6 +812,13 @@ class _HomePageState extends State<HomePage> {
                                     onPressed: () {
                                       setState(() {
                                         _data4.removeAt(i);
+                                        allsum(
+                                          _data3,
+                                          _data4,
+                                          updateUI: () {
+                                            setState(() {});
+                                          },
+                                        );
                                       });
                                     },
                                     child: const Icon(Icons.delete,
@@ -810,6 +864,13 @@ class _HomePageState extends State<HomePage> {
                                                 .toString();
                                       else
                                         _data3.removeAt(i);
+                                      allsum(
+                                        _data3,
+                                        _data4,
+                                        updateUI: () {
+                                          setState(() {});
+                                        },
+                                      );
                                     });
                                   },
                                   child: Container(
@@ -829,6 +890,13 @@ class _HomePageState extends State<HomePage> {
                                       _data3[i][1][0] =
                                           (int.parse(_data3[i][1][0]) + 1)
                                               .toString();
+                                      allsum(
+                                        _data3,
+                                        _data4,
+                                        updateUI: () {
+                                          setState(() {});
+                                        },
+                                      );
                                     });
                                   },
                                   child: Container(
@@ -854,6 +922,13 @@ class _HomePageState extends State<HomePage> {
                                     onPressed: () {
                                       setState(() {
                                         _data3.removeAt(i);
+                                        allsum(
+                                          _data3,
+                                          _data4,
+                                          updateUI: () {
+                                            setState(() {});
+                                          },
+                                        );
                                       });
                                     },
                                     child: const Icon(Icons.delete,
@@ -864,18 +939,30 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ),
                     ),
-                ]);
+
+                    Row(
+                      children: [
+                        Text(
+                          '總金額為\$:${sum3.toString()}       ',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.purpleAccent,
+                          ),
+                        ),
+                        ElevatedButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: Text('關閉購物車'),
+                        ),
+                      ],
+                    )
+                  ],
+                );
               },
             ),
           ),
-          actions: [
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: Text('關閉購物車'),
-            ),
-          ],
+
         );
       },
     );
