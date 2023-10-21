@@ -681,9 +681,9 @@ class _HomePageState extends State<HomePage> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text('購物車內容'),
-          content: SingleChildScrollView(
-            child: Column(
-              children: [
+          content: StatefulBuilder(
+            builder: (BuildContext context, StateSetter setState) {
+              return Column(mainAxisSize: MainAxisSize.min, children: [
                 for (int i = 0; i < _data4.length; i++)
                   Card(
                     // 使用 Card 包装每个项目
@@ -708,14 +708,17 @@ class _HomePageState extends State<HomePage> {
                             ],
                           ),
                           Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               TextButton(
                                 onPressed: () {
                                   setState(() {
-                                    if (counte > 1) counte--;
-                                    print(counte);
-                                    sum2 = sum1 * counte;
-                                    print(counte);
+                                    if (int.parse(_data4[i][1][0]) > 1)
+                                      _data4[i][1][0] =
+                                          (int.parse(_data4[i][1][0]) - 1)
+                                              .toString();
+                                    else
+                                      _data4.removeAt(i);
                                   });
                                 },
                                 child: Container(
@@ -726,16 +729,15 @@ class _HomePageState extends State<HomePage> {
                                 ),
                               ),
                               Text(
-                                counte.toString(),
+                                _data4[i][1][0].toString(),
                                 style: TextStyle(color: Colors.black),
                               ),
                               TextButton(
                                 onPressed: () {
                                   setState(() {
-                                    counte++;
-                                    print(counte);
-                                    sum2 = sum1 * counte;
-                                    print(counte);
+                                    _data4[i][1][0] =
+                                        (int.parse(_data4[i][1][0]) + 1)
+                                            .toString();
                                   });
                                 },
                                 child: Container(
@@ -747,20 +749,26 @@ class _HomePageState extends State<HomePage> {
                               ),
                             ],
                           ),
-                          TextButton(
-                            onPressed: () {
-                              setState(() {
-                                if (int.parse(_data4[i][1][0]) > 1)
-                                  _data4[i][1][0] =
-                                      (int.parse(_data4[i][1][0]) - 1)
-                                          .toString();
-                                else
-                                  _data4.removeAt(i);
-                              });
-                            },
-                            child: const Icon(Icons.remove_circle_outline,
-                                color: Colors.red),
-                          ),
+                          Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  '\$${(int.parse(_data4[i][1][0]) * int.parse(_data4[i][2][0])).toString()}',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.amber,
+                                  ),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      _data4.removeAt(i);
+                                    });
+                                  },
+                                  child: const Icon(Icons.delete,
+                                      color: Colors.red),
+                                ),
+                              ]),
                         ],
                       ),
                     ),
@@ -801,8 +809,8 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                   ),
-              ],
-            ),
+              ]);
+            },
           ),
           actions: [
             ElevatedButton(
