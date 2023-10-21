@@ -773,6 +773,9 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                   ),
+
+
+
                 for (int i = 0; i < _data3.length; i++)
                   Card(
                     // 使用 Card 包装每个项目
@@ -796,19 +799,73 @@ class _HomePageState extends State<HomePage> {
                                 ),
                             ],
                           ),
-                          TextButton(
-                            onPressed: () {
-                              setState(() {
-                                _data3.removeAt(i);
-                              });
-                            },
-                            child: const Icon(Icons.remove_circle_outline,
-                                color: Colors.red),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              TextButton(
+                                onPressed: () {
+                                  setState(() {
+                                    if (int.parse(_data3[i][1][0]) > 1)
+                                      _data3[i][1][0] =
+                                          (int.parse(_data3[i][1][0]) - 1)
+                                              .toString();
+                                    else
+                                      _data3.removeAt(i);
+                                  });
+                                },
+                                child: Container(
+                                  width: 30.0, // Adjust the width as needed
+                                  height: 30.0, // Adjust the height as needed
+                                  child: const Icon(Icons.remove,
+                                      color: Colors.black),
+                                ),
+                              ),
+                              Text(
+                                _data3[i][1][0].toString(),
+                                style: TextStyle(color: Colors.black),
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  setState(() {
+                                    _data3[i][1][0] =
+                                        (int.parse(_data3[i][1][0]) + 1)
+                                            .toString();
+                                  });
+                                },
+                                child: Container(
+                                  width: 30.0, // Adjust the width as needed
+                                  height: 30.0, // Adjust the height as needed
+                                  child: const Icon(Icons.add,
+                                      color: Colors.black),
+                                ),
+                              ),
+                            ],
                           ),
+                          Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  '\$${(int.parse(_data3[i][1][0]) * int.parse(_data3[i][2][0])).toString()}',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.amber,
+                                  ),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      _data3.removeAt(i);
+                                    });
+                                  },
+                                  child: const Icon(Icons.delete,
+                                      color: Colors.red),
+                                ),
+                              ]),
                         ],
                       ),
                     ),
                   ),
+
               ]);
             },
           ),
