@@ -745,10 +745,10 @@ class _HomePageState extends State<HomePage> {
   Future<http.Response> pushOrderContent( String contractAddress2,String consumerWallet,String consumerPassword,String id,
       String orderID,String num) {
     final Map<String, String> usedata = {
-      'contractAddress2' : contractAddress2,
-      'consumerWalletString' : consumerWallet,
+      'contractAddress' : contractAddress2,
+      'consumerWallet' : consumerWallet,
       'consumerPassword' : consumerPassword,
-      'String id' :  id,
+      'id' :  id,
       'orderID' : orderID,
       'num' : num,
     };
@@ -828,7 +828,7 @@ class _HomePageState extends State<HomePage> {
 
     Future<void> _showDialog(List<List<List<String>>> data3,
         List<List<List<String>>> data4) async {
-      print(contractAddress2);
+      //print(contractAddress2);
       showDialog(
         context: context,
         builder: (BuildContext context) {
