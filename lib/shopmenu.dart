@@ -742,6 +742,27 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  Future<http.Response> pushOrderContent( String contractAddress2,String consumerWallet,String consumerPassword,String id,
+      String orderID,String num) {
+    final Map<String, String> usedata = {
+      'contractAddress2' : contractAddress2,
+      'consumerWalletString' : consumerWallet,
+      'consumerPassword' : consumerPassword,
+      'String id' :  id,
+      'orderID' : orderID,
+    };
+    print(usedata);
+    final headers = {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    };
+    final body = Uri(queryParameters: usedata).query;
+    return http.post(
+      Uri.parse('http://192.168.1.102:15000/contract/pushOrderContent'),
+      headers: headers,
+      body: body,
+    );
+  }
+
   Future<void> uptheblock(List<List<List<String>>> data3, List<List<List<String>>> data4) async {
     //print(sum3);
     foodCost = sum3.toString();
@@ -770,6 +791,16 @@ class _HomePageState extends State<HomePage> {
         if (j > 0)
           concatenatedText += '${_data[int.parse(data4[i][0][j]) - 1][4]} ';
       }
+      final response = await pushOrderContent(  contractAddress2, consumerWallet, consumerPassword,id,
+          concatenatedText,_data4[i][1][0]);
+      if (response.statusCode == 200) {
+        print("Response data: ${response.body}");
+        // 將回應的值設置到 _storeWallet 控制器中
+        contractAddress = response.body;
+      } else {
+        // 請求失敗，處理錯誤
+        print("Request failed with status: ${response.statusCode}");
+      }
       print(concatenatedText+'   '+_data4[i][1][0]);
     }
     for (int i = 0; i < _data3.length; i++) {//套餐
@@ -779,6 +810,16 @@ class _HomePageState extends State<HomePage> {
           concatenatedText += '${_data[int.parse(data3[i][0][j]) - 1][3]} ';
         if (j > 0)
           concatenatedText += '${_data[int.parse(data3[i][0][j]) - 1][4]} ';
+      }
+      final response = await pushOrderContent(  contractAddress2, consumerWallet, consumerPassword,id,
+          concatenatedText,_data3[i][1][0]);
+      if (response.statusCode == 200) {
+        print("Response data: ${response.body}");
+        // 將回應的值設置到 _storeWallet 控制器中
+        contractAddress = response.body;
+      } else {
+        // 請求失敗，處理錯誤
+        print("Request failed with status: ${response.statusCode}");
       }
       print(concatenatedText+'    '+_data3[i][1][0]);
     }
