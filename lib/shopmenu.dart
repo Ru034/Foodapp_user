@@ -750,6 +750,7 @@ class _HomePageState extends State<HomePage> {
       'consumerPassword' : consumerPassword,
       'String id' :  id,
       'orderID' : orderID,
+      'num' : num,
     };
     print(usedata);
     final headers = {
@@ -801,7 +802,7 @@ class _HomePageState extends State<HomePage> {
         // 請求失敗，處理錯誤
         print("Request failed with status: ${response.statusCode}");
       }
-      print(concatenatedText+'   '+_data4[i][1][0]);
+      //print(concatenatedText+'   '+_data4[i][1][0]);
     }
     for (int i = 0; i < _data3.length; i++) {//套餐
       concatenatedText = "";
@@ -821,7 +822,7 @@ class _HomePageState extends State<HomePage> {
         // 請求失敗，處理錯誤
         print("Request failed with status: ${response.statusCode}");
       }
-      print(concatenatedText+'    '+_data3[i][1][0]);
+      //print(concatenatedText+'    '+_data3[i][1][0]);
     }
   }
 
