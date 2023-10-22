@@ -705,8 +705,62 @@ class _HomePageState extends State<HomePage> {
 
     updateUI(); // Call the callback function to update the UI.
   }
+  String contractAddress= '0x9435E1B32fc47c1df9035D4140086095d9604D88' ;
+  String contractAddress2= '0x9435E1B32fc47c1df9035D4140086095d9604D88' ;
+  String consumerPassword = '0';
+  String consumerName = 'B';
+  String consumerAddress ='高雄市三民區XXX';
+  String consumerPhone = '0900000001';
+  String consumerWallet = '0xccd2ada5a9bbb08ec956651cbb21cc2a6171c8eb';
+  String fee = '30';
+  String note = 'note';
+  String foodCost = '0';
 
-  void uptheblock(List<List<List<String>>> data3, List<List<List<String>>> data4) {
+
+  Future<http.Response> createOrder( String contractAddress,String consumerPassword,String consumerName,
+      String consumerAddress,String consumerPhone,String consumerWallet,String fee,String note,String foodCost) {
+    final Map<String, String> usedata = {
+      'contractAddress' : contractAddress,
+      'consumerPassword' : consumerPassword,
+      'consumerName' : consumerName,
+      'consumerAddress' : consumerAddress,
+      'consumerPhone' : consumerPhone,
+      'consumerWallet' : consumerWallet,
+      'fee' : fee,
+      'note' : note,
+      'foodCost' : foodCost,
+    };
+    print(usedata);
+    final headers = {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    };
+    final body = Uri(queryParameters: usedata).query;
+    return http.post(
+      Uri.parse('http://192.168.1.102:15000/contract/createOrder'),
+      headers: headers,
+      body: body,
+    );
+  }
+
+  Future<void> uptheblock(List<List<List<String>>> data3, List<List<List<String>>> data4) async {
+    //print(sum3);
+    foodCost = sum3.toString();
+    final response = await createOrder(  contractAddress, consumerPassword,consumerName,
+        consumerAddress,consumerPhone,consumerWallet,fee,note,foodCost);
+    if (response.statusCode == 200) {
+      print("Response data: ${response.body}");
+      // 將回應的值設置到 _storeWallet 控制器中
+      contractAddress = response.body;
+    } else {
+      // 請求失敗，處理錯誤
+      print("Request failed with status: ${response.statusCode}");
+    }
+
+    print(contractAddress);
+    final contractAddressJson = json.decode(contractAddress);
+    final id = contractAddressJson['id'].toString();
+    print(id);
+
     String concatenatedText = "";
     for (int i = 0; i < _data4.length; i++) {//單點
       concatenatedText = "";
@@ -732,6 +786,7 @@ class _HomePageState extends State<HomePage> {
 
     Future<void> _showDialog(List<List<List<String>>> data3,
         List<List<List<String>>> data4) async {
+      print(contractAddress2);
       showDialog(
         context: context,
         builder: (BuildContext context) {
