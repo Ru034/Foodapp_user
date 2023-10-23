@@ -763,6 +763,25 @@ class _HomePageState extends State<HomePage> {
       body: body,
     );
   }
+  Future<void> showSuccessDialog() async {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('訂單已成功送出'),
+          content: Text('您的訂單已成功送出。'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context); // 關閉對話框
+              },
+              child: Text('關閉'),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   Future<void> uptheblock(List<List<List<String>>> data3, List<List<List<String>>> data4) async {
     //print(sum3);
@@ -822,9 +841,11 @@ class _HomePageState extends State<HomePage> {
         // 請求失敗，處理錯誤
         print("Request failed with status: ${response.statusCode}");
       }
+      await showSuccessDialog();
       //print(concatenatedText+'    '+_data3[i][1][0]);
     }
   }
+
 
     Future<void> _showDialog(List<List<List<String>>> data3,
         List<List<List<String>>> data4) async {
@@ -1093,9 +1114,10 @@ class _HomePageState extends State<HomePage> {
                             ),
                           ),
                           ElevatedButton(
-                            onPressed: () {
-                              Navigator.pop(context);
-                              uptheblock(_data3, _data4);
+                            onPressed: ()  {
+                              Navigator.pop(context); // 關閉當前對話框
+                               uptheblock(_data3, _data4);
+
                             },
                             child: Text('送出訂單'),
                           ),
