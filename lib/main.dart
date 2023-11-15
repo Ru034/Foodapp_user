@@ -1,38 +1,24 @@
-import 'package:path_provider/path_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:csv/csv.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'dart:io';
-import 'dart:typed_data';
-import 'package:file_picker/file_picker.dart';
 import 'package:googleapis/drive/v3.dart' as drive;
 import 'package:google_sign_in/google_sign_in.dart' as signIn;
+import 'dart:io';
+import 'main2.dart';
+import 'sign_in.dart';
 import 'package:http/http.dart' as http;
-import 'package:googleapis_auth/googleapis_auth.dart' as auth;
-import 'package:googleapis/drive/v3.dart' show Media;
-import 'package:file_picker/file_picker.dart';
-import 'package:googleapis_auth/auth_io.dart';
 import 'dart:convert'; // for utf8
 import 'dart:async'; // for Stream
-import 'shopmenu.dart';
-import 'main2.dart';
-
-/*
-app:foodapp
-package:com.example.foodapp
-Launcher:com.example.foodapp.MainActivity
-SHA1: 83:4D:3C:8A:4C:BB:10:13:48:81:E5:F3:EA:8D:E9:19:1B:0F:CC:B1
- */
-//增加從雲端抓資料與輸出資料
-
-
-void main() {
+import 'dart:async';
+import 'package:flutter/widgets.dart';
+import 'package:path/path.dart';
+import 'package:sqflite/sqflite.dart';
+import 'SQL.dart';
+FoodSql shopdata = FoodSql("shopdata2","storeWallet TEXT, contractAddress TEXT, storePassword TEXT "); //建立資料庫
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());
-}
 
+}
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
@@ -50,50 +36,159 @@ class MyApp extends StatelessWidget {
 }
 
 
+
 class HomePage extends StatefulWidget {
-  //HomePage 的狀態類別，用於管理狀態變化
+  //const HomePage({Key? key}) : super(key: key);
+
   @override
-  _HomePageState createState() => _HomePageState();
+  State<HomePage> createState() => _HomePageState();
 }
 
+
 class _HomePageState extends State<HomePage> {
-  //HomePage 的狀態類別，用於管理狀態變化
-  List<List<dynamic>> _data = [];
+  final TextEditingController storeWallet = TextEditingController();
+  final TextEditingController storePassword = TextEditingController();
+  final TextEditingController contractAddress = TextEditingController();
+  String result = "";
 
-  get auth2 => null;
+  Future<http.Response> Checkacc(TextEditingController storeWallet, TextEditingController storePassword, TextEditingController storeAddress,) async {
+    final Map<String, String> data = {
+      'storeWallet': storeWallet.text,
+      'storePassword': storePassword.text,
+      'contractAddress': storeAddress.text,
+    };
+    print(data);
+    final headers = {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    };
+    final body = Uri(queryParameters: data).query;
+    final response = await http.post(
+      Uri.parse('http://192.168.1.102:15000/signUp/check'),
+      headers: headers,
+      body: body,
+    );
 
+    // 解析伺服器回應
+    if (response.statusCode == 200) {
+      final responseBody = response.body;
+      final responseMap = json.decode(responseBody);
+      if (responseMap['result'] != null) {
+        result = responseMap['result'].toString();
+      }
+    } else {
+      result = ""; // 處理錯誤情況，將 result 設為空字串或其他值
+    }
+    return response;
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      /*
-      appBar: AppBar(
-        title: Text("Blofood"),
-      ),
-      */
-
-        body: ListView(
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start, // 將子元素靠左對齊
-              children: [
-                ElevatedButton(
-                  onPressed: () async {
-                    Navigator.push(context , MaterialPageRoute(builder: (context) =>main2()));
-                  },
-                  child: Text("打開店家"),
-                ),
-                /*
-                ElevatedButton(
-                  onPressed: () async {
-                    Navigator.push(context , MaterialPageRoute(builder: (context) =>sign_in()));
-                  },
-                  child: Text("註冊"),
-                ),
-                 */
-              ],
+      body: Stack(
+        children: [
+          // Background Image or Color
+          Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [Colors.white, Colors.white],
+              ),
             ),
-          ],
-        ));
+          ),
+          Center(
+            child: Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(10),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey,
+                    blurRadius: 5,
+                  ),
+                ],
+              ),
+              width: 300,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Text(
+                    '登入',
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  SizedBox(height: 20),
+                  TextFormField(
+                    controller: contractAddress,
+                    decoration: InputDecoration(
+                      labelText: '合約位置',
+                      prefixIcon: Icon(Icons.edit_location_sharp),
+                    ),
+                  ),
+                  SizedBox(height: 20),
+                  TextFormField(
+                    controller: storeWallet,
+                    decoration: InputDecoration(
+                      labelText: '錢包/帳號',
+                      prefixIcon: Icon(Icons.person),
+                    ),
+                  ),
+                  SizedBox(height: 10),
+                  TextFormField(
+                    controller: storePassword,
+                    decoration: InputDecoration(
+                      labelText: '密碼',
+                      prefixIcon: Icon(Icons.lock),
+                    ),
+                    obscureText: true,
+                  ),
+                  SizedBox(height: 20),
+                  ElevatedButton(
+                    onPressed: () async {
+                      await Checkacc(storeWallet, storePassword, contractAddress);
+                      print(result);
+                      if (result == "true") {
+                        await shopdata.initializeDatabase(); //初始化資料庫 並且創建資料庫
+                        //await shopdata.deleteallsql("shopdata");
+                        await shopdata.insertsql("shopdata2",{"storeWallet": storeWallet.text,"contractAddress":contractAddress.text,"storePassword":storePassword.text}); //插入資料
+                        Navigator.push(context, MaterialPageRoute(
+                            builder: (context) =>
+                                main2()));
+                      }
+                      else {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: Text("登入失敗"),
+                              content: Text("請檢查輸入是否正確"),
+                            );
+                          },
+                        );
+                      }
+                    },
+                    child: Text('登入'),
+                  ),
+                  ElevatedButton(
+                    onPressed: () async{
+
+                      print("contractAddress.text");
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => sign_in()));
+                      //Navigator.push(context , MaterialPageRoute(builder: (context) =>sign_in()));
+
+                    },
+                    child: Text('註冊帳號'),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

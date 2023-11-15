@@ -17,6 +17,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:googleapis_auth/auth_io.dart';
 import 'dart:convert'; // for utf8
 import 'dart:async'; // for Stream
+import 'SQL.dart';
 
 //增加從雲端抓資料與輸出資料
 class GoogleAuthClient extends http.BaseClient {
@@ -869,6 +870,7 @@ class _HomePageState extends State<HomePage> {
                             padding: const EdgeInsets.all(8.0),
                             child: Column(
                               children: [
+
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
@@ -1161,6 +1163,18 @@ class _HomePageState extends State<HomePage> {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
+                      ),
+                      ElevatedButton(
+                        onPressed: () async {
+
+
+                          FoodSql shopdata = FoodSql("shopdata2","storeWallet TEXT, contractAddress TEXT, storePassword TEXT "); //建立資料庫
+                          await shopdata.initializeDatabase(); //初始化資料庫 並且創建資料庫
+                          print(await shopdata.querytsql("shopdata2")); //查詢所有資料
+
+
+                        },
+                        child: Text("測試"),
                       ),
                       const Padding(
                         padding: EdgeInsets.only(
