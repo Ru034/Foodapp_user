@@ -17,6 +17,7 @@ import 'package:googleapis_auth/auth_io.dart';
 import 'dart:convert'; // for utf8
 import 'dart:async'; // for Stream
 import 'shopmenu.dart';
+import 'main2.dart';
 
 /*
 app:foodapp
@@ -49,12 +50,10 @@ class MyApp extends StatelessWidget {
 }
 
 
-
 class HomePage extends StatefulWidget {
-  //const HomePage({Key? key}) : super(key: key);
-
+  //HomePage 的狀態類別，用於管理狀態變化
   @override
-  State<HomePage> createState() => _HomePageState();
+  _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
@@ -80,7 +79,7 @@ class _HomePageState extends State<HomePage> {
               children: [
                 ElevatedButton(
                   onPressed: () async {
-                    Navigator.push(context , MaterialPageRoute(builder: (context) =>shopmenu()));
+                    Navigator.push(context , MaterialPageRoute(builder: (context) =>main2()));
                   },
                   child: Text("打開店家"),
                 ),
