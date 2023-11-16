@@ -13,7 +13,7 @@ import 'package:flutter/widgets.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'SQL.dart';
-FoodSql shopdata = FoodSql("shopdata2","storeWallet TEXT, contractAddress TEXT, storePassword TEXT "); //建立資料庫
+FoodSql userdata = FoodSql("userdata","Wallet TEXT, Password TEXT "); //建立資料庫
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());
@@ -46,16 +46,14 @@ class HomePage extends StatefulWidget {
 
 
 class _HomePageState extends State<HomePage> {
-  final TextEditingController storeWallet = TextEditingController();
-  final TextEditingController storePassword = TextEditingController();
-  final TextEditingController contractAddress = TextEditingController();
+  final TextEditingController Wallet = TextEditingController();
+  final TextEditingController Password = TextEditingController();
   String result = "";
-
-  Future<http.Response> Checkacc(TextEditingController storeWallet, TextEditingController storePassword, TextEditingController storeAddress,) async {
+ //這邊要確定
+  Future<http.Response> Checkacc(TextEditingController Wallet, TextEditingController Password) async {
     final Map<String, String> data = {
-      'storeWallet': storeWallet.text,
-      'storePassword': storePassword.text,
-      'contractAddress': storeAddress.text,
+      'wallet': Wallet.text,
+      'password': Password.text,
     };
     print(data);
     final headers = {
@@ -63,7 +61,7 @@ class _HomePageState extends State<HomePage> {
     };
     final body = Uri(queryParameters: data).query;
     final response = await http.post(
-      Uri.parse('http://192.168.1.102:15000/signUp/check'),
+      Uri.parse('http://192.168.1.102:15000/checkUser'),
       headers: headers,
       body: body,
     );
@@ -122,15 +120,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                   SizedBox(height: 20),
                   TextFormField(
-                    controller: contractAddress,
-                    decoration: InputDecoration(
-                      labelText: '合約位置',
-                      prefixIcon: Icon(Icons.edit_location_sharp),
-                    ),
-                  ),
-                  SizedBox(height: 20),
-                  TextFormField(
-                    controller: storeWallet,
+                    controller: Wallet,
                     decoration: InputDecoration(
                       labelText: '錢包/帳號',
                       prefixIcon: Icon(Icons.person),
@@ -138,7 +128,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                   SizedBox(height: 10),
                   TextFormField(
-                    controller: storePassword,
+                    controller: Password,
                     decoration: InputDecoration(
                       labelText: '密碼',
                       prefixIcon: Icon(Icons.lock),
@@ -148,12 +138,12 @@ class _HomePageState extends State<HomePage> {
                   SizedBox(height: 20),
                   ElevatedButton(
                     onPressed: () async {
-                      await Checkacc(storeWallet, storePassword, contractAddress);
+                      await Checkacc(Wallet, Password);
                       print(result);
                       if (result == "true") {
-                        await shopdata.initializeDatabase(); //初始化資料庫 並且創建資料庫
+                        await userdata.initializeDatabase(); //初始化資料庫 並且創建資料庫
                         //await shopdata.deleteallsql("shopdata");
-                        await shopdata.insertsql("shopdata2",{"storeWallet": storeWallet.text,"contractAddress":contractAddress.text,"storePassword":storePassword.text}); //插入資料
+                        await userdata.insertsql("userdata",{"Wallet": Wallet.text,"Password":Password.text}); //插入資料
                         Navigator.push(context, MaterialPageRoute(
                             builder: (context) =>
                                 main2()));
@@ -174,8 +164,6 @@ class _HomePageState extends State<HomePage> {
                   ),
                   ElevatedButton(
                     onPressed: () async{
-
-                      print("contractAddress.text");
                       Navigator.push(context,
                           MaterialPageRoute(builder: (context) => sign_in()));
                       //Navigator.push(context , MaterialPageRoute(builder: (context) =>sign_in()));

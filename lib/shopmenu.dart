@@ -1168,9 +1168,9 @@ class _HomePageState extends State<HomePage> {
                         onPressed: () async {
 
 
-                          FoodSql shopdata = FoodSql("shopdata2","storeWallet TEXT, contractAddress TEXT, storePassword TEXT "); //建立資料庫
-                          await shopdata.initializeDatabase(); //初始化資料庫 並且創建資料庫
-                          print(await shopdata.querytsql("shopdata2")); //查詢所有資料
+                          FoodSql userdata = FoodSql("userdata","Wallet TEXT, Password TEXT "); //建立資料庫
+                          await userdata.initializeDatabase(); //初始化資料庫 並且創建資料庫
+                          print(await userdata.querytsql("userdata")); //查詢所有資料
 
 
                         },
