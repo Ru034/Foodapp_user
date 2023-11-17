@@ -41,11 +41,9 @@ class _RecommendPageState extends State<RecommendPage> {
       user_Password = lastShopData['Password'].toString();
     }
   }
-  late String menuVersion  ; //取得menu版本
-  Future<void> menuid(String shop_storeWallet, String shop_contractAddress) async {
+  Future<List<String>> getcontract(String Wallet) async { // 取得所有合約
     final Map<String, String> data = {
-      'contractAddress': shop_contractAddress,
-      'wallet': shop_storeWallet,
+      'account': Wallet,
     };
     print(data);
     final headers = {
@@ -53,20 +51,32 @@ class _RecommendPageState extends State<RecommendPage> {
     };
     final body = Uri(queryParameters: data).query;
     final response = await http.post(
-      Uri.parse('http://192.168.1.102:15000/contract/getMenuVersion'),
+      Uri.parse('http://192.168.1.102:15000/signUp/getContract'),
       headers: headers,
       body: body,
     );
-    late String menuid;
+    List<String> contracts = []; // 初始化 contracts
     if (response.statusCode == 200) {
-      menuid = response.body; // 將整個 API 回傳的內容直接賦值給 storeName
-      Map<String, dynamic> jsonData = jsonDecode(menuid);
-      menuVersion = jsonData['menuVersion'] ?? '';
-      print("menuVersion: $menuVersion");
+      String responseBody = response.body;
+      Map<String, dynamic> jsonData = jsonDecode(responseBody);
+      if (jsonData.containsKey('contracts')) {
+        List<dynamic> contractList = jsonData['contracts'];
+        for (var contract in contractList) {
+          contracts.add(contract.toString());
+        }
+        print("contracts: $contracts");
+      } else {
+        print('Response does not contain "contracts" key');
+      }
     } else {
       print('Request failed with status: ${response.statusCode}');
     }
+    return contracts;
   }
+
+
+
+
   List<String> storeNameList = [
   ];
   List<String> storePriceList = [
@@ -108,6 +118,11 @@ class _RecommendPageState extends State<RecommendPage> {
                         await getdata();
                         print(user_Wallet);
                         print(user_Password);
+                        List<String> contractList = await getcontract(user_Wallet);
+                        for (String contract in contractList) {
+                          print(contract);
+                        }
+
                       },
                       child: Text("測試"),
                     ),
