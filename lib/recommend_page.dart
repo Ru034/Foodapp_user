@@ -1,5 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:csv/csv.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:io';
+import 'dart:typed_data';
+import 'package:file_picker/file_picker.dart';
+import 'package:googleapis/drive/v3.dart' as drive;
+import 'package:google_sign_in/google_sign_in.dart' as signIn;
+import 'package:http/http.dart' as http;
+import 'package:googleapis_auth/googleapis_auth.dart' as auth;
+import 'package:googleapis/drive/v3.dart' show Media;
 
+import 'package:file_picker/file_picker.dart';
+import 'package:googleapis_auth/auth_io.dart';
+import 'dart:convert'; // for utf8
+import 'dart:async'; // for Stream
+import 'SQL.dart';
 class RecommendPage extends StatefulWidget {
   const RecommendPage({Key? key}) : super(key: key);
 
@@ -8,49 +27,55 @@ class RecommendPage extends StatefulWidget {
 }
 
 class _RecommendPageState extends State<RecommendPage> {
+  late String user_Wallet;
+  late String user_Password;
+  Future<void> getdata() async {
+    //取得shopdata最後一筆資料
+    FoodSql userdata = FoodSql("userdata", "Wallet TEXT, Password TEXT");
+    await userdata.initializeDatabase();
+    Map<String, dynamic>? lastShopData = await userdata
+        .querylastsql("userdata"); // 使用 Map<String, dynamic>? 接收返回值
+    if (lastShopData != null) {
+      // 檢查是否返回了資料
+      user_Wallet = lastShopData['Wallet'].toString();
+      user_Password = lastShopData['Password'].toString();
+    }
+  }
+  late String menuVersion  ; //取得menu版本
+  Future<void> menuid(String shop_storeWallet, String shop_contractAddress) async {
+    final Map<String, String> data = {
+      'contractAddress': shop_contractAddress,
+      'wallet': shop_storeWallet,
+    };
+    print(data);
+    final headers = {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    };
+    final body = Uri(queryParameters: data).query;
+    final response = await http.post(
+      Uri.parse('http://192.168.1.102:15000/contract/getMenuVersion'),
+      headers: headers,
+      body: body,
+    );
+    late String menuid;
+    if (response.statusCode == 200) {
+      menuid = response.body; // 將整個 API 回傳的內容直接賦值給 storeName
+      Map<String, dynamic> jsonData = jsonDecode(menuid);
+      menuVersion = jsonData['menuVersion'] ?? '';
+      print("menuVersion: $menuVersion");
+    } else {
+      print('Request failed with status: ${response.statusCode}');
+    }
+  }
   List<String> storeNameList = [
-    '餐廳1',
-    '餐廳2',
-    '餐廳1',
-    '餐廳2',
-    '餐廳1',
-    '餐廳2',
-    '餐廳1',
-    '餐廳2',
-    '餐廳1',
-    '餐廳2',
-    '餐廳1',
-    '餐廳2'
   ];
   List<String> storePriceList = [
-    '50~100 TWD',
-    '100~200 TWD',
-    '150~250 TWD',
-    '200~300 TWD',
-    '250~350 TWD',
-    '300~400 TWD',
-    '350~450 TWD',
-    '400~500 TWD',
-    '450~550 TWD',
-    '500~600 TWD',
-    '550~650 TWD',
-    '600~700 TWD'
   ];
   List<String> storeDistanceList = [
-    '0.1km',
-    '0.2km',
-    '0.3km',
-    '0.4km',
-    '0.5km',
-    '0.6km',
-    '0.7km',
-    '0.8km',
-    '0.9km',
-    '1.0km',
-    '1.1km',
-    '1.2km'
   ];
-
+  _RecommendPageState() {
+    storeNameList.add("麥當勞");
+  }
   @override
   Widget build(BuildContext context) {
     final titleStyle = TextStyle(
@@ -77,6 +102,14 @@ class _RecommendPageState extends State<RecommendPage> {
                             style: titleStyle.copyWith(
                                 color: Colors.black87)),
                       ],
+                    ),
+                    ElevatedButton(
+                      onPressed: () async {
+                        await getdata();
+                        print(user_Wallet);
+                        print(user_Password);
+                      },
+                      child: Text("測試"),
                     ),
                     SizedBox(height: 30),
 
@@ -116,6 +149,7 @@ class _RecommendPageState extends State<RecommendPage> {
                                     ],
                                   ),
                                 )));
+
                       },
                     ),
                   ],
