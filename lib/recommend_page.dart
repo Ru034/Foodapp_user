@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:flutter/material.dart';
@@ -74,8 +76,102 @@ class _RecommendPageState extends State<RecommendPage> {
     return contracts;
   }
 
+  Future<bool> getClosedStatus(String user_Wallet, String shop_contractAddress) async { //Todo
+    late bool closedStatus  ; //取得menu版本
+    final Map<String, String> data = {
+      'contractAddress': shop_contractAddress,
+      'wallet': user_Wallet,
+    };
+    print(data);
+    final headers = {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    };
+    final body = Uri(queryParameters: data).query;
+    final response = await http.post(
+      Uri.parse('http://192.168.1.102:15000/contract/getClosedStatus'),
+      headers: headers,
+      body: body,
+    );
+    late String value;
+    if (response.statusCode == 200) {
+      value = response.body; // 將整個 API 回傳的內容直接賦值給 storeName
+      Map<String, dynamic> jsonData = jsonDecode(value);
+      closedStatus = jsonData['closedStatus'] ?? '';
+      print("closedStatus: $closedStatus");
+    } else {
+      print('Request failed with status: ${response.statusCode}');
+    }
+    return closedStatus;
+  }
 
 
+  Future<void> getacc(String user_Wallet, String shop_contractAddress) async {
+    //String storeName=''   ; //店家名稱
+    //String storeAddress=''; //店家地址
+    //String storePhone=''; //店家電話
+    //String storeWallet=''; //店家錢包
+    //String currentID=''; //店家ID
+    //String storeTag='';
+    //String latitudeAndLongitude=''; //經緯度
+    //String menuLink=''; //菜單連結
+    //String storeEmail=''; //店家信箱
+    final Map<String, String> data = {
+      'contractAddress': shop_contractAddress,
+      'wallet': user_Wallet,
+    };
+    print(data);
+    final headers = {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    };
+    final body = Uri(queryParameters: data).query;
+    final response = await http.post(
+      Uri.parse('http://192.168.1.102:15000/contract/getStore'),
+      headers: headers,
+      body: body,
+    );
+    late String toll;
+    if (response.statusCode == 200) {
+      toll = response.body; // 將整個 API 回傳的內容直接賦值給 storeName
+      print(toll);
+      Map<String, dynamic> jsonData = jsonDecode(toll);
+      String storeName = jsonData['storeName'] ?? '';
+      String storeAddress = jsonData['storeAddress'] ?? '';
+      String storePhone = jsonData['storePhone'] ?? '';
+      String storeWallet = jsonData['storeWallet'] ?? '';
+      String currentID = jsonData['currentID'] ?? '';
+      String storeTag = jsonData['storeTag'] ?? '';
+      String latitudeAndLongitude = jsonData['latitudeAndLongitude'] ?? '';
+      String menuLink = jsonData['menuLink'] ?? '';
+      String storeEmail = jsonData['storeEmail'] ?? '';
+      // print(storeName);
+      // print(storeAddress);
+      // print(storePhone);
+      // print(storeWallet);
+      // print(currentID);
+      // print(storeTag);
+      // print(latitudeAndLongitude);
+      // print(menuLink);
+      // print(storeEmail);
+
+
+      FoodSql shoplink = FoodSql("shoplink2","storeName TEXT, storeAddress TEXT, storePhone TEXT, storeWallet TEXT, currentID TEXT, storeTag TEXT, latitudeAndLongitude TEXT, menuLink TEXT, storeEmail TEXT"); //建立資料庫
+      await shoplink.initializeDatabase(); //初始化資料庫 並且創建資料庫
+      await shoplink.insertsql("shoplink2", {
+        'storeName': storeName,
+        'contractAddress': storeAddress,
+        'storePhone': storePhone,
+        'storeWallet': storeWallet,
+        'currentID': currentID,
+        'storeTag': storeTag,
+        'latitudeAndLongitude': latitudeAndLongitude,
+        'menuLink': menuLink,
+        'storeEmail': storeEmail,
+      });
+      //print(toll);
+    } else {
+      print('Request failed with status: ${response.statusCode}');
+    }
+  }
 
   List<String> storeNameList = [
   ];
@@ -118,16 +214,25 @@ class _RecommendPageState extends State<RecommendPage> {
                         await getdata();
                         print(user_Wallet);
                         print(user_Password);
+
+
                         List<String> contractList = await getcontract(user_Wallet);
                         for (String contract in contractList) {
-                          print(contract);
-                        }
+                          bool closedStatus =await getClosedStatus(user_Wallet, contract) ;
+                          if (!closedStatus) {
+                            await getacc(user_Wallet, contract);
+                            // FoodSql shoplink = FoodSql("shoplink2","storeName TEXT, contractAddress TEXT, storePhone TEXT, storeWallet TEXT, currentID TEXT, storeTag TEXT, latitudeAndLongitude TEXT, menuLink TEXT, storeEmail TEXT"); //建立資料庫
+                            // await shoplink.initializeDatabase();
+                            // print(await shoplink.querytsql("shoplink2"));
 
+
+                            print('closedStatus is false. Do something...');
+                          }
+                        }
                       },
                       child: Text("測試"),
                     ),
                     SizedBox(height: 30),
-
                     GridView.builder(
                       shrinkWrap: true,
                       physics: NeverScrollableScrollPhysics(),
@@ -136,7 +241,7 @@ class _RecommendPageState extends State<RecommendPage> {
                         childAspectRatio: 2.0,
                         mainAxisSpacing: 20,
                       ),
-                      itemCount: 12,
+                      itemCount: 2,//改這李
                       itemBuilder: (context, index) {
                         return SizedBox(
                             height: 100,

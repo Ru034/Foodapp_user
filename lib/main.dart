@@ -143,7 +143,7 @@ class _HomePageState extends State<HomePage> {
                       if (result == "true") {
                         await userdata.initializeDatabase(); //初始化資料庫 並且創建資料庫
                         //await shopdata.deleteallsql("shopdata");
-                        await userdata.insertsql("userdata",{"Wallet": Wallet.text,"Password":Password.text}); //插入資料
+                        //await userdata.insertsql("userdata",{"Wallet": Wallet.text,"Password":Password.text}); //插入資料
                         Navigator.push(context, MaterialPageRoute(
                             builder: (context) =>
                                 main2()));
