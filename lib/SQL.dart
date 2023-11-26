@@ -25,7 +25,7 @@ class DBHelper {
 
          */
         await db.execute('''
-          CREATE TABLE IF NOT EXISTS shopdata(storeName TEXT, storeAddress TEXT, storePhone TEXT, storeWallet TEXT, currentID TEXT, storeTag TEXT, latitudeAndLongitude TEXT, menuLink TEXT, storeEmail TEXT )
+          CREATE TABLE IF NOT EXISTS storedata(storeName TEXT, storeAddress TEXT, storePhone TEXT, storeWallet TEXT, currentID TEXT, storeTag TEXT, latitudeAndLongitude TEXT, menuLink TEXT, storeEmail TEXT,shopcontractAddress TEXT)
         ''');
         // 建立 consumers 表格
         await db.execute('''
@@ -36,9 +36,9 @@ class DBHelper {
   }
 
   // 表格中插入資料
-  Future<void> insertshopdata(Map<String, dynamic> shopdata) async {
+  Future<void> insertstoredata(Map<String, dynamic> storedata) async {
     final db = await database;
-    await db.insert('shopdata', shopdata);
+    await db.insert('storedata', storedata);
   }
   Future<void> insertuserdata(Map<String, dynamic> userdata) async {
     final db = await database;
@@ -47,10 +47,10 @@ class DBHelper {
 
 
   // 更新資料
-  Future<void> updateshopdata(String updateparameter,String updatevalute,String updateparameter2,String updatevalute2) async {
+  Future<void> updatestoredata(String updateparameter,String updatevalute,String updateparameter2,String updatevalute2) async {
     final db = await database;
     await db.update(
-      'shopdata',
+      'storedata',
       {updateparameter: updatevalute,updateparameter2: updatevalute2},
       where: '$updateparameter = ?',
       whereArgs: [updatevalute],
@@ -68,10 +68,10 @@ class DBHelper {
 
 
   // 刪除資料
-  Future<void> deleteshopdata(String deleteparameter,String deletevalute) async {
+  Future<void> deletestoredata(String deleteparameter,String deletevalute) async {
     final db = await database;
     await db.delete(
-      'shopdata',
+      'storedata',
       where: '$deleteparameter = ?',
       whereArgs: [deletevalute],
     );
@@ -86,10 +86,10 @@ class DBHelper {
   }
 
   // 查詢資料
-  Future<List<Map<String, dynamic>>> queryshopdata(String queryparameter,String queryvalute) async {
+  Future<List<Map<String, dynamic>>> querystoredata(String queryparameter,String queryvalute) async {
     final db = await database;
     return await db.query(
-      'shopdata',
+      'storedata',
       where: '$queryparameter = ?',
       whereArgs: [queryvalute],
     );
@@ -105,9 +105,9 @@ class DBHelper {
 
 
   // 查詢所有資料
-  Future<List<Map<String, dynamic>>> queryallshopdata() async {
+  Future<List<Map<String, dynamic>>> queryallstoredata() async {
     final db = await database;
-    return await db.query('shopdata');
+    return await db.query('storedata');
   }
   Future<List<Map<String, dynamic>>> queryalluserdata() async {
     final db = await database;
@@ -116,10 +116,10 @@ class DBHelper {
 
 
   // 讀取最後一筆資料
-  Future<Map<String, dynamic>> querylastshopdata() async {
+  Future<Map<String, dynamic>> querylaststoredata() async {
     final db = await database;
     var maps = await db.query(
-      'shopdata', // 修改資料庫表的名稱為 'shopdata'
+      'storedata', // 修改資料庫表的名稱為 'storedata'
       orderBy: "ROWID DESC", // 使用 ROWID 或其他合適的欄位進行降序排序
       limit: 1,
     );
@@ -132,7 +132,7 @@ class DBHelper {
   Future<Map<String, dynamic>> querylastuserdata() async {
     final db = await database;
     var maps = await db.query(
-      'userdata', // 修改資料庫表的名稱為 'shopdata'
+      'userdata', // 修改資料庫表的名稱為 'storedata'
       orderBy: "ROWID DESC", // 使用 ROWID 或其他合適的欄位進行降序排序
       limit: 1,
     );
@@ -146,9 +146,9 @@ class DBHelper {
 
 
   // 刪除資料表
-  Future<void> deleteshopdatatable() async {
+  Future<void> deletestoredatatable() async {
     final db = await database;
-    await db.delete('shopdata');
+    await db.delete('storedata');
   }
   Future<void> deleteuserdatatable() async {
     final db = await database;

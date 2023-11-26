@@ -37,11 +37,11 @@ class _RecommendPageState extends State<RecommendPage> {
   Future<void> getdata() async {
     //取得shopdata最後一筆資料
     final dbHelper = DBHelper(); // 建立 DBHelper 物件
-    Map<String, dynamic>? lastShopData = await dbHelper.querylastuserdata(); // 使用 Map<String, dynamic>? 接收返回值
-    if (lastShopData != null) {
+    Map<String, dynamic>? laststoreData = await dbHelper.querylastuserdata(); // 使用 Map<String, dynamic>? 接收返回值
+    if (laststoreData != null) {
       // 檢查是否返回了資料
-      user_Wallet = lastShopData['Wallet'].toString();
-      user_Password = lastShopData['Password'].toString();
+      user_Wallet = laststoreData['Wallet'].toString();
+      user_Password = laststoreData['Password'].toString();
     }
   }
   Future<List<String>> getcontract(String Wallet) async { // 取得所有合約
@@ -191,9 +191,9 @@ class _RecommendPageState extends State<RecommendPage> {
       print(toll);
       Map<String, dynamic> jsonData = jsonDecode(toll);
       final dbHelper = DBHelper();
-      await dbHelper.deleteshopdatatable();
+      await dbHelper.deletestoredatatable();
       storeName = jsonData['storeName'] ?? '';
-      storeAddress = shop_contractAddress;
+      storeAddress = jsonData['storeAddress'] ?? '';
       storePhone = jsonData['storePhone'] ?? '';
       storeWallet = jsonData['storeWallet'] ?? '';
       currentID = jsonData['currentID'] ?? '';
@@ -201,11 +201,10 @@ class _RecommendPageState extends State<RecommendPage> {
       latitudeAndLongitude = jsonData['latitudeAndLongitude'] ?? '';
       menuLink = jsonData['menuLink'] ?? '';
       storeEmail = jsonData['storeEmail'] ?? '';
-      await menuid(user_Wallet, storeAddress); //menuVersion
-      await getmenu(user_Wallet, storeAddress, menuVersion);
+      await menuid(user_Wallet, shop_contractAddress); //menuVersion
+      await getmenu(user_Wallet, shop_contractAddress, menuVersion);
       menuLink = newmenuLink;
       currentID = menuVersion;
-
 
 
       print(storeName);
@@ -218,23 +217,49 @@ class _RecommendPageState extends State<RecommendPage> {
       print(menuLink);
       print(storeEmail);
 
-      await dbHelper.insertshopdata({"storeName": storeName,"storeAddress": storeAddress,"storePhone": storePhone,"storeWallet": storeWallet,"currentID": currentID,"storeTag": storeTag,"latitudeAndLongitude": latitudeAndLongitude,"menuLink": menuLink,"storeEmail": storeEmail});
-      //await insertshopdata({"storeName": storeName,"storeAddress": storeAddress,"storePhone": storePhone,"storeWallet": storeWallet,"currentID": currentID,"storeTag": storeTag,"latitudeAndLongitude": latitudeAndLongitude,"menuLink": menuLink,"storeEmail": storeEmail});
-      //print(toll);
+      await dbHelper.insertstoredata({"storeName": storeName,"storeAddress": storeAddress,"storePhone": storePhone,"storeWallet": storeWallet,"currentID": currentID,"storeTag": storeTag,"latitudeAndLongitude": latitudeAndLongitude,"menuLink": menuLink,"storeEmail": storeEmail,"shopcontractAddress": shop_contractAddress});
+
     } else {
       print('Request failed with status: ${response.statusCode}');
     }
   }
 
+  Future<void> updateStoreListsFromDatabase() async {
+    final dbHelper = DBHelper();
+    List<Map<String, dynamic>> storeData = await dbHelper.queryallstoredata();
+    //storeNameList.clear(); // 清空現有的列表
+    //storeTagList.clear();
+    for (var record in storeData) {
+      storeNameList.add(record["storeName"]);
+      storeTagList.add(record["storeTag"]);
+    }
+    setState(() {
+    });
+  }
+
+
   List<String> storeNameList = [
   ];
-  List<String> storePriceList = [
+  List<String> storeTagList = [
   ];
-  List<String> storeDistanceList = [
-  ];
+  // List<String> storeDistanceList = [
+  // ];
+  /*
   _RecommendPageState() {
-    storeNameList.add("麥當勞");
+    storeNameList.add("storeName");
+    storeTagList.add("storeTag");
   }
+   */
+  @override
+  void initState() {
+    super.initState();
+    updateStoreListsFromDatabase();
+  }
+  // 構造函數，當 widget 被創建時執行，這裏初始化列表
+  // _RecommendPageState() {
+  //   updateStoreListsFromDatabase();
+  // }
+
   @override
   Widget build(BuildContext context) {
     final titleStyle = TextStyle(
@@ -270,20 +295,25 @@ class _RecommendPageState extends State<RecommendPage> {
 
 
                         List<String> contractList = await getcontract(user_Wallet);
+                        final dbHelper = DBHelper();
+                        List<Map<String, dynamic>> storeData = await dbHelper.queryallstoredata();
+                        storeNameList.clear(); // 清空現有的列表
+                        storeTagList.clear();
                         for (String contract in contractList) {
                           bool closedStatus =await getClosedStatus(user_Wallet, contract) ;
                           if (!closedStatus) {
                             await getacc(user_Wallet, contract);
-                            // FoodSql shoplink = FoodSql("shoplink2","storeName TEXT, contractAddress TEXT, storePhone TEXT, storeWallet TEXT, currentID TEXT, storeTag TEXT, latitudeAndLongitude TEXT, menuLink TEXT, storeEmail TEXT"); //建立資料庫
-                            // await shoplink.initializeDatabase();
-                            // print(await shoplink.querytsql("shoplink2"));
-
-
+                            updateStoreListsFromDatabase();
+                            //刷新頁面
                             print('closedStatus is false. Do something...');
                           }
+
                         }
+                        setState(() {
+                          updateStoreListsFromDatabase();
+                        });
                       },
-                      child: Text("測試"),
+                      child: Text("下載最新檔案"),
                     ),
                     SizedBox(height: 30),
                     GridView.builder(
@@ -294,7 +324,7 @@ class _RecommendPageState extends State<RecommendPage> {
                         childAspectRatio: 2.0,
                         mainAxisSpacing: 20,
                       ),
-                      itemCount: 2,//改這李
+                      itemCount: storeNameList.length,//改這李
                       itemBuilder: (context, index) {
                         return SizedBox(
                             height: 100,
@@ -312,13 +342,13 @@ class _RecommendPageState extends State<RecommendPage> {
                                         style: TextStyle(fontSize: 24),
                                       ),
                                       Text(
-                                        storePriceList[index],
+                                        storeTagList[index],
                                         style: TextStyle(fontSize: 18),
                                       ),
-                                      Text(
-                                        storeDistanceList[index],
-                                        style: TextStyle(fontSize: 18),
-                                      ),
+                                      // Text(
+                                      //   storeDistanceList[index],
+                                      //   style: TextStyle(fontSize: 18),
+                                      // ),
                                     ],
                                   ),
                                 )));
