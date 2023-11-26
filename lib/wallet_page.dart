@@ -46,10 +46,8 @@ class _HomePageState extends State<HomePage> {
   late String user_Password;
   Future<void> getdata() async {
     //取得shopdata最後一筆資料
-    FoodSql userdata = FoodSql("userdata", "Wallet TEXT, Password TEXT");
-    await userdata.initializeDatabase();
-    Map<String, dynamic>? lastShopData = await userdata
-        .querylastsql("userdata"); // 使用 Map<String, dynamic>? 接收返回值
+    final dbHelper = DBHelper(); // 建立 DBHelper 物件
+    Map<String, dynamic>? lastShopData = await dbHelper.querylastuserdata(); // 使用 Map<String, dynamic>? 接收返回值
     if (lastShopData != null) {
       // 檢查是否返回了資料
       user_Wallet = lastShopData['Wallet'].toString();

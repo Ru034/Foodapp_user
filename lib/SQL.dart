@@ -1,89 +1,138 @@
-import 'dart:async';
-import 'package:flutter/widgets.dart';
-import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
-class FoodSql {
-  late String table_name;
-  late String createsql_value;
-  late Database database;
-  Future<void> initializeDatabase() async { //初始化資料庫  並且創建資料庫
-    database =await openDatabase(
-      join(await getDatabasesPath(), 'foodsql.db'),
-      onCreate: (db, version) {return db.execute('CREATE TABLE $table_name($createsql_value)');},
+import 'package:path/path.dart';
+//final dbHelper = DBHelper(); // 建立 DBHelper 物件
+
+class DBHelper {
+  Database? _database;
+
+  Future<Database> get database async {
+    if (_database != null) return _database!;
+    _database = await initDatabase();
+    return _database!;
+  }
+
+  Future<Database> initDatabase() async {
+    String path = join(await getDatabasesPath(), 'foodsql.db');
+    return await openDatabase(
+      path,
       version: 1,
-    ) ;
-  }
+      onCreate: (db, version) async {
+        // 建立 stores 表格
+        /*
+        await db.execute(
+        'CREATE TABLE userdata(Wallet TEXT, Password TEXT )',
+          );
 
-  //使用時要放這段程式碼
-  //FoodSql shopdata = FoodSql("shopdata","storeWallet TEXT, contractAddress TEXT"); //建立資料庫
-  //await shopdata.initializeDatabase(); //初始化資料庫 並且創建資料庫
-
-
-  //FoodSql shopdata = FoodSql("shopdata","storeWallet TEXT, contractAddress TEXT"); //建立資料庫
-  FoodSql(this.table_name,this.createsql_value) ; //建構子
-
-
-
-
-  Future<void> insertsql(String table,Map<String, dynamic> mapvalue) async { //插入資料
-      await database.insert(
-        table, // 确保表名正确
-        mapvalue,
-        conflictAlgorithm: ConflictAlgorithm.replace,
-      );
-    //await shopdata.insertsql("shopdata",{"storeWallet": storeWallet.text,"contractAddress":contractAddress.text}); //插入資料
-  }
-
-
-  Future<void> deletesql(String table,String deleteparameter,String deletevalute) async { //刪除資料
-    print(deleteparameter) ;
-    print(deletevalute) ;
-    await database.delete(
-      table, // 确保表名正确
-      where: '$deleteparameter = ?',
-      whereArgs: [deletevalute],
+         */
+        await db.execute('''
+          CREATE TABLE IF NOT EXISTS shopdata(storeName TEXT, storeAddress TEXT, storePhone TEXT, storeWallet TEXT, currentID TEXT, storeTag TEXT, latitudeAndLongitude TEXT, menuLink TEXT, storeEmail TEXT )
+        ''');
+        // 建立 consumers 表格
+        await db.execute('''
+          CREATE TABLE IF NOT EXISTS userdata(Wallet TEXT, Password TEXT )
+        ''');
+      },
     );
-    //await shopdata.deletesql("shopdata","contractAddress",contractAddress.text); //刪除資料
+  }
+
+  // 表格中插入資料
+  Future<void> insertshopdata(Map<String, dynamic> shopdata) async {
+    final db = await database;
+    await db.insert('shopdata', shopdata);
+  }
+  Future<void> insertuserdata(Map<String, dynamic> userdata) async {
+    final db = await database;
+    await db.insert('userdata', userdata);
   }
 
 
-  Future<void> updatesql(String table,String updateparameter,String updatevalute,String updateparameter2,String updatevalute2) async { //更新資料
-    await database.update(
-      table,
+  // 更新資料
+  Future<void> updateshopdata(String updateparameter,String updatevalute,String updateparameter2,String updatevalute2) async {
+    final db = await database;
+    await db.update(
+      'shopdata',
       {updateparameter: updatevalute,updateparameter2: updatevalute2},
       where: '$updateparameter = ?',
       whereArgs: [updatevalute],
     );
-    //await shopdata.updatesql("shopdata", "contractAddress", contractAddress.text, "storeWallet", storeWallet.text); //更新資料
+  }
+  Future<void> updateuserdata(String updateparameter,String updatevalute,String updateparameter2,String updatevalute2) async {
+    final db = await database;
+    await db.update(
+      'userdata',
+      {updateparameter: updatevalute,updateparameter2: updatevalute2},
+      where: '$updateparameter = ?',
+      whereArgs: [updatevalute],
+    );
   }
 
 
-  Future<List<Map<String, dynamic>>> querytosql(String table,String queryparameter,String queryvalute) async {   //查詢單筆資料
-    var maps = await database.query(
-      table,
+  // 刪除資料
+  Future<void> deleteshopdata(String deleteparameter,String deletevalute) async {
+    final db = await database;
+    await db.delete(
+      'shopdata',
+      where: '$deleteparameter = ?',
+      whereArgs: [deletevalute],
+    );
+  }
+  Future<void> deleteuserdata(String deleteparameter,String deletevalute) async {
+    final db = await database;
+    await db.delete(
+      'userdata',
+      where: '$deleteparameter = ?',
+      whereArgs: [deletevalute],
+    );
+  }
+
+  // 查詢資料
+  Future<List<Map<String, dynamic>>> queryshopdata(String queryparameter,String queryvalute) async {
+    final db = await database;
+    return await db.query(
+      'shopdata',
       where: '$queryparameter = ?',
       whereArgs: [queryvalute],
     );
-    return maps;
-    //print(await shopdata.querytosql("shopdata","contractAddress",contractAddress.text)); //查詢單筆資料
   }
-
-
-  dynamic querytsql(String table) async {   //查詢所有資料
-    var maps = await database.query(table);
-    return maps;
-    //print(await shopdata.querytsql("shopdata")); //查詢所有資料
-  }
-  Future<void> deleteallsql(String table) async { //刪除資料
-    await database.delete(
-      table, // 确保表名正确
+  Future<List<Map<String, dynamic>>> queryuserdata(String queryparameter,String queryvalute) async {
+    final db = await database;
+    return await db.query(
+      'userdata',
+      where: '$queryparameter = ?',
+      whereArgs: [queryvalute],
     );
-    //await shopdata.deleteallsql("shopdata"); //刪除資料
   }
-  //讀取最後一筆資料
-  Future<Map<String, dynamic>> querylastsql(String table) async {
-    var maps = await database.query(
-      table, // 修改資料庫表的名稱為 'shopdata'
+
+
+  // 查詢所有資料
+  Future<List<Map<String, dynamic>>> queryallshopdata() async {
+    final db = await database;
+    return await db.query('shopdata');
+  }
+  Future<List<Map<String, dynamic>>> queryalluserdata() async {
+    final db = await database;
+    return await db.query('userdata');
+  }
+
+
+  // 讀取最後一筆資料
+  Future<Map<String, dynamic>> querylastshopdata() async {
+    final db = await database;
+    var maps = await db.query(
+      'shopdata', // 修改資料庫表的名稱為 'shopdata'
+      orderBy: "ROWID DESC", // 使用 ROWID 或其他合適的欄位進行降序排序
+      limit: 1,
+    );
+    if (maps.isNotEmpty) {
+      return maps.first; // 返回最後一筆資料，如果有的話
+    } else {
+      return {}; // 如果資料為空，返回一個空的 Map
+    }
+  }
+  Future<Map<String, dynamic>> querylastuserdata() async {
+    final db = await database;
+    var maps = await db.query(
+      'userdata', // 修改資料庫表的名稱為 'shopdata'
       orderBy: "ROWID DESC", // 使用 ROWID 或其他合適的欄位進行降序排序
       limit: 1,
     );
@@ -96,7 +145,23 @@ class FoodSql {
 
 
 
+  // 刪除資料表
+  Future<void> deleteshopdatatable() async {
+    final db = await database;
+    await db.delete('shopdata');
+  }
+  Future<void> deleteuserdatatable() async {
+    final db = await database;
+    await db.delete('userdata');
+  }
+
+  // 關閉資料庫
+  Future<void> closedatabase() async {
+    final db = await database;
+    await db.close();
+  }
+
+
 
 }
-
 

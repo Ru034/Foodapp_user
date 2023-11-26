@@ -1,3 +1,4 @@
+
 import 'package:path_provider/path_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -56,6 +57,8 @@ class _HomePageState extends State<HomePage> {
   TextEditingController Password = TextEditingController(); //密碼
   String account  = ""; //店家錢包
   String Wallet  =""; //店家錢包
+
+
 
   Future<void> showWalletDialog(BuildContext context, String wallet) async {
     return showDialog<void>(
@@ -172,10 +175,14 @@ class _HomePageState extends State<HomePage> {
                         Map<String, dynamic> data = json.decode(account);
                         Wallet= data["account"];
                         showWalletDialog(context, Wallet);
-                        FoodSql userdata = FoodSql("userdata","Wallet TEXT, Password TEXT "); //建立資料庫
-                        await userdata.initializeDatabase(); //初始化資料庫 並且創建資料庫
-                        //await shopdata.deleteallsql("shopdata");
-                        await userdata.insertsql("userdata",{"Wallet": Wallet,"Password":Password.text});
+                        //FoodSql userdata = FoodSql("userdata","Wallet TEXT, Password TEXT "); //建立資料庫
+                        final dbHelper = DBHelper();
+                        await dbHelper.insertuserdata({
+                          "Wallet": Wallet,
+                          "Password": Password.text
+                        });
+
+                        print(await dbHelper.queryalluserdata());
                         Navigator.push(context, MaterialPageRoute(
                             builder: (context) =>
                                 main2()));

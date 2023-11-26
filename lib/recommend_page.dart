@@ -18,9 +18,12 @@ import 'package:googleapis/drive/v3.dart' show Media;
 
 import 'package:file_picker/file_picker.dart';
 import 'package:googleapis_auth/auth_io.dart';
+import 'package:path/path.dart';
+import 'package:sqflite/sqflite.dart';
 import 'dart:convert'; // for utf8
 import 'dart:async'; // for Stream
 import 'SQL.dart';
+//FoodSql shopdata = FoodSql("shopdata","storeName TEXT, storeAddress TEXT, storePhone TEXT, storeWallet TEXT, currentID TEXT, storeTag TEXT, latitudeAndLongitude TEXT, menuLink TEXT, storeEmail TEXT "); //建立資料庫
 class RecommendPage extends StatefulWidget {
   const RecommendPage({Key? key}) : super(key: key);
 
@@ -33,10 +36,8 @@ class _RecommendPageState extends State<RecommendPage> {
   late String user_Password;
   Future<void> getdata() async {
     //取得shopdata最後一筆資料
-    FoodSql userdata = FoodSql("userdata", "Wallet TEXT, Password TEXT");
-    await userdata.initializeDatabase();
-    Map<String, dynamic>? lastShopData = await userdata
-        .querylastsql("userdata"); // 使用 Map<String, dynamic>? 接收返回值
+    final dbHelper = DBHelper(); // 建立 DBHelper 物件
+    Map<String, dynamic>? lastShopData = await dbHelper.querylastuserdata(); // 使用 Map<String, dynamic>? 接收返回值
     if (lastShopData != null) {
       // 檢查是否返回了資料
       user_Wallet = lastShopData['Wallet'].toString();
@@ -106,15 +107,15 @@ class _RecommendPageState extends State<RecommendPage> {
 
 
   Future<void> getacc(String user_Wallet, String shop_contractAddress) async {
-    //String storeName=''   ; //店家名稱
-    //String storeAddress=''; //店家地址
-    //String storePhone=''; //店家電話
-    //String storeWallet=''; //店家錢包
-    //String currentID=''; //店家ID
-    //String storeTag='';
-    //String latitudeAndLongitude=''; //經緯度
-    //String menuLink=''; //菜單連結
-    //String storeEmail=''; //店家信箱
+    String storeName=''   ; //店家名稱
+    String storeAddress=''; //店家地址
+    String storePhone=''; //店家電話
+    String storeWallet=''; //店家錢包
+    String currentID=''; //店家ID
+    String storeTag='';
+    String latitudeAndLongitude=''; //經緯度
+    String menuLink=''; //菜單連結
+    String storeEmail=''; //店家信箱
     final Map<String, String> data = {
       'contractAddress': shop_contractAddress,
       'wallet': user_Wallet,
@@ -134,39 +135,41 @@ class _RecommendPageState extends State<RecommendPage> {
       toll = response.body; // 將整個 API 回傳的內容直接賦值給 storeName
       print(toll);
       Map<String, dynamic> jsonData = jsonDecode(toll);
-      String storeName = jsonData['storeName'] ?? '';
-      String storeAddress = jsonData['storeAddress'] ?? '';
-      String storePhone = jsonData['storePhone'] ?? '';
-      String storeWallet = jsonData['storeWallet'] ?? '';
-      String currentID = jsonData['currentID'] ?? '';
-      String storeTag = jsonData['storeTag'] ?? '';
-      String latitudeAndLongitude = jsonData['latitudeAndLongitude'] ?? '';
-      String menuLink = jsonData['menuLink'] ?? '';
-      String storeEmail = jsonData['storeEmail'] ?? '';
-      // print(storeName);
-      // print(storeAddress);
-      // print(storePhone);
-      // print(storeWallet);
-      // print(currentID);
-      // print(storeTag);
-      // print(latitudeAndLongitude);
-      // print(menuLink);
-      // print(storeEmail);
+      final dbHelper = DBHelper();
+      await dbHelper.deleteshopdatatable();
+      storeName = jsonData['storeName'] ?? '';
+      storeAddress = jsonData['storeAddress'] ?? '';
+      storePhone = jsonData['storePhone'] ?? '';
+      storeWallet = jsonData['storeWallet'] ?? '';
+      currentID = jsonData['currentID'] ?? '';
+      storeTag = jsonData['storeTag'] ?? '';
+      latitudeAndLongitude = jsonData['latitudeAndLongitude'] ?? '';
+      menuLink = jsonData['menuLink'] ?? '';
+      storeEmail = jsonData['storeEmail'] ?? '';
 
-
-      FoodSql shoplink = FoodSql("shoplink2","storeName TEXT, storeAddress TEXT, storePhone TEXT, storeWallet TEXT, currentID TEXT, storeTag TEXT, latitudeAndLongitude TEXT, menuLink TEXT, storeEmail TEXT"); //建立資料庫
-      await shoplink.initializeDatabase(); //初始化資料庫 並且創建資料庫
-      await shoplink.insertsql("shoplink2", {
-        'storeName': storeName,
-        'contractAddress': storeAddress,
-        'storePhone': storePhone,
-        'storeWallet': storeWallet,
-        'currentID': currentID,
-        'storeTag': storeTag,
-        'latitudeAndLongitude': latitudeAndLongitude,
-        'menuLink': menuLink,
-        'storeEmail': storeEmail,
-      });
+      /*
+      storeName = jsonData['storeName'] != '' ? jsonData['storeName'] : '0';
+      storeAddress = jsonData['storeAddress'] != '' ? jsonData['storeAddress'] : '0';
+      storePhone = jsonData['storePhone'] != '' ? jsonData['storePhone'] : '0';
+      storeWallet = jsonData['storeWallet'] != '' ? jsonData['storeWallet'] : '0';
+      currentID = jsonData['currentID'] != '' ? jsonData['currentID'] : '0';
+      storeTag = jsonData['storeTag'] != '' ? jsonData['storeTag'] : '0';
+      latitudeAndLongitude = jsonData['latitudeAndLongitude'] != '' ? jsonData['latitudeAndLongitude'] : '0';
+      menuLink = jsonData['menuLink'] != '' ? jsonData['menuLink'] : '0';
+      storeEmail = jsonData['storeEmail'] != '' ? jsonData['storeEmail'] : '0';
+       */
+      print(storeName);
+      print(storeAddress);
+      print(storePhone);
+      print(storeWallet);
+      print(currentID);
+      print(storeTag);
+      print(latitudeAndLongitude);
+      print(menuLink);
+      print(storeEmail);
+      //print(await shoplink.querytsql("shoplink"));
+      await dbHelper.insertshopdata({"storeName": storeName,"storeAddress": storeAddress,"storePhone": storePhone,"storeWallet": storeWallet,"currentID": currentID,"storeTag": storeTag,"latitudeAndLongitude": latitudeAndLongitude,"menuLink": menuLink,"storeEmail": storeEmail});
+      //await insertshopdata({"storeName": storeName,"storeAddress": storeAddress,"storePhone": storePhone,"storeWallet": storeWallet,"currentID": currentID,"storeTag": storeTag,"latitudeAndLongitude": latitudeAndLongitude,"menuLink": menuLink,"storeEmail": storeEmail});
       //print(toll);
     } else {
       print('Request failed with status: ${response.statusCode}');
