@@ -105,6 +105,61 @@ class _RecommendPageState extends State<RecommendPage> {
     return closedStatus;
   }
 
+  late String menuVersion  ; //取得menu版本
+  Future<void> menuid(String shop_storeWallet, String shop_contractAddress) async { //取得menu版本
+    final Map<String, String> data = {
+      'contractAddress': shop_contractAddress,
+      'wallet': shop_storeWallet,
+    };
+    print(data);
+    final headers = {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    };
+    final body = Uri(queryParameters: data).query;
+    final response = await http.post(
+      Uri.parse('http://192.168.1.102:15000/contract/getMenuVersion'),
+      headers: headers,
+      body: body,
+    );
+    late String menuid;
+    if (response.statusCode == 200) {
+      menuid = response.body; // 將整個 API 回傳的內容直接賦值給 storeName
+      Map<String, dynamic> jsonData = jsonDecode(menuid);
+      menuVersion = jsonData['menuVersion'] ?? '';
+      print("menuVersion: $menuVersion");
+    } else {
+      print('Request failed with status: ${response.statusCode}');
+    }
+  }
+  //取得店家
+  late String newmenuLink  ; //取得menu版本
+  Future<void> getmenu(String shop_storeWallet, String shop_contractAddress , String menuVersion) async {
+    final Map<String, String> data = {
+      'contractAddress': shop_contractAddress,
+      'wallet': shop_storeWallet,
+      'menuVersion': menuVersion,
+    };
+    print(data);
+    final headers = {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    };
+    final body = Uri(queryParameters: data).query;
+    final response = await http.post(
+      Uri.parse('http://192.168.1.102:15000/contract/getMenu'),
+      headers: headers,
+      body: body,
+    );
+    late String menulink;
+    if (response.statusCode == 200) {
+      menulink = response.body; // 將整個 API 回傳的內容直接賦值給 storeName
+      Map<String, dynamic> jsonData = jsonDecode(menulink);
+      newmenuLink = jsonData['menuLink'] ?? '';
+      print("menuLink: $newmenuLink");
+    } else {
+      print('Request failed with status: ${response.statusCode}');
+    }
+  }
+
 
   Future<void> getacc(String user_Wallet, String shop_contractAddress) async {
     String storeName=''   ; //店家名稱
@@ -138,7 +193,7 @@ class _RecommendPageState extends State<RecommendPage> {
       final dbHelper = DBHelper();
       await dbHelper.deleteshopdatatable();
       storeName = jsonData['storeName'] ?? '';
-      storeAddress = jsonData['storeAddress'] ?? '';
+      storeAddress = shop_contractAddress;
       storePhone = jsonData['storePhone'] ?? '';
       storeWallet = jsonData['storeWallet'] ?? '';
       currentID = jsonData['currentID'] ?? '';
@@ -146,18 +201,13 @@ class _RecommendPageState extends State<RecommendPage> {
       latitudeAndLongitude = jsonData['latitudeAndLongitude'] ?? '';
       menuLink = jsonData['menuLink'] ?? '';
       storeEmail = jsonData['storeEmail'] ?? '';
+      await menuid(user_Wallet, storeAddress); //menuVersion
+      await getmenu(user_Wallet, storeAddress, menuVersion);
+      menuLink = newmenuLink;
+      currentID = menuVersion;
 
-      /*
-      storeName = jsonData['storeName'] != '' ? jsonData['storeName'] : '0';
-      storeAddress = jsonData['storeAddress'] != '' ? jsonData['storeAddress'] : '0';
-      storePhone = jsonData['storePhone'] != '' ? jsonData['storePhone'] : '0';
-      storeWallet = jsonData['storeWallet'] != '' ? jsonData['storeWallet'] : '0';
-      currentID = jsonData['currentID'] != '' ? jsonData['currentID'] : '0';
-      storeTag = jsonData['storeTag'] != '' ? jsonData['storeTag'] : '0';
-      latitudeAndLongitude = jsonData['latitudeAndLongitude'] != '' ? jsonData['latitudeAndLongitude'] : '0';
-      menuLink = jsonData['menuLink'] != '' ? jsonData['menuLink'] : '0';
-      storeEmail = jsonData['storeEmail'] != '' ? jsonData['storeEmail'] : '0';
-       */
+
+
       print(storeName);
       print(storeAddress);
       print(storePhone);
@@ -167,7 +217,7 @@ class _RecommendPageState extends State<RecommendPage> {
       print(latitudeAndLongitude);
       print(menuLink);
       print(storeEmail);
-      //print(await shoplink.querytsql("shoplink"));
+
       await dbHelper.insertshopdata({"storeName": storeName,"storeAddress": storeAddress,"storePhone": storePhone,"storeWallet": storeWallet,"currentID": currentID,"storeTag": storeTag,"latitudeAndLongitude": latitudeAndLongitude,"menuLink": menuLink,"storeEmail": storeEmail});
       //await insertshopdata({"storeName": storeName,"storeAddress": storeAddress,"storePhone": storePhone,"storeWallet": storeWallet,"currentID": currentID,"storeTag": storeTag,"latitudeAndLongitude": latitudeAndLongitude,"menuLink": menuLink,"storeEmail": storeEmail});
       //print(toll);
