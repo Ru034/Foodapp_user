@@ -40,7 +40,6 @@ class _MyHomePageState extends State<MyHomePage> {
     const OrderPage(),
     const WalletPage(),
     const SettingPage(),
-    const shopmenu(),
   ]; //傳送至頁面的陣列
   @override
   Widget build(BuildContext context) {
@@ -68,7 +67,6 @@ class _MyHomePageState extends State<MyHomePage> {
           NavigationDestination(icon: Icon(Icons.shopping_cart), label: "訂單"),
           NavigationDestination(icon: Icon(Icons.account_balance_wallet), label: "錢包"),
           NavigationDestination(icon: Icon(Icons.settings), label: "設定"),
-          NavigationDestination(icon: Icon(Icons.transit_enterexit), label: "測試"),
         ],
       ),
     );

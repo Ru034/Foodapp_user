@@ -371,9 +371,10 @@ class _RecommendPageState extends State<RecommendPage> {
                                   String currentStoreAddress= storeAddressList[index];
                                   String currentStoreLink= storeLinkList[index];
                                   print("StoreName: $currentStoreName, Tag: $currentStoreTag, Address: $currentStoreAddress, Link: $currentStoreLink");
-                                  Navigator.push(context , MaterialPageRoute(builder: (context) => shopmenu()));
+                                  Navigator.push(context , MaterialPageRoute(builder: (context) => shopmenu(storeAddress: currentStoreLink)));
                                 },
                                 child: Column(
+
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Text(

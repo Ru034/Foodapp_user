@@ -40,7 +40,9 @@ void main() {
 }
 */
 class shopmenu extends StatelessWidget {
-  const shopmenu({Key? key}) : super(key: key);
+  //const shopmenu({Key? key}) : super(key: key);
+  final String storeAddress;
+  shopmenu({Key? key, required this.storeAddress}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +52,7 @@ class shopmenu extends StatelessWidget {
         useMaterial3: true,
       ),
       debugShowCheckedModeBanner: false,
-      home: const HomePage(),
+      home: HomePage(storeAddress: storeAddress),
     );
   }
 }
@@ -61,7 +63,10 @@ Future<String> loadAsset() async {
 }
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+  var storeAddress;
+
+  HomePage({Key? key, required this.storeAddress}) : super(key: key);
+
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -1176,8 +1181,9 @@ class _HomePageState extends State<HomePage> {
                       onPressed: () async {
 
 
-                        final dbHelper = DBHelper();
-                        print(await dbHelper.queryalluserdata());
+                        //final dbHelper = DBHelper();
+                        //print(await dbHelper.queryalluserdata());
+                        print(widget.storeAddress);
 
 
                       },
