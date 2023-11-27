@@ -271,6 +271,33 @@ class _RecommendPageState extends State<RecommendPage> {
     }
   }
 
+  Future<void> showUpdateCompleteDialog(BuildContext context) {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // 用户必须点击按钮来关闭对话框
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('更新'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text('更新完畢。'), // 你可以在这里自定义你的消息
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('確認'),
+              onPressed: () {
+                Navigator.of(context).pop(); // 关闭对话框
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   List<String> storeNameList = [];
   List<String> storeTagList = [];
   List<String> storeAddressList = [];
@@ -343,6 +370,7 @@ class _RecommendPageState extends State<RecommendPage> {
                       setState(() {
                         updateStoreListsFromDatabase();
                       });
+                      await showUpdateCompleteDialog(context);
                     },
                     child: Text("下載最新檔案"),
                   ),
