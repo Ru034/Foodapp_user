@@ -23,6 +23,7 @@ import 'package:sqflite/sqflite.dart';
 import 'dart:convert'; // for utf8
 import 'dart:async'; // for Stream
 import 'SQL.dart';
+
 //FoodSql shopdata = FoodSql("shopdata","storeName TEXT, storeAddress TEXT, storePhone TEXT, storeWallet TEXT, currentID TEXT, storeTag TEXT, latitudeAndLongitude TEXT, menuLink TEXT, storeEmail TEXT "); //建立資料庫
 class RecommendPage extends StatefulWidget {
   const RecommendPage({Key? key}) : super(key: key);
@@ -34,17 +35,21 @@ class RecommendPage extends StatefulWidget {
 class _RecommendPageState extends State<RecommendPage> {
   late String user_Wallet;
   late String user_Password;
+
   Future<void> getdata() async {
     //取得shopdata最後一筆資料
     final dbHelper = DBHelper(); // 建立 DBHelper 物件
-    Map<String, dynamic>? laststoreData = await dbHelper.querylastuserdata(); // 使用 Map<String, dynamic>? 接收返回值
+    Map<String, dynamic>? laststoreData =
+        await dbHelper.querylastuserdata(); // 使用 Map<String, dynamic>? 接收返回值
     if (laststoreData != null) {
       // 檢查是否返回了資料
       user_Wallet = laststoreData['Wallet'].toString();
       user_Password = laststoreData['Password'].toString();
     }
   }
-  Future<List<String>> getcontract(String Wallet) async { // 取得所有合約
+
+  Future<List<String>> getcontract(String Wallet) async {
+    // 取得所有合約
     final Map<String, String> data = {
       'account': Wallet,
     };
@@ -77,8 +82,10 @@ class _RecommendPageState extends State<RecommendPage> {
     return contracts;
   }
 
-  Future<bool> getClosedStatus(String user_Wallet, String shop_contractAddress) async { //Todo
-    late bool closedStatus  ; //取得menu版本
+  Future<bool> getClosedStatus(
+      String user_Wallet, String shop_contractAddress) async {
+    //Todo
+    late bool closedStatus; //取得menu版本
     final Map<String, String> data = {
       'contractAddress': shop_contractAddress,
       'wallet': user_Wallet,
@@ -105,8 +112,10 @@ class _RecommendPageState extends State<RecommendPage> {
     return closedStatus;
   }
 
-  late String menuVersion  ; //取得menu版本
-  Future<void> menuid(String shop_storeWallet, String shop_contractAddress) async { //取得menu版本
+  late String menuVersion; //取得menu版本
+  Future<void> menuid(
+      String shop_storeWallet, String shop_contractAddress) async {
+    //取得menu版本
     final Map<String, String> data = {
       'contractAddress': shop_contractAddress,
       'wallet': shop_storeWallet,
@@ -131,9 +140,11 @@ class _RecommendPageState extends State<RecommendPage> {
       print('Request failed with status: ${response.statusCode}');
     }
   }
+
   //取得店家
-  late String newmenuLink  ; //取得menu版本
-  Future<void> getmenu(String shop_storeWallet, String shop_contractAddress , String menuVersion) async {
+  late String newmenuLink; //取得menu版本
+  Future<void> getmenu(String shop_storeWallet, String shop_contractAddress,
+      String menuVersion) async {
     final Map<String, String> data = {
       'contractAddress': shop_contractAddress,
       'wallet': shop_storeWallet,
@@ -160,17 +171,16 @@ class _RecommendPageState extends State<RecommendPage> {
     }
   }
 
-
   Future<void> getacc(String user_Wallet, String shop_contractAddress) async {
-    String storeName=''   ; //店家名稱
-    String storeAddress=''; //店家地址
-    String storePhone=''; //店家電話
-    String storeWallet=''; //店家錢包
-    String currentID=''; //店家ID
-    String storeTag='';
-    String latitudeAndLongitude=''; //經緯度
-    String menuLink=''; //菜單連結
-    String storeEmail=''; //店家信箱
+    String storeName = ''; //店家名稱
+    String storeAddress = ''; //店家地址
+    String storePhone = ''; //店家電話
+    String storeWallet = ''; //店家錢包
+    String currentID = ''; //店家ID
+    String storeTag = '';
+    String latitudeAndLongitude = ''; //經緯度
+    String menuLink = ''; //菜單連結
+    String storeEmail = ''; //店家信箱
     final Map<String, String> data = {
       'contractAddress': shop_contractAddress,
       'wallet': user_Wallet,
@@ -191,7 +201,6 @@ class _RecommendPageState extends State<RecommendPage> {
       print(toll);
       Map<String, dynamic> jsonData = jsonDecode(toll);
       final dbHelper = DBHelper();
-      await dbHelper.deletestoredatatable();
       storeName = jsonData['storeName'] ?? '';
       storeAddress = jsonData['storeAddress'] ?? '';
       storePhone = jsonData['storePhone'] ?? '';
@@ -206,7 +215,6 @@ class _RecommendPageState extends State<RecommendPage> {
       menuLink = newmenuLink;
       currentID = menuVersion;
 
-
       print(storeName);
       print(storeAddress);
       print(storePhone);
@@ -217,8 +225,18 @@ class _RecommendPageState extends State<RecommendPage> {
       print(menuLink);
       print(storeEmail);
 
-      await dbHelper.insertstoredata({"storeName": storeName,"storeAddress": storeAddress,"storePhone": storePhone,"storeWallet": storeWallet,"currentID": currentID,"storeTag": storeTag,"latitudeAndLongitude": latitudeAndLongitude,"menuLink": menuLink,"storeEmail": storeEmail,"shopcontractAddress": shop_contractAddress});
-
+      await dbHelper.insertstoredata({
+        "storeName": storeName,
+        "storeAddress": storeAddress,
+        "storePhone": storePhone,
+        "storeWallet": storeWallet,
+        "currentID": currentID,
+        "storeTag": storeTag,
+        "latitudeAndLongitude": latitudeAndLongitude,
+        "menuLink": menuLink,
+        "storeEmail": storeEmail,
+        "shopcontractAddress": shop_contractAddress
+      });
     } else {
       print('Request failed with status: ${response.statusCode}');
     }
@@ -227,21 +245,28 @@ class _RecommendPageState extends State<RecommendPage> {
   Future<void> updateStoreListsFromDatabase() async {
     final dbHelper = DBHelper();
     List<Map<String, dynamic>> storeData = await dbHelper.queryallstoredata();
-    //storeNameList.clear(); // 清空現有的列表
-    //storeTagList.clear();
+
+    // 准备临时列表，用于获取数据库数据
+    List<String> tempStoreNames = [];
+    List<String> tempStoreTags = [];
+
     for (var record in storeData) {
-      storeNameList.add(record["storeName"]);
-      storeTagList.add(record["storeTag"]);
+      tempStoreNames.add(record["storeName"]?.toString() ?? 'Unknown');
+      tempStoreTags.add(record["storeTag"]?.toString() ?? 'No Tag');
     }
-    setState(() {
-    });
+
+    // 使用 setState 更新 widget 的状态
+    if (mounted) {
+      setState(() {
+        storeNameList = tempStoreNames;
+        storeTagList = tempStoreTags;
+      });
+    }
   }
 
+  List<String> storeNameList = [];
+  List<String> storeTagList = [];
 
-  List<String> storeNameList = [
-  ];
-  List<String> storeTagList = [
-  ];
   // List<String> storeDistanceList = [
   // ];
   /*
@@ -255,10 +280,7 @@ class _RecommendPageState extends State<RecommendPage> {
     super.initState();
     updateStoreListsFromDatabase();
   }
-  // 構造函數，當 widget 被創建時執行，這裏初始化列表
-  // _RecommendPageState() {
-  //   updateStoreListsFromDatabase();
-  // }
+
 
   @override
   Widget build(BuildContext context) {
@@ -268,116 +290,111 @@ class _RecommendPageState extends State<RecommendPage> {
     );
 
     return Scaffold(
-
         body: Stack(
+      children: [
+        ListView(
           children: [
-            ListView(
-              children: [
-                Padding(padding: EdgeInsets.only(
-                    left: 30, top: 30, right: 30, bottom: 120), child: Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text("Blo",
-                            style: titleStyle.copyWith(
-                                color: Colors.red[900])),
-                        Text("food",
-                            style: titleStyle.copyWith(
-                                color: Colors.black87)),
-                      ],
-                    ),
-                    ElevatedButton(
-                      onPressed: () async {
-                        await getdata();
-                        print(user_Wallet);
-                        print(user_Password);
+            Padding(
+              padding:
+                  EdgeInsets.only(left: 30, top: 30, right: 30, bottom: 120),
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text("Blo",
+                          style: titleStyle.copyWith(color: Colors.red[900])),
+                      Text("food",
+                          style: titleStyle.copyWith(color: Colors.black87)),
+                    ],
+                  ),
+                  ElevatedButton(
+                    onPressed: () async {
+                      final dbHelper = DBHelper();
+                      await dbHelper.deletestoredatatable();
+                      await getdata();
+                      print(user_Wallet);
+                      print(user_Password);
 
-
-                        List<String> contractList = await getcontract(user_Wallet);
-                        final dbHelper = DBHelper();
-                        List<Map<String, dynamic>> storeData = await dbHelper.queryallstoredata();
-                        storeNameList.clear(); // 清空現有的列表
-                        storeTagList.clear();
-                        for (String contract in contractList) {
-                          bool closedStatus =await getClosedStatus(user_Wallet, contract) ;
-                          if (!closedStatus) {
-                            await getacc(user_Wallet, contract);
-                            updateStoreListsFromDatabase();
-                            //刷新頁面
-                            print('closedStatus is false. Do something...');
-                          }
-
-                        }
-                        setState(() {
+                      List<String> contractList =
+                          await getcontract(user_Wallet);
+                      List<Map<String, dynamic>> storeData =
+                          await dbHelper.queryallstoredata();
+                      storeNameList.clear(); // 清空現有的列表
+                      storeTagList.clear();
+                      for (String contract in contractList) {
+                        bool closedStatus =
+                            await getClosedStatus(user_Wallet, contract);
+                        if (!closedStatus) {
+                          await getacc(user_Wallet, contract);
                           updateStoreListsFromDatabase();
-                        });
-                      },
-                      child: Text("下載最新檔案"),
+                          //刷新頁面
+                          print('closedStatus is false. Do something...');
+                        }
+                      }
+                      setState(() {
+                        updateStoreListsFromDatabase();
+                      });
+                    },
+                    child: Text("下載最新檔案"),
+                  ),
+                  SizedBox(height: 30),
+                  GridView.builder(
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 1,
+                      childAspectRatio: 2.0,
+                      mainAxisSpacing: 20,
                     ),
-                    SizedBox(height: 30),
-                    GridView.builder(
-                      shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 1,
-                        childAspectRatio: 2.0,
-                        mainAxisSpacing: 20,
-                      ),
-                      itemCount: storeNameList.length,//改這李
-                      itemBuilder: (context, index) {
-                        return SizedBox(
-                            height: 100,
-                            width: 200,
-                            child: Card(
-                                clipBehavior: Clip.hardEdge,
-                                child: InkWell(
-                                  splashColor: Colors.brown.withAlpha(75),
-                                  onTap: () {},
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        storeNameList[index],
-                                        style: TextStyle(fontSize: 24),
-                                      ),
-                                      Text(
-                                        storeTagList[index],
-                                        style: TextStyle(fontSize: 18),
-                                      ),
-                                      // Text(
-                                      //   storeDistanceList[index],
-                                      //   style: TextStyle(fontSize: 18),
-                                      // ),
-                                    ],
-                                  ),
-                                )));
-
-                      },
-                    ),
-                  ],
-                ),)
-              ],
-            ),
-            Container(
-              alignment: Alignment.bottomCenter,
-              child:
-              Padding(
-                  padding: EdgeInsets.only(
-                      left: 30, top: 0, right: 30, bottom: 15),
-                  child: SearchBar(
-                    padding: const MaterialStatePropertyAll<EdgeInsets>(
-                        EdgeInsets.symmetric(horizontal: 16.0)),
-                    leading: const Icon(Icons.search),
-                    hintText: '搜尋店家',
-                  )
+                    itemCount: storeNameList.length,
+                    //改這李
+                    itemBuilder: (context, index) {
+                      return SizedBox(
+                          height: 100,
+                          width: 200,
+                          child: Card(
+                              clipBehavior: Clip.hardEdge,
+                              child: InkWell(
+                                splashColor: Colors.brown.withAlpha(75),
+                                onTap: () {},
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      storeNameList[index],
+                                      style: TextStyle(fontSize: 24),
+                                    ),
+                                    Text(
+                                      storeTagList[index],
+                                      style: TextStyle(fontSize: 18),
+                                    ),
+                                    // Text(
+                                    //   storeDistanceList[index],
+                                    //   style: TextStyle(fontSize: 18),
+                                    // ),
+                                  ],
+                                ),
+                              )));
+                    },
+                  ),
+                ],
               ),
-
             )
           ],
+        ),
+        Container(
+          alignment: Alignment.bottomCenter,
+          child: Padding(
+              padding: EdgeInsets.only(left: 30, top: 0, right: 30, bottom: 15),
+              child: SearchBar(
+                padding: const MaterialStatePropertyAll<EdgeInsets>(
+                    EdgeInsets.symmetric(horizontal: 16.0)),
+                leading: const Icon(Icons.search),
+                hintText: '搜尋店家',
+              )),
         )
-
-
-    );
+      ],
+    ));
   }
 }
