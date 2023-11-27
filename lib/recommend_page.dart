@@ -1,6 +1,7 @@
 import 'dart:ffi';
 
 import 'package:flutter/material.dart';
+import 'package:foodapp_user/shopmenu.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -369,7 +370,8 @@ class _RecommendPageState extends State<RecommendPage> {
                                   String currentStoreTag = storeTagList[index];
                                   String currentStoreAddress= storeAddressList[index];
                                   String currentStoreLink= storeLinkList[index];
-                                  print("Tapped on store: $currentStoreName, Tag: $currentStoreTag, Address: $currentStoreAddress, Link: $currentStoreLink");
+                                  print("StoreName: $currentStoreName, Tag: $currentStoreTag, Address: $currentStoreAddress, Link: $currentStoreLink");
+                                  Navigator.push(context , MaterialPageRoute(builder: (context) => shopmenu()));
                                 },
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
