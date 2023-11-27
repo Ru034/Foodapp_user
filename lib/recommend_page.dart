@@ -250,11 +250,13 @@ class _RecommendPageState extends State<RecommendPage> {
     List<String> tempStoreNames = [];
     List<String> tempStoreTags = [];
     List<String> tempStoreAddress = [];
+    List<String> tempStoreLink = [];
 
     for (var record in storeData) {
       tempStoreNames.add(record["storeName"]?.toString() ?? 'Unknown');
       tempStoreTags.add(record["storeTag"]?.toString() ?? 'No Tag');
       tempStoreAddress.add(record["storeAddress"]?.toString() ?? 'No Tag');
+      tempStoreLink.add(record["menuLink"]?.toString() ?? 'No Tag');
     }
 
     // 使用 setState 更新 widget 的状态
@@ -263,14 +265,15 @@ class _RecommendPageState extends State<RecommendPage> {
         storeNameList = tempStoreNames;
         storeTagList = tempStoreTags;
         storeAddressList = tempStoreAddress;
+        storeLinkList = tempStoreLink;
       });
     }
   }
 
   List<String> storeNameList = [];
   List<String> storeTagList = [];
-  List<String> storeAddressList = [
-   ];
+  List<String> storeAddressList = [];
+  List<String> storeLinkList = [];
   /*
   _RecommendPageState() {
     storeNameList.add("storeName");
@@ -325,6 +328,7 @@ class _RecommendPageState extends State<RecommendPage> {
                       storeNameList.clear(); // 清空現有的列表
                       storeTagList.clear();
                       storeAddressList.clear();
+                      storeLinkList.clear();
                       for (String contract in contractList) {
                         bool closedStatus =
                             await getClosedStatus(user_Wallet, contract);
@@ -364,7 +368,8 @@ class _RecommendPageState extends State<RecommendPage> {
                                   String currentStoreName = storeNameList[index];
                                   String currentStoreTag = storeTagList[index];
                                   String currentStoreAddress= storeAddressList[index];
-                                  print("Tapped on store: $currentStoreName, Tag: $currentStoreTag, Address: $currentStoreAddress");
+                                  String currentStoreLink= storeLinkList[index];
+                                  print("Tapped on store: $currentStoreName, Tag: $currentStoreTag, Address: $currentStoreAddress, Link: $currentStoreLink");
                                 },
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
