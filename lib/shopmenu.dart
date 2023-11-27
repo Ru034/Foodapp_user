@@ -20,6 +20,7 @@ import 'dart:async'; // for Stream
 import 'SQL.dart';
 import 'recommend_page.dart';
 import 'shopmenu.dart';
+import 'main2.dart';
 
 //增加從雲端抓資料與輸出資料
 class GoogleAuthClient extends http.BaseClient {
@@ -1160,7 +1161,7 @@ class _HomePageState extends State<HomePage> {
                   children: [
                     ElevatedButton(
                       onPressed: () async {
-                        Navigator.push(context , MaterialPageRoute(builder: (context) => RecommendPage()));
+                        Navigator.push(context , MaterialPageRoute(builder: (context) => main2()));
                       },
                       child: Text("回上一頁"),
                     ),
