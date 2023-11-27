@@ -249,10 +249,12 @@ class _RecommendPageState extends State<RecommendPage> {
     // 准备临时列表，用于获取数据库数据
     List<String> tempStoreNames = [];
     List<String> tempStoreTags = [];
+    List<String> tempStoreAddress = [];
 
     for (var record in storeData) {
       tempStoreNames.add(record["storeName"]?.toString() ?? 'Unknown');
       tempStoreTags.add(record["storeTag"]?.toString() ?? 'No Tag');
+      tempStoreAddress.add(record["storeAddress"]?.toString() ?? 'No Tag');
     }
 
     // 使用 setState 更新 widget 的状态
@@ -260,15 +262,15 @@ class _RecommendPageState extends State<RecommendPage> {
       setState(() {
         storeNameList = tempStoreNames;
         storeTagList = tempStoreTags;
+        storeAddressList = tempStoreAddress;
       });
     }
   }
 
   List<String> storeNameList = [];
   List<String> storeTagList = [];
-
-  // List<String> storeDistanceList = [
-  // ];
+  List<String> storeAddressList = [
+   ];
   /*
   _RecommendPageState() {
     storeNameList.add("storeName");
@@ -322,6 +324,7 @@ class _RecommendPageState extends State<RecommendPage> {
                           await dbHelper.queryallstoredata();
                       storeNameList.clear(); // 清空現有的列表
                       storeTagList.clear();
+                      storeAddressList.clear();
                       for (String contract in contractList) {
                         bool closedStatus =
                             await getClosedStatus(user_Wallet, contract);
@@ -357,7 +360,12 @@ class _RecommendPageState extends State<RecommendPage> {
                               clipBehavior: Clip.hardEdge,
                               child: InkWell(
                                 splashColor: Colors.brown.withAlpha(75),
-                                onTap: () {},
+                                onTap: () {
+                                  String currentStoreName = storeNameList[index];
+                                  String currentStoreTag = storeTagList[index];
+                                  String currentStoreAddress= storeAddressList[index];
+                                  print("Tapped on store: $currentStoreName, Tag: $currentStoreTag, Address: $currentStoreAddress");
+                                },
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
@@ -369,10 +377,10 @@ class _RecommendPageState extends State<RecommendPage> {
                                       storeTagList[index],
                                       style: TextStyle(fontSize: 18),
                                     ),
-                                    // Text(
-                                    //   storeDistanceList[index],
-                                    //   style: TextStyle(fontSize: 18),
-                                    // ),
+                                    Text(
+                                      storeAddressList[index],
+                                      style: TextStyle(fontSize: 18),
+                                    ),
                                   ],
                                 ),
                               )));
