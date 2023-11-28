@@ -297,6 +297,23 @@ class _RecommendPageState extends State<RecommendPage> {
       },
     );
   }
+  bool _isLoading = false; // 添加這個新的標誌
+
+  // ... 省略其餘的代碼，只顯示你如何更新這個標誌
+
+  // 當你開始下載資料時，設置標誌為 true
+  void _startLoading() {
+    setState(() {
+      _isLoading = true;
+    });
+  }
+
+  // 當下載完成或失敗時，設置標誌為 false
+  void _stopLoading() {
+    setState(() {
+      _isLoading = false;
+    });
+  }
 
   List<String> storeNameList = [];
   List<String> storeTagList = [];
@@ -343,40 +360,45 @@ class _RecommendPageState extends State<RecommendPage> {
                   ),
                   ElevatedButton(
                     onPressed: () async {
-                      final dbHelper = DBHelper();
-                      await dbHelper.deletestoredatatable();
-                      await getdata();
-                      print(user_Wallet);
-                      print(user_Password);
+                      _startLoading(); // 開始加載數據，更新UI來顯示加載指示器
+                      try {
 
-                      List<String> contractList =
-                          await getcontract(user_Wallet);
-                      List<Map<String, dynamic>> storeData =
-                          await dbHelper.queryallstoredata();
-                      storeNameList.clear(); // 清空現有的列表
-                      storeTagList.clear();
-                      storeAddressList.clear();
-                      storeLinkList.clear();
-                      setState(() {
-                        storeNameList ;
-                        storeTagList ;
-                        storeAddressList ;
-                        storeLinkList ;
-                      });
-                      for (String contract in contractList) {
-                        bool closedStatus =
-                            await getClosedStatus(user_Wallet, contract);
-                        if (!closedStatus) {
-                          await getacc(user_Wallet, contract);
-                          updateStoreListsFromDatabase();
-                          //刷新頁面
-                          print('closedStatus is false. Do something...');
+                        final dbHelper = DBHelper();
+                        await dbHelper.deletestoredatatable();
+                        storeNameList.clear(); // 清空現有的列表
+                        storeTagList.clear();
+                        storeAddressList.clear();
+                        storeLinkList.clear();
+                        setState(() {
+                          storeNameList ;
+                          storeTagList ;
+                          storeAddressList ;
+                          storeLinkList ;
+                        });
+                        await getdata();
+                        print(user_Wallet);
+                        print(user_Password);
+
+                        List<String> contractList = await getcontract(user_Wallet);
+                        List<Map<String, dynamic>> storeData = await dbHelper.queryallstoredata();
+
+
+                        for (String contract in contractList) {
+                          bool closedStatus = await getClosedStatus(user_Wallet, contract);
+                          if (!closedStatus) {
+                            await getacc(user_Wallet, contract);
+                            updateStoreListsFromDatabase();
+                            //刷新頁面
+                            print('closedStatus is false. Do something...');
+                          }
                         }
+                        setState(() {
+                          updateStoreListsFromDatabase();
+                        });
+                        await showUpdateCompleteDialog(context);
+                      } finally {
+                        _stopLoading(); // 無論加載成功與否，最終都會停止加載
                       }
-                      setState(() {
-                        updateStoreListsFromDatabase();
-                      });
-                      await showUpdateCompleteDialog(context);
                     },
                     child: Text("下載最新檔案"),
                   ),
@@ -428,6 +450,8 @@ class _RecommendPageState extends State<RecommendPage> {
                               )));
                     },
                   ),
+                  if (_isLoading) // 加上這裡的代碼：如果 _isLoading 為 true，顯示加载指示器
+                    Center(child: CircularProgressIndicator()),
                 ],
               ),
             )
