@@ -357,6 +357,12 @@ class _RecommendPageState extends State<RecommendPage> {
                       storeTagList.clear();
                       storeAddressList.clear();
                       storeLinkList.clear();
+                      setState(() {
+                        storeNameList ;
+                        storeTagList ;
+                        storeAddressList ;
+                        storeLinkList ;
+                      });
                       for (String contract in contractList) {
                         bool closedStatus =
                             await getClosedStatus(user_Wallet, contract);
